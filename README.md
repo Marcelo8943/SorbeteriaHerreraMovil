@@ -1,17 +1,24 @@
-# herrera_system
+ # Universidad Nacional Autónoma de Nicaragua, Managua,
 
-A new Flutter project.
+ # Docente: 
+ • Danny Aldahir Lopez Sanchez 
 
-## Getting Started
+ # Integrantes: 
+ • Marcelo Antonio Campos Mena_#24903408
+ • Ronald Santiago Bermúdez Narváez_#24903639
+ • Yahir Andrés López Guevara_#24902913
 
-This project is a starting point for a Flutter application.
+ # Correos institucionales: 
+ • marcelo.campos24903408@estu.unan.edu.ni
+ • ronald.bermudez24903639@estu.unan.edu.ni
+ • yahir.lopez24902913@estu.unan.edu.ni
 
-A few resources to get you started if this is your first Flutter project:
+ # Correos con loa cuales se tiene vinculado el usuario de git hub:
+ • marcelocampos8943@gmail.com (Marcelo8943)
+ • santiagoberm123@gmail.com (Ronald12-wp)
+ • yahir.lopez24902913@estu.unan.edu.ni (yahir63)           
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+ # Contexto del proyecto:
+ • Sorbetería Herrera (Jinotepe, Carazo) cuenta con un sistema web transaccional (ASP.NET Core y SQL Server) que digitaliza sus operaciones diarias de ventas, inventario, pedidos y clientes.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ • Sin embargo, la gerencia carece de acceso remoto a la información y de una herramienta analítica para la toma de decisiones. Para resolverlo, el proyecto añade una aplicación móvil multiplataforma en Flutter para Administradores y Gerentes, respaldada por un Data Warehouse (KPIs) y una arquitectura híbrida (SQL Server para operación y MongoDB para auditoría), complementando el sistema web actual sin reemplazarlo.
