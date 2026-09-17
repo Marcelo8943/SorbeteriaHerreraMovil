@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'widgets.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  static final _facebookUri = Uri.parse(
+    'https://www.facebook.com/SorbetesHerrera/',
+  );
+
+  final _userController = TextEditingController(text: 'Marcelo');
+  final _passwordController = TextEditingController(text: 'herrera');
+  bool _hidePassword = true;
+
+  @override
+  void dispose() {
+    _userController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _openFacebook() async {
+    final didOpen = await launchUrl(
+      _facebookUri,
+      mode: LaunchMode.externalApplication,
+    );
+
+    if (!didOpen && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No se pudo abrir la página de Facebook.'),
+        ),
+      );
+    }
+  }
+
+  void _showPendingLoginMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Inicio de sesión pendiente de integración.'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: LoginColors.background,
+      body: SafeArea(
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 430),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  LoginHero(onLogoTap: _openFacebook),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 18, 14, 0),
+                    child: _LoginForm(
+                      userController: _userController,
+                      passwordController: _passwordController,
+                      hidePassword: _hidePassword,
+                      onPasswordVisibilityChanged: () {
+                        setState(() => _hidePassword = !_hidePassword);
+                      },
+                      onLogin: _showPendingLoginMessage,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LoginForm extends StatelessWidget {
+  const _LoginForm({
+    required this.userController,
+    required this.passwordController,
+    required this.hidePassword,
+    required this.onPasswordVisibilityChanged,
+    required this.onLogin,
+  });
+
+  final TextEditingController userController;
+  final TextEditingController passwordController;
+  final bool hidePassword;
+  final VoidCallback onPasswordVisibilityChanged;
+  final VoidCallback onLogin;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Iniciar Sesión', style: LoginTextStyles.heading),
+        const SizedBox(height: 2),
+        const Text(
+          'Ingresa tus credenciales para continuar.',
+          style: LoginTextStyles.description,
+        ),
+        const SizedBox(height: 17),
+        LoginTextField(
+          label: 'Usuario',
+          controller: userController,
+          icon: Icons.person_outline_rounded,
+        ),
+        const SizedBox(height: 13),
+        LoginTextField(
+          label: 'Contraseña',
+          controller: passwordController,
+          icon: Icons.shield_outlined,
+          obscureText: hidePassword,
+          trailing: IconButton(
+            tooltip: hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña',
+            onPressed: onPasswordVisibilityChanged,
+            icon: Icon(
+              hidePassword
+                  ? Icons.visibility_outlined
+                  : Icons.visibility_off_outlined,
+              color: LoginColors.fieldIcon,
+              size: 20,
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
+        LoginButton(onPressed: onLogin),
+        const SizedBox(height: 18),
+        const Center(
+          child: Text(
+            '© 2026 Sorbetería Herrera.\nTodos los derechos reservados.',
+            textAlign: TextAlign.center,
+            style: LoginTextStyles.footer,
+          ),
+        ),
+      ],
+    );
+  }
+}
