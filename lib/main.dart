@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'Screens/Login/loginScreen.dart';
+import 'routes/app_routes.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const HerreraApp());
@@ -14,12 +15,9 @@ class HerreraApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sorbetería Herrera',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00B889),
-        ),
-      ),
-      home: const LoginScreen(),
+      theme: AppTheme.light,
+      initialRoute: AppRoutes.login,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
 }
