@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../routes/app_routes.dart';
 import 'widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _userController = TextEditingController(text: 'Marcelo');
   final _passwordController = TextEditingController(text: 'herrera');
-  bool _hidePassword = true; 
+  bool _hidePassword = true;
 
   @override
   void dispose() {
@@ -41,11 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showPendingLoginMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Inicio de sesión pendiente de integración.'),
-      ),
-    );
+    Navigator.of(context).pushReplacementNamed(AppRoutes.shell);
   }
 
   @override
