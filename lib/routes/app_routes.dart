@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../Screens/Configuraciones/conf_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
@@ -59,6 +60,12 @@ class AppRoutes {
 
       case shell:
         return MaterialPageRoute(builder: (_) => const _AuthenticatedShell());
+
+      case configuracion:
+        return MaterialPageRoute(
+          builder: (_) => const ConfiguracionesScreen(),
+          settings: settings,
+        );
 
       default:
         final title = _titleFor(settings.name);
@@ -152,7 +159,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.settings_outlined,
       label: 'Configuración',
-      onTap: () => _showPending(context, 'Configuración'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.configuracion);
+      },
     ),
     AppDrawerItem(
       icon: Icons.logout,
