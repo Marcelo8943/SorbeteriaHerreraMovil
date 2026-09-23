@@ -124,8 +124,12 @@ class ClienteDetalleCardData extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: _LabelValue('DEPARTAMENTO', cliente.departamento)),
-              Expanded(child: _LabelValue('CLIENTE DESDE', cliente.clienteDesde)),
+              Expanded(
+                child: _LabelValue('DEPARTAMENTO', cliente.departamento),
+              ),
+              Expanded(
+                child: _LabelValue('CLIENTE DESDE', cliente.clienteDesde),
+              ),
             ],
           ),
           const SizedBox(height: 20),
