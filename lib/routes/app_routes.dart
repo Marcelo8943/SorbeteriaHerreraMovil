@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Screens/Login/loginScreen.dart';
+import '../Screens/Login/login_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
