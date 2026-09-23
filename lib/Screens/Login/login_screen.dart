@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes/app_routes.dart';
+import '../../theme/app_theme.dart';
 import 'login_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,6 +47,14 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.of(context).pushReplacementNamed(AppRoutes.shell);
   }
 
+  void _showPasswordRecoveryMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('La recuperación de contraseña estará disponible pronto.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         setState(() => _hidePassword = !_hidePassword);
                       },
                       onLogin: _showPendingLoginMessage,
+                      onForgotPassword: _showPasswordRecoveryMessage,
                     ),
                   ),
                 ],
@@ -90,6 +100,7 @@ class _LoginForm extends StatelessWidget {
     required this.hidePassword,
     required this.onPasswordVisibilityChanged,
     required this.onLogin,
+    required this.onForgotPassword,
   });
 
   final TextEditingController userController;
@@ -97,6 +108,7 @@ class _LoginForm extends StatelessWidget {
   final bool hidePassword;
   final VoidCallback onPasswordVisibilityChanged;
   final VoidCallback onLogin;
+  final VoidCallback onForgotPassword;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +145,24 @@ class _LoginForm extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 14),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: onForgotPassword,
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            child: const Text('¿Olvidó su contraseña?'),
+          ),
+        ),
+        const SizedBox(height: 8),
         LoginButton(onPressed: onLogin),
         const SizedBox(height: 18),
         const Center(
