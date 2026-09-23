@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/app_models.dart';
 import '../../theme/app_theme.dart';
+import 'cliente_form_screen.dart';
 import 'cliente_detalle_widgets.dart';
 
 class ClienteDetalleScreen extends StatelessWidget {
@@ -13,6 +14,16 @@ class ClienteDetalleScreen extends StatelessWidget {
     required this.cliente,
     required this.avatarColor,
   });
+
+  Future<void> _openEditForm(BuildContext context) async {
+    final resultado = await Navigator.push<Cliente>(
+      context,
+      MaterialPageRoute(builder: (_) => ClienteFormScreen(cliente: cliente)),
+    );
+    if (context.mounted && resultado != null) {
+      Navigator.pop(context, resultado);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +42,7 @@ class ClienteDetalleScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ClienteDetalleHero(
-              cliente: cliente,
-              avatarColor: avatarColor,
-            ),
+            ClienteDetalleHero(cliente: cliente, avatarColor: avatarColor),
             Transform.translate(
               offset: const Offset(0, -24),
               child: Padding(
@@ -49,7 +57,9 @@ class ClienteDetalleScreen extends StatelessWidget {
                 AppSpacing.md,
                 AppSpacing.lg,
               ),
-              child: ClienteDetalleEditButton(onPressed: () {}),
+              child: ClienteDetalleEditButton(
+                onPressed: () => _openEditForm(context),
+              ),
             ),
           ],
         ),
