@@ -1,164 +1,40 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../../models/app_models.dart';
 
-/// Tarjeta de KPI/Estadística para el encabezado
-class ClienteStatCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final Color bgColor;
-  final Color iconColor;
-  final IconData icon;
-
-  const ClienteStatCard({
-    Key? key,
-    required this.title,
-    required this.value,
-    required this.bgColor,
-    required this.iconColor,
-    required this.icon,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-        boxShadow: AppSpacing.cardShadow,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: iconColor, size: 17),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 10.5,
-                  color: AppColors.muted,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.ink,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Campo de Búsqueda y Botón de Filtro
-class ClienteSearchFilterRow extends StatelessWidget {
-  final String hintText;
-  final TextEditingController? searchController;
-  final ValueChanged<String>? onSearchChanged;
-  final VoidCallback? onFilterTap;
-  final bool isFilterActive;
-
-  const ClienteSearchFilterRow({
-    Key? key,
-    this.hintText = 'Buscar clientes...',
-    this.searchController,
-    this.onSearchChanged,
-    this.onFilterTap,
-    this.isFilterActive = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: AppColors.lavender,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.search, color: AppColors.muted, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    onChanged: onSearchChanged,
-                    style: const TextStyle(fontSize: 13, color: AppColors.ink),
-                    decoration: InputDecoration(
-                      hintText: hintText,
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      fillColor: Colors.transparent,
-                      hintStyle: const TextStyle(fontSize: 13, color: AppColors.muted),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
-            color: isFilterActive ? AppColors.primary : AppColors.card,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: IconButton(
-            icon: Icon(
-              Icons.tune,
-              color: isFilterActive ? AppColors.textOnPrimary : AppColors.ink,
-              size: 20,
-            ),
-            onPressed: onFilterTap,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Item Individual de Cliente (Layout exacto al prototipo)
+/// Item Individual de Cliente adaptado al modelo de datos Cliente
 class ClienteCardItem extends StatelessWidget {
-  final String nombre;
-  final String puntoVenta;
-  final String municipio;
-  final String iniciales;
+  final Cliente cliente;
+  final int index;
   final VoidCallback? onTap;
 
   const ClienteCardItem({
     Key? key,
-    required this.nombre,
-    required this.puntoVenta,
-    required this.municipio,
-    required this.iniciales,
+    required this.cliente,
+    required this.index,
     this.onTap,
   }) : super(key: key);
 
+  static Color colorForIndex(int index) {
+    final tonosDisponibles = AppToneColors.intense.values.toList();
+    return tonosDisponibles[index % tonosDisponibles.length];
+  }
+
+  String get _inicialesDisplay {
+    if (cliente.iniciales != null && cliente.iniciales!.isNotEmpty) {
+      return cliente.iniciales!;
+    }
+    List<String> partes = cliente.nombre.trim().split(' ');
+    if (partes.length >= 2) {
+      return '${partes[0][0]}${partes[1][0]}'.toUpperCase();
+    }
+    return partes.isNotEmpty ? partes[0][0].toUpperCase() : '';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Color avatarBgColor = colorForIndex(index);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       child: Material(
@@ -175,12 +51,12 @@ class ClienteCardItem extends StatelessWidget {
                   width: 46,
                   height: 46,
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: avatarBgColor,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Center(
                     child: Text(
-                      iniciales,
+                      _inicialesDisplay,
                       style: const TextStyle(
                         color: AppColors.textOnPrimary,
                         fontWeight: FontWeight.bold,
@@ -195,7 +71,7 @@ class ClienteCardItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        nombre,
+                        cliente.nombre,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -209,7 +85,7 @@ class ClienteCardItem extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              municipio,
+                              '${cliente.municipio} (${cliente.departamento})',
                               style: const TextStyle(fontSize: 11.5, color: AppColors.muted),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -223,7 +99,7 @@ class ClienteCardItem extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              puntoVenta,
+                              cliente.puntoVenta,
                               style: const TextStyle(fontSize: 11.5, color: AppColors.muted),
                               overflow: TextOverflow.ellipsis,
                             ),

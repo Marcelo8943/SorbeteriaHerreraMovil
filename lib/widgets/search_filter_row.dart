@@ -53,7 +53,7 @@ class SearchFilterRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
           child: IconButton(
-            icon: const Icon(Icons.filter_list, color: Color(0xFF3C465C)),
+            icon: const Icon(Icons.tune, color: Color(0xFF3C465C), size: 28),
             onPressed: onFilterTap,
           ),
         ),

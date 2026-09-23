@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'widgets.dart';
-import '../ClientesDetalle/cliente_detalle_screen.dart';
+import 'clientes_widgets.dart';
 import '../../theme/app_theme.dart';
+import '../ClientesDetalle/cliente_detalle_screen.dart';
+import '../../widgets/search_filter_row.dart';
+import '../../widgets/h_stat_card.dart';
+
+// Importación de modelos y mock por entidad
+import '../../models/app_models.dart';
+import '../../models/mocks/mock_clientes.dart';
 
 class ClientesScreen extends StatefulWidget {
-  const ClientesScreen({Key? key}) : super(key: key);
+  const ClientesScreen({super.key});
 
   @override
   State<ClientesScreen> createState() => _ClientesScreenState();
@@ -18,108 +24,51 @@ class _ClientesScreenState extends State<ClientesScreen> {
   String _selectedDepartamento = 'Todos';
   String _selectedMunicipio = 'Todos';
 
-  final List<Map<String, String>> _allClientes = const [
-    {
-      'nombre': 'Roberto Argüello',
-      'municipio': 'Catarina',
-      'departamento': 'Masaya',
-      'puntoVenta': 'Heladería & Snacks Masaya',
-      'iniciales': 'RA',
-    },
-    {
-      'nombre': 'Luisa Fernanda Campos',
-      'municipio': 'Diriomo',
-      'departamento': 'Granada',
-      'puntoVenta': 'Minisuper Diriomo',
-      'iniciales': 'LF',
-    },
-    {
-      'nombre': 'Nohelia Cortes',
-      'municipio': 'Tipitapa',
-      'departamento': 'Managua',
-      'puntoVenta': 'Teresa',
-      'iniciales': 'NC',
-    },
-    {
-      'nombre': 'Carlos Gutiérrez',
-      'municipio': 'Jinotepe',
-      'departamento': 'Carazo',
-      'puntoVenta': 'Pulpería El Rosario',
-      'iniciales': 'CG',
-    },
-    {
-      'nombre': 'Ana Sofía Sevilla',
-      'municipio': 'Granada',
-      'departamento': 'Granada',
-      'puntoVenta': 'Distribuidora La Fe',
-      'iniciales': 'AS',
-    },
-    {
-      'nombre': 'Jorge Luis Torres',
-      'municipio': 'Rivas',
-      'departamento': 'Rivas',
-      'puntoVenta': 'Variedades San José',
-      'iniciales': 'JT',
-    },
-    {
-      'nombre': 'Elena Rostrán',
-      'municipio': 'León',
-      'departamento': 'León',
-      'puntoVenta': 'Super Comercio Rostrán',
-      'iniciales': 'ER',
-    },
-    {
-      'nombre': 'Félix Salgado',
-      'municipio': 'Chinandega',
-      'departamento': 'Chinandega',
-      'puntoVenta': 'Sorbetería La Fuente',
-      'iniciales': 'FS',
-    },
-    {
-      'nombre': 'Lucía Bermúdez',
-      'municipio': 'Estelí',
-      'departamento': 'Estelí',
-      'puntoVenta': 'Comercial El Carmen',
-      'iniciales': 'LB',
-    },
-    {
-      'nombre': 'Gabriel Peralta',
-      'municipio': 'Matagalpa',
-      'departamento': 'Matagalpa',
-      'puntoVenta': 'Variedades Peralta',
-      'iniciales': 'GP',
-    },
-    {
-      'nombre': 'Sonia Blandón',
-      'municipio': 'Jinotega',
-      'departamento': 'Jinotega',
-      'puntoVenta': 'Pulpería La Bendición',
-      'iniciales': 'SB',
-    },
-    {
-      'nombre': 'Víctor Ruiz',
-      'municipio': 'Masaya',
-      'departamento': 'Masaya',
-      'puntoVenta': 'Distribuidora Ruiz',
-      'iniciales': 'VR',
-    },
+  // Fuente de datos desde mock_clientes.dart
+  final List<Cliente> _allClientes = mockClientes;
+
+  final List<String> _departamentos = [
+    'Todos',
+    'Masaya',
+    'Granada',
+    'Managua',
+    'Carazo',
+    'Rivas',
+    'León',
+    'Chinandega',
+    'Estelí',
+    'Matagalpa',
+    'Jinotega'
   ];
 
-  final List<String> _departamentos = ['Todos', 'Masaya', 'Granada', 'Managua', 'Carazo', 'Rivas', 'León', 'Chinandega', 'Estelí', 'Matagalpa', 'Jinotega'];
-  final List<String> _municipios = ['Todos', 'Catarina', 'Diriomo', 'Tipitapa', 'Jinotepe', 'Granada', 'Rivas', 'León', 'Chinandega', 'Estelí', 'Matagalpa', 'Jinotega', 'Masaya'];
+  final List<String> _municipios = [
+    'Todos',
+    'Catarina',
+    'Diriomo',
+    'Tipitapa',
+    'Jinotepe',
+    'Granada',
+    'Rivas',
+    'León',
+    'Chinandega',
+    'Estelí',
+    'Matagalpa',
+    'Jinotega',
+    'Masaya'
+  ];
 
   // Búsqueda filtrada ÚNICAMENTE por nombre del cliente
-  List<Map<String, String>> get _filteredClientes {
+  List<Cliente> get _filteredClientes {
     return _allClientes.where((cliente) {
-      final matchesSearch = cliente['nombre']!
+      final matchesSearch = cliente.nombre
           .toLowerCase()
           .contains(_searchQuery.toLowerCase());
 
       final matchesDepto = _selectedDepartamento == 'Todos' ||
-          cliente['departamento'] == _selectedDepartamento;
+          cliente.departamento == _selectedDepartamento;
 
       final matchesMuni = _selectedMunicipio == 'Todos' ||
-          cliente['municipio'] == _selectedMunicipio;
+          cliente.municipio == _selectedMunicipio;
 
       return matchesSearch && matchesDepto && matchesMuni;
     }).toList();
@@ -257,10 +206,8 @@ class _ClientesScreenState extends State<ClientesScreen> {
     final int startIndex = (effectivePage - 1) * _itemsPerPage;
     final int endIndex = (startIndex + _itemsPerPage < filteredList.length) ? startIndex + _itemsPerPage : filteredList.length;
 
-    final List<Map<String, String>> displayedClientes =
+    final List<Cliente> displayedClientes =
         filteredList.isEmpty ? [] : filteredList.sublist(startIndex, endIndex);
-
-    final bool isFilterActive = _selectedDepartamento != 'Todos' || _selectedMunicipio != 'Todos';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -276,13 +223,38 @@ class _ClientesScreenState extends State<ClientesScreen> {
                 children: [
                   Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
+                      // LOGO NATIVO
+                      Container(
+                        width: 42,
+                        height: 42,
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Container(
-                          width: 42,
-                          height: 42,
-                          color: AppColors.primary,
-                          child: const Icon(Icons.icecream, color: AppColors.textOnPrimary),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF00684F),
+                            borderRadius: BorderRadius.circular(9),
+                            border: Border.all(
+                              color: const Color(0xFF004B39),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: const FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              'Herrera',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.italic,
+                                fontFamily: 'serif',
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -318,22 +290,24 @@ class _ClientesScreenState extends State<ClientesScreen> {
                     const Text('Consulta y administra tu cartera de clientes.', style: TextStyle(fontSize: 12.5, color: AppColors.muted)),
                     const SizedBox(height: 14),
 
+                    // Uso del widget global HStatCard
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          ClienteStatCard(title: 'Activos', value: '${_allClientes.length}', bgColor: AppToneColors.soft[AppTone.teal]!, iconColor: AppToneColors.intense[AppTone.teal]!, icon: Icons.people),
+                          HStatCard(title: 'Activos', value: '${_allClientes.length}', bgColor: AppToneColors.soft[AppTone.teal]!, iconColor: AppToneColors.intense[AppTone.teal]!, icon: Icons.people),
                           const SizedBox(width: 10),
-                          ClienteStatCard(title: 'Municipios', value: '13', bgColor: AppToneColors.soft[AppTone.red]!, iconColor: AppToneColors.intense[AppTone.red]!, icon: Icons.location_on),
+                          HStatCard(title: 'Municipios', value: '13', bgColor: AppToneColors.soft[AppTone.red]!, iconColor: AppToneColors.intense[AppTone.red]!, icon: Icons.location_on),
                           const SizedBox(width: 10),
-                          ClienteStatCard(title: 'Puntos de venta', value: '15', bgColor: AppToneColors.soft[AppTone.purple]!, iconColor: AppToneColors.intense[AppTone.purple]!, icon: Icons.store),
+                          HStatCard(title: 'Puntos de venta', value: '15', bgColor: AppToneColors.soft[AppTone.purple]!, iconColor: AppToneColors.intense[AppTone.purple]!, icon: Icons.store),
                         ],
                       ),
                     ),
                     const SizedBox(height: 14),
 
-                    ClienteSearchFilterRow(
-                      isFilterActive: isFilterActive,
+                    // Llamada a SearchFilterRow
+                    SearchFilterRow(
+                      hintText: 'Buscar clientes...',
                       onSearchChanged: (val) => setState(() { _searchQuery = val; _currentPage = 1; }),
                       onFilterTap: _showFilterModal,
                     ),
@@ -353,22 +327,24 @@ class _ClientesScreenState extends State<ClientesScreen> {
                     const SizedBox(height: 12),
 
                     Column(
-                      children: displayedClientes.map((item) {
+                      children: List.generate(displayedClientes.length, (index) {
+                        final cliente = displayedClientes[index];
                         return ClienteCardItem(
-                          nombre: item['nombre']!,
-                          puntoVenta: item['puntoVenta']!,
-                          municipio: '${item['municipio']} (${item['departamento']})',
-                          iniciales: item['iniciales']!,
+                          cliente: cliente,
+                          index: index,
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ClienteDetalleScreen(clienteData: item),
+                                builder: (context) => ClienteDetalleScreen(
+                                  cliente: cliente,
+                                  avatarColor: ClienteCardItem.colorForIndex(index),
+                                ),
                               ),
                             );
                           },
                         );
-                      }).toList(),
+                      }),
                     ),
 
                     const SizedBox(height: 12),
