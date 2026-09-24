@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'clientes_widgets.dart';
+import 'widgets/clientes_widgets.dart';
 import '../../theme/app_theme.dart';
 import 'cliente_detalle_screen.dart';
 import 'cliente_form_screen.dart';
