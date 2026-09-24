@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
-import 'conf_widgets.dart';
+import 'widgets/conf_widgets.dart';
 
 class ConfiguracionesScreen extends StatelessWidget {
   const ConfiguracionesScreen({super.key});
