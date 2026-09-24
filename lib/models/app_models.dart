@@ -66,6 +66,22 @@ class Usuario {
   bool get esAdministrador => rol == 'Administrador';
 }
 
+class Negocio {
+  final String nombre;
+  final String eslogan;
+  final String direccion;
+  final String telefono;
+  final String correo;
+
+  const Negocio({
+    required this.nombre,
+    required this.eslogan,
+    required this.direccion,
+    required this.telefono,
+    required this.correo,
+  });
+}
+
 class ItemTransaccion {
   final String producto;
   final int cantidad;

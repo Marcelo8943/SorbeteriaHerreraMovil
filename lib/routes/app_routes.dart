@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../Screens/Configuraciones/conf_screen.dart';
+import '../Screens/Configuraciones/AcercaDe/acerca_de_screen.dart';
+import '../Screens/Configuraciones/DatosNegocio/datos_negocio_screen.dart';
 import '../Screens/Configuraciones/MiPerfil/mi_perfil_screen.dart';
+import '../Screens/Configuraciones/Seguridad/seguridad_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
@@ -21,6 +24,7 @@ class AppRoutes {
   static const String miPerfil = '/mi-perfil';
   static const String datosNegocio = '/datos-negocio';
   static const String seguridad = '/seguridad';
+  static const String acercaDe = '/acerca-de';
   static const String preferencias = '/preferencias';
 
   // Ronald — Catálogo y Clientes
@@ -71,6 +75,24 @@ class AppRoutes {
       case miPerfil:
         return MaterialPageRoute(
           builder: (_) => const MiPerfilScreen(),
+          settings: settings,
+        );
+
+      case datosNegocio:
+        return MaterialPageRoute(
+          builder: (_) => const DatosNegocioScreen(),
+          settings: settings,
+        );
+
+      case seguridad:
+        return MaterialPageRoute(
+          builder: (_) => const SeguridadScreen(),
+          settings: settings,
+        );
+
+      case acercaDe:
+        return MaterialPageRoute(
+          builder: (_) => const AcercaDeScreen(),
           settings: settings,
         );
 
