@@ -6,6 +6,7 @@ import '../../models/mocks/mock_productos.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
 import '../../widgets/search_filter_row.dart';
+import 'producto_detalle_screen.dart';
 import 'widgets/productos_widgets.dart';
 
 class ProductosScreen extends StatefulWidget {
@@ -80,6 +81,14 @@ class _ProductosScreenState extends State<ProductosScreen> {
         imgUrl: producto.imgUrl,
       );
     });
+  }
+
+  void _abrirDetalle(Producto producto) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ProductoDetalleScreen(producto: producto),
+      ),
+    );
   }
 
   void _mostrarFiltros() {
@@ -189,7 +198,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
                       Expanded(
                         child: ProductoCard(
                           producto: productosDePagina[index],
-                          onTap: () {},
+                          onTap: () => _abrirDetalle(productosDePagina[index]),
                           onEstadoChanged: (_) => _toggleEstado(productosDePagina[index]),
                         ),
                       ),
@@ -198,7 +207,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
                         child: index + 1 < productosDePagina.length
                             ? ProductoCard(
                             producto: productosDePagina[index + 1],
-                                onTap: () {},
+                                onTap: () => _abrirDetalle(productosDePagina[index + 1]),
                             onEstadoChanged: (_) => _toggleEstado(productosDePagina[index + 1]),
                               )
                             : const SizedBox(),
