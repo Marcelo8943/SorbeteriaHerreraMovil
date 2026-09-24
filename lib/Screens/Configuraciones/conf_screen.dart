@@ -52,6 +52,9 @@ class ConfiguracionesScreen extends StatelessWidget {
                           iconColor: AppToneColors.intense[AppTone.yellow]!,
                           title: 'Datos del Negocio',
                           subtitle: 'Nombre, eslogan y contacto',
+                          onTap: () => Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.datosNegocio),
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         const ConfigurationSectionLabel('SISTEMA'),
@@ -62,6 +65,9 @@ class ConfiguracionesScreen extends StatelessWidget {
                           iconColor: AppToneColors.intense[AppTone.blue]!,
                           title: 'Seguridad',
                           subtitle: 'Cambiar contraseña',
+                          onTap: () => Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.seguridad),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         ConfigurationOptionTile(
@@ -70,6 +76,8 @@ class ConfiguracionesScreen extends StatelessWidget {
                           iconColor: AppColors.muted,
                           title: 'Acerca de',
                           subtitle: 'Sorbetería Herrera App v2.2.0',
+                          onTap: () =>
+                              Navigator.of(context).pushNamed(AppRoutes.acercaDe),
                         ),
                         const SizedBox(height: AppSpacing.xl),
                         LogoutButton(onPressed: () => _logout(context)),
