@@ -40,6 +40,10 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final visibleItems = items.where((item) => isAdmin || !item.adminOnly);
 
+    final bottomGestureInset = MediaQuery.of(
+      context,
+    ).systemGestureInsets.bottom;
+
     return Drawer(
       backgroundColor: AppColors.background,
       shape: const RoundedRectangleBorder(
@@ -47,6 +51,7 @@ class AppDrawer extends StatelessWidget {
       ),
       child: SafeArea(
         right: false,
+        bottom: false,
         child: Column(
           children: [
             Container(
@@ -77,7 +82,9 @@ class AppDrawer extends StatelessWidget {
                             foregroundColor: AppColors.textOnPrimary,
                             child: Text(
                               userInitials,
-                              style: const TextStyle(fontWeight: FontWeight.w800),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                           ),
                           const SizedBox(width: AppSpacing.sm),
@@ -93,7 +100,10 @@ class AppDrawer extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const Icon(Icons.chevron_right, color: AppColors.muted),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: AppColors.muted,
+                          ),
                         ],
                       ),
                     ),
@@ -103,11 +113,11 @@ class AppDrawer extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(
+                padding: EdgeInsets.fromLTRB(
                   AppSpacing.sm,
                   0,
                   AppSpacing.sm,
-                  AppSpacing.md,
+                  AppSpacing.md + bottomGestureInset,
                 ),
                 children: [
                   for (final item in visibleItems)

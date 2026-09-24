@@ -28,11 +28,17 @@ class _AppShellState extends State<AppShell> {
       key: _scaffoldKey,
       drawer: Builder(builder: widget.drawerBuilder),
       body: IndexedStack(index: _currentIndex, children: widget.tabScreens),
-      bottomNavigationBar: AppTabBar(
-        items: widget.tabItems,
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        onMorePressed: () => _scaffoldKey.currentState?.openDrawer(),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        minimum: EdgeInsets.only(
+          bottom: MediaQuery.of(context).systemGestureInsets.bottom,
+        ),
+        child: AppTabBar(
+          items: widget.tabItems,
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          onMorePressed: () => _scaffoldKey.currentState?.openDrawer(),
+        ),
       ),
     );
   }
