@@ -170,4 +170,37 @@ class LogEvento {
     this.fechaEdicion,
     required this.fechaRelativa,
   });
+
 }
+
+// Modelo de catalogos.
+class Linea {
+  final int id;
+  final String nombre;
+
+  const Linea({
+    required this.id,
+    required this.nombre,
+  });
+}
+
+class Presentacion {
+  final int id;
+  final String nombre;
+
+  const Presentacion({
+    required this.id,
+    required this.nombre,
+  });
+}
+
+class Sabor {
+  final int id;
+  final String nombre;
+
+  const Sabor({
+    required this.id,
+    required this.nombre,
+  });
+}
+

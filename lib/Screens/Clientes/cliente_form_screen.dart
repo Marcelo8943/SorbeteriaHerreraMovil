@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/app_models.dart';
 import '../../theme/app_theme.dart';
-import 'cliente_form_widgets.dart';
+import 'widgets/cliente_form_widgets.dart';
 
 class ClienteFormScreen extends StatefulWidget {
   final Cliente? cliente; // null => Agregar, !null => Editar

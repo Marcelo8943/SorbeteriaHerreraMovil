@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
-import '../../models/app_models.dart';
+import '../../../theme/app_theme.dart';
+import '../../../models/app_models.dart';
 
 /// Item Individual de Cliente adaptado al modelo de datos Cliente
 class ClienteCardItem extends StatelessWidget {
