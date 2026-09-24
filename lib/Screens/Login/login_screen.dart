@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
-import 'login_widgets.dart';
+import 'widgets/login_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
