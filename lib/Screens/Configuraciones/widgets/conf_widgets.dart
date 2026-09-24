@@ -34,15 +34,17 @@ class ConfigurationProfileCard extends StatelessWidget {
     required this.name,
     required this.description,
     required this.initials,
+    this.onTap,
   });
 
   final String name;
   final String description;
   final String initials;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final content = Container(
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
@@ -86,6 +88,18 @@ class ConfigurationProfileCard extends StatelessWidget {
           ),
           const Icon(Icons.chevron_right_rounded, color: Color(0xFFB3BDD0)),
         ],
+      ),
+    );
+
+    if (onTap == null) return content;
+
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+        child: content,
       ),
     );
   }
