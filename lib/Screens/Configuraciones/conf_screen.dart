@@ -40,6 +40,8 @@ class ConfiguracionesScreen extends StatelessWidget {
                           name: 'Marcelo Mena',
                           description: 'Administrador · Marcelomena@gmail.com',
                           initials: 'MM',
+                          onTap: () =>
+                              Navigator.of(context).pushNamed(AppRoutes.miPerfil),
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         const ConfigurationSectionLabel('ADMINISTRACIÓN'),

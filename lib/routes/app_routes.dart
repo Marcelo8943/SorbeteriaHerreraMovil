@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../Screens/Configuraciones/conf_screen.dart';
+import '../Screens/Configuraciones/MiPerfil/mi_perfil_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
@@ -64,6 +65,12 @@ class AppRoutes {
       case configuracion:
         return MaterialPageRoute(
           builder: (_) => const ConfiguracionesScreen(),
+          settings: settings,
+        );
+
+      case miPerfil:
+        return MaterialPageRoute(
+          builder: (_) => const MiPerfilScreen(),
           settings: settings,
         );
 
