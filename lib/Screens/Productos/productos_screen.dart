@@ -6,6 +6,7 @@ import '../../models/mocks/mock_productos.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
 import '../../widgets/search_filter_row.dart';
+import 'producto_form_screen.dart';
 import 'producto_detalle_screen.dart';
 import 'widgets/productos_widgets.dart';
 
@@ -83,12 +84,44 @@ class _ProductosScreenState extends State<ProductosScreen> {
     });
   }
 
-  void _abrirDetalle(Producto producto) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
+  Future<void> _abrirDetalle(Producto producto) async {
+    final productoActualizado = await Navigator.of(context).push<Producto>(
+      MaterialPageRoute<Producto>(
         builder: (_) => ProductoDetalleScreen(producto: producto),
       ),
     );
+    if (productoActualizado != null && mounted) {
+      _guardarProducto(productoActualizado);
+    }
+  }
+
+  Future<void> _abrirFormulario({Producto? producto}) async {
+    final resultado = await Navigator.of(context).push<Producto>(
+      MaterialPageRoute<Producto>(
+        builder: (_) => ProductoFormScreen(producto: producto),
+      ),
+    );
+    if (resultado == null || !mounted) return;
+
+    if (producto == null) {
+      setState(() {
+        _productos.add(resultado);
+        _busqueda = '';
+        _linea = 'Todas';
+        _sabor = 'Todos';
+        _estado = 'Todos';
+        _presentacion = 'Todas';
+        _paginaActual = (_productos.length / _productosPorPagina).ceil();
+      });
+    } else {
+      _guardarProducto(resultado);
+    }
+  }
+
+  void _guardarProducto(Producto producto) {
+    final index = _productos.indexWhere((item) => item.id == producto.id);
+    if (index < 0) return;
+    setState(() => _productos[index] = producto);
   }
 
   void _mostrarFiltros() {
@@ -160,7 +193,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ProductoTopBar(onAdd: () {}),
+            ProductoTopBar(onAdd: () => _abrirFormulario()),
             Expanded(
               child: ListView(padding: const EdgeInsets.fromLTRB(16, 16, 16, 24), children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -176,8 +209,6 @@ class _ProductosScreenState extends State<ProductosScreen> {
             HStatCard(title: 'Inactivos', value: '${_productos.length - activos}', bgColor: AppToneColors.soft[AppTone.red]!, iconColor: AppToneColors.intense[AppTone.red]!, icon: Icons.block_outlined),
           ])),
           const SizedBox(height: 16),
-          SingleChildScrollView(scrollDirection: Axis.horizontal, child: Row(children: _lineas.map((linea) => Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(label: Text(linea), selected: _linea == linea, onSelected: (_) { setState(() { _linea = linea; _paginaActual = 1; }); }, selectedColor: AppColors.primary, labelStyle: TextStyle(color: _linea == linea ? Colors.white : AppColors.muted, fontSize: 12, fontWeight: FontWeight.w700), backgroundColor: AppColors.card, side: BorderSide.none))).toList())),
-          const SizedBox(height: 8),
           SearchFilterRow(hintText: 'Buscar por nombre...', onSearchChanged: (value) { setState(() { _busqueda = value; _paginaActual = 1; }); }, onFilterTap: _mostrarFiltros),
           const SizedBox(height: 16),
           Row(children: [const Text('Resultados', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3), decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(99)), child: Text('${filtrados.length}', style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800)))]),
