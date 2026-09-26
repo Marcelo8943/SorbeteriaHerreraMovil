@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../models/app_models.dart';
-import '../../../../models/mocks/mock_catalogo.dart';
 import '../../../../theme/app_theme.dart';
 import 'producto_imagen.dart';
 
@@ -30,9 +29,9 @@ class ProductoTopBar extends StatelessWidget {
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF00684F),
+                    color: AppColors.primaryDarker,
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: const Color(0xFF004B39), width: 1.5),
+                    border: Border.all(color: AppColors.primaryDarker, width: 1.5),
                   ),
                   child: const FittedBox(
                     fit: BoxFit.scaleDown,
@@ -104,18 +103,15 @@ class ProductoStatusBadge extends StatelessWidget {
 class ProductoCard extends StatelessWidget {
   final Producto producto;
   final VoidCallback onTap;
-  final ValueChanged<bool> onEstadoChanged;
 
   const ProductoCard({
     super.key,
     required this.producto,
     required this.onTap,
-    required this.onEstadoChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    final activo = producto.estado == 'Activo';
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
       onTap: onTap,
@@ -132,7 +128,7 @@ class ProductoCard extends StatelessWidget {
             Container(
               height: 112,
               width: double.infinity,
-              color: const Color(0xFFF6F7FB),
+              color: AppColors.lavender,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(12),
               child: ProductoImagen(
@@ -167,7 +163,7 @@ class ProductoCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'C\$${producto.precioDetalle.toStringAsFixed(2)}',
+                    'C\$ ${producto.precioDetalle.toStringAsFixed(2)}',
                     style: TextStyle(
                       color: AppToneColors.intense[AppTone.teal],
                       fontSize: 14,
@@ -184,34 +180,6 @@ class ProductoCard extends StatelessWidget {
                       fontSize: 10.5,
                       fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          activo ? 'Disponible' : 'Inactivo',
-                          style: TextStyle(
-                            color: activo
-                                ? AppToneColors.intense[AppTone.teal]
-                                : AppColors.muted,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 24,
-                        child: Transform.scale(
-                          scale: 0.82,
-                          child: Switch.adaptive(
-                            value: activo,
-                            onChanged: onEstadoChanged,
-                            activeThumbColor: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
@@ -317,218 +285,4 @@ class ProductoPaginationRow extends StatelessWidget {
   }
 }
 
-class ProductoFormDialog extends StatefulWidget {
-  final Producto? producto; // Null para nuevo, objeto para edición
 
-  const ProductoFormDialog({super.key, this.producto});
-
-  @override
-  State<ProductoFormDialog> createState() => _ProductoFormDialogState();
-}
-
-class _ProductoFormDialogState extends State<ProductoFormDialog> {
-  final _formKey = GlobalKey<FormState>();
-
-  late TextEditingController _nombreController;
-  late TextEditingController _precioDetalleController;
-  late TextEditingController _precioMayoreoController;
-
-  String? _lineaSeleccionada;
-  String? _presentacionSeleccionada;
-  String? _saborSeleccionado;
-  String _estadoSeleccionado = 'Activo';
-
-  @override
-  void initState() {
-    super.initState();
-    final p = widget.producto;
-
-    _nombreController = TextEditingController(text: p?.nombre ?? '');
-    _precioDetalleController = TextEditingController(
-      text: p != null ? p.precioDetalle.toStringAsFixed(2) : '',
-    );
-    _precioMayoreoController = TextEditingController(
-      text: p != null ? p.precioMayoreo.toStringAsFixed(2) : '',
-    );
-
-    _lineaSeleccionada = p?.linea ?? mockLineas.first.nombre;
-    _presentacionSeleccionada = p?.presentacion ?? mockPresentaciones.first.nombre;
-    _saborSeleccionado = p?.sabor ?? mockSabores.first.nombre;
-    _estadoSeleccionado = p?.estado ?? 'Activo';
-  }
-
-  @override
-  void dispose() {
-    _nombreController.dispose();
-    _precioDetalleController.dispose();
-    _precioMayoreoController.dispose();
-    super.dispose();
-  }
-
-  void _guardar() {
-    if (_formKey.currentState!.validate()) {
-      final nuevoProducto = Producto(
-        id: widget.producto?.id ?? DateTime.now().millisecondsSinceEpoch,
-        nombre: _nombreController.text.trim(),
-        linea: _lineaSeleccionada!,
-        sabor: _saborSeleccionado!,
-        presentacion: _presentacionSeleccionada!,
-        precioDetalle: double.parse(_precioDetalleController.text),
-        precioMayoreo: double.parse(_precioMayoreoController.text),
-        estado: _estadoSeleccionado,
-        imgUrl: widget.producto?.imgUrl ?? 'assets/images/productos/default.png',
-      );
-
-      Navigator.of(context).pop(nuevoProducto);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final esEdicion = widget.producto != null;
-
-    return AlertDialog(
-      title: Text(esEdicion ? 'Editar Producto' : 'Nuevo Producto'),
-      content: SingleChildScrollView(
-        child: SizedBox(
-          width: 400,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Nombre del producto
-                TextFormField(
-                  controller: _nombreController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre del Producto',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Campo requerido' : null,
-                ),
-                const SizedBox(height: 12),
-
-                // Selector de Línea
-                DropdownButtonFormField<String>(
-                  initialValue: _lineaSeleccionada,
-                  decoration: const InputDecoration(
-                    labelText: 'Línea',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: mockLineas.map((linea) {
-                    return DropdownMenuItem(
-                      value: linea.nombre,
-                      child: Text(linea.nombre),
-                    );
-                  }).toList(),
-                  onChanged: (val) => setState(() => _lineaSeleccionada = val),
-                ),
-                const SizedBox(height: 12),
-
-                // Selector de Sabor
-                DropdownButtonFormField<String>(
-                  initialValue: _saborSeleccionado,
-                  decoration: const InputDecoration(
-                    labelText: 'Sabor',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: mockSabores.map((sabor) {
-                    return DropdownMenuItem(
-                      value: sabor.nombre,
-                      child: Text(sabor.nombre),
-                    );
-                  }).toList(),
-                  onChanged: (val) => setState(() => _saborSeleccionado = val),
-                ),
-                const SizedBox(height: 12),
-
-                // Selector de Presentación
-                DropdownButtonFormField<String>(
-                  initialValue: _presentacionSeleccionada,
-                  decoration: const InputDecoration(
-                    labelText: 'Presentación',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: mockPresentaciones.map((pres) {
-                    return DropdownMenuItem(
-                      value: pres.nombre,
-                      child: Text(pres.nombre),
-                    );
-                  }).toList(),
-                  onChanged: (val) =>
-                      setState(() => _presentacionSeleccionada = val),
-                ),
-                const SizedBox(height: 12),
-
-                // Precios
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _precioDetalleController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        decoration: const InputDecoration(
-                          labelText: 'Precio Detalle (C\$)',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) return 'Requerido';
-                          if (double.tryParse(value) == null) return 'Inválido';
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _precioMayoreoController,
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        decoration: const InputDecoration(
-                          labelText: 'Precio Mayoreo (C\$)',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) return 'Requerido';
-                          if (double.tryParse(value) == null) return 'Inválido';
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Estado (Activo / Inactivo)
-                DropdownButtonFormField<String>(
-                  initialValue: _estadoSeleccionado,
-                  decoration: const InputDecoration(
-                    labelText: 'Estado',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: 'Activo', child: Text('Activo')),
-                    DropdownMenuItem(value: 'Inactivo', child: Text('Inactivo')),
-                  ],
-                  onChanged: (val) {
-                    if (val != null) setState(() => _estadoSeleccionado = val);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
-        ),
-        ElevatedButton(
-          onPressed: _guardar,
-          child: Text(esEdicion ? 'Actualizar' : 'Guardar'),
-        ),
-      ],
-    );
-  }
-}

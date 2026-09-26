@@ -49,7 +49,7 @@ class ProductoFormField extends StatelessWidget {
               fontWeight: FontWeight.normal,
             ),
             filled: true,
-            fillColor: const Color(0xFFEDEFF5),
+            fillColor: AppColors.lavender,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -117,7 +117,7 @@ class ProductoDropdownField extends StatelessWidget {
           ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: const Color(0xFFEDEFF5),
+            fillColor: AppColors.lavender,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -172,7 +172,7 @@ class ProductoEstadoSwitch extends StatelessWidget {
           value: activo,
           onChanged: onChanged,
           activeColor: Colors.white,
-          activeTrackColor: const Color(0xFF00C88C),
+          activeTrackColor: AppColors.primary,
         ),
       ],
     );
