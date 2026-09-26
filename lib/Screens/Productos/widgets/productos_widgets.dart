@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../models/app_models.dart';
 import '../../../../models/mocks/mock_catalogo.dart';
 import '../../../../theme/app_theme.dart';
+import 'producto_imagen.dart';
 
 class ProductoTopBar extends StatelessWidget {
   final VoidCallback onAdd;
@@ -85,7 +86,7 @@ class ProductoStatusBadge extends StatelessWidget {
         ? AppToneColors.intense[AppTone.teal]!
         : AppToneColors.intense[AppTone.red]!;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
         color: activo
             ? AppToneColors.soft[AppTone.teal]
@@ -94,7 +95,7 @@ class ProductoStatusBadge extends StatelessWidget {
       ),
       child: Text(
         estado,
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w800),
+        style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w800),
       ),
     );
   }
@@ -134,14 +135,9 @@ class ProductoCard extends StatelessWidget {
               color: const Color(0xFFF6F7FB),
               alignment: Alignment.center,
               padding: const EdgeInsets.all(12),
-              child: Image.asset(
-                producto.imgUrl,
+              child: ProductoImagen(
+                referencia: producto.imgUrl,
                 fit: BoxFit.contain,
-                errorBuilder: (_, _, _) => Icon(
-                  Icons.icecream_outlined,
-                  size: 48,
-                  color: AppToneColors.intense[AppTone.teal],
-                ),
               ),
             ),
             Padding(
@@ -206,10 +202,13 @@ class ProductoCard extends StatelessWidget {
                       ),
                       SizedBox(
                         height: 24,
-                        child: Switch.adaptive(
-                          value: activo,
-                          onChanged: onEstadoChanged,
-                          activeThumbColor: AppColors.primary,
+                        child: Transform.scale(
+                          scale: 0.82,
+                          child: Switch.adaptive(
+                            value: activo,
+                            onChanged: onEstadoChanged,
+                            activeThumbColor: AppColors.primary,
+                          ),
                         ),
                       ),
                     ],

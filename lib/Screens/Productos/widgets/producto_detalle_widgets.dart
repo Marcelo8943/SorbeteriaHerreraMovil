@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
+import 'producto_imagen.dart';
 
 /// Encabezado verde con la imagen, nombre y estado
 class HeaderSeccion extends StatelessWidget {
@@ -35,14 +36,10 @@ class HeaderSeccion extends StatelessWidget {
                 )
               ],
             ),
-            child: Image.asset(
-              producto.imgUrl,
+            child: ProductoImagen(
+              referencia: producto.imgUrl,
               fit: BoxFit.contain,
-              errorBuilder: (_, _, _) => const Icon(
-                Icons.icecream_outlined,
-                size: 60,
-                color: AppColors.primary,
-              ),
+              iconSize: 60,
             ),
           ),
           const SizedBox(height: 16),

@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import '../../models/app_models.dart';
 import '../../theme/app_theme.dart';
+import 'producto_form_screen.dart';
 import 'widgets/producto_detalle_widgets.dart';
 
 class ProductoDetalleScreen extends StatelessWidget {
   final Producto producto;
 
   const ProductoDetalleScreen({super.key, required this.producto});
+
+  Future<void> _editar(BuildContext context) async {
+    final actualizado = await Navigator.of(context).push<Producto>(
+      MaterialPageRoute<Producto>(
+        builder: (_) => ProductoFormScreen(producto: producto),
+      ),
+    );
+    if (actualizado != null && context.mounted) {
+      Navigator.of(context).pop(actualizado);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +46,7 @@ class ProductoDetalleScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () => _editar(context),
                         icon: const Icon(Icons.edit_outlined, size: 18),
                         label: const Text('Editar producto'),
                       ),

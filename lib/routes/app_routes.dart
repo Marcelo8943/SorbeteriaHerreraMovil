@@ -9,6 +9,7 @@ import '../Screens/Login/login_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
+import '../Screens/Precios/precios_screen.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -96,6 +97,12 @@ class AppRoutes {
           settings: settings,
         );
 
+      case precios:
+        return MaterialPageRoute(
+          builder: (_) => const PreciosScreen(),
+          settings: settings,
+        );
+
       default:
         final title = _titleFor(settings.name);
         return MaterialPageRoute(
@@ -152,7 +159,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.sell_outlined,
       label: 'Precios',
-      onTap: () => _showPending(context, 'Precios'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.precios);
+      },
     ),
     AppDrawerItem(
       icon: Icons.info_outline,

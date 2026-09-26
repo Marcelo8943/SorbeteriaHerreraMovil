@@ -220,3 +220,42 @@ class Sabor {
   });
 }
 
+/// Representa un precio base configurado por línea y presentación.
+class PrecioGeneral {
+  final int id;
+  final String presentacion; // ej. "4 Onzas", "8 Onzas", "1/4 Galón"
+  final String linea; // ej. "Tradicional", "Lights", "Fantacia"
+  final double precioDetalle; // Precio sugerido
+  final double precioMayoreo; // Precio de distribución
+  final int cantidadProductos; // Productos de esa línea y presentación
+
+  const PrecioGeneral({
+    required this.id,
+    required this.presentacion,
+    this.linea = 'Todas',
+    required this.precioDetalle,
+    required this.precioMayoreo,
+    required this.cantidadProductos,
+  });
+}
+
+/// Representa una tarifa o promoción con precio especial para un producto
+class PrecioEspecial {
+  final int id;
+  final int productoId;
+  final String productoNombre;
+  final double precioEspecial;
+  final String? motivo;      // ej. "40% Descuento", "Especial Día de Madres"
+  final String fechaInicio;   // ej. "03/03/25"
+  final String? colorTag;     // Identificador de estilo para la card (púrpura, amarillo, etc.)
+
+  const PrecioEspecial({
+    required this.id,
+    required this.productoId,
+    required this.productoNombre,
+    required this.precioEspecial,
+    this.motivo,
+    required this.fechaInicio,
+    this.colorTag,
+  });
+}
