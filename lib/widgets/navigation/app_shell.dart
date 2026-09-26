@@ -27,7 +27,10 @@ class _AppShellState extends State<AppShell> {
     return Scaffold(
       key: _scaffoldKey,
       drawer: Builder(builder: widget.drawerBuilder),
-      body: IndexedStack(index: _currentIndex, children: widget.tabScreens),
+      body: SafeArea(
+        bottom: false,
+        child: IndexedStack(index: _currentIndex, children: widget.tabScreens),
+      ),
       bottomNavigationBar: SafeArea(
         top: false,
         minimum: EdgeInsets.only(
