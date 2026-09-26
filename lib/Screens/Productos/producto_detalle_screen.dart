@@ -9,15 +9,12 @@ class ProductoDetalleScreen extends StatelessWidget {
 
   const ProductoDetalleScreen({super.key, required this.producto});
 
-  Future<void> _editar(BuildContext context) async {
-    final actualizado = await Navigator.of(context).push<Producto>(
-      MaterialPageRoute<Producto>(
+  void _abrirFicha(BuildContext context) {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
         builder: (_) => ProductoFormScreen(producto: producto),
       ),
     );
-    if (actualizado != null && context.mounted) {
-      Navigator.of(context).pop(actualizado);
-    }
   }
 
   @override
@@ -46,7 +43,7 @@ class ProductoDetalleScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () => _editar(context),
+                        onPressed: () => _abrirFicha(context),
                         icon: const Icon(Icons.edit_outlined, size: 18),
                         label: const Text('Editar producto'),
                       ),

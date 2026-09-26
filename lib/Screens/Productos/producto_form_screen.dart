@@ -56,24 +56,8 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     super.dispose();
   }
 
-  void _guardar() {
-    if (_formKey.currentState!.validate()) {
-      final precioDetalle = double.parse(_precioDetalleController.text.trim());
-      final precioMayoreo = double.parse(_precioMayoreoController.text.trim());
-      final productoResultado = Producto(
-        id: widget.producto?.id ?? DateTime.now().millisecondsSinceEpoch,
-        nombre: _nombreController.text.trim(),
-        linea: _lineaSeleccionada,
-        sabor: _saborSeleccionado,
-        presentacion: _presentacionSeleccionada,
-        precioDetalle: precioDetalle,
-        precioMayoreo: precioMayoreo,
-        estado: _esActivo ? 'Activo' : 'Inactivo',
-        imgUrl: _imagenUrlController.text.trim(),
-      );
-
-      Navigator.of(context).pop(productoResultado);
-    }
+  void _cerrarVistaPrevia() {
+    Navigator.of(context).pop();
   }
 
   @override
@@ -81,7 +65,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     final esEdicion = widget.producto != null;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F8),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -183,7 +167,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                           width: double.infinity,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFF6F7FB),
+                            color: AppColors.lavender,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: ProductoImagen(
@@ -230,9 +214,9 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton.icon(
-                      onPressed: _guardar,
+                      onPressed: _cerrarVistaPrevia,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF00C88C),
+                        backgroundColor: AppColors.primary,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -240,7 +224,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                       ),
                       icon: const Icon(Icons.check, size: 20, color: Colors.white),
                       label: Text(
-                        esEdicion ? 'Actualizar producto' : 'Guardar producto',
+                        esEdicion ? 'Confirmar Edición' : 'Crear',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,

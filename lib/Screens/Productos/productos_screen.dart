@@ -5,7 +5,6 @@ import '../../models/mocks/mock_catalogo.dart';
 import '../../models/mocks/mock_productos.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
-import '../../widgets/search_filter_row.dart';
 import 'producto_form_screen.dart';
 import 'producto_detalle_screen.dart';
 import 'widgets/productos_widgets.dart';
@@ -19,121 +18,43 @@ class ProductosScreen extends StatefulWidget {
 
 class _ProductosScreenState extends State<ProductosScreen> {
   late final List<Producto> _productos;
-  String _busqueda = '';
-  String _linea = 'Todas';
-  String _sabor = 'Todos';
-  String _estado = 'Todos';
-  String _presentacion = 'Todas';
   int _paginaActual = 1;
   static const _productosPorPagina = 10;
-
-  List<String> get _lineas => [
-        'Todas',
-        ...{...mockLineas.map((linea) => linea.nombre), ..._productos.map((producto) => producto.linea)},
-      ];
-
-  List<String> get _presentaciones => [
-        'Todas',
-        ...{
-          ...mockPresentaciones.map((presentacion) => presentacion.nombre.trim()),
-          ..._productos.map((producto) => producto.presentacion),
-        },
-      ];
-
-  List<String> get _sabores => [
-        'Todos',
-        ...{
-          ...mockSabores.map((sabor) => sabor.nombre),
-          ..._productos.map((producto) => producto.sabor.trim()),
-        },
-      ];
 
   @override
   void initState() {
     super.initState();
-    _productos = List<Producto>.from(mockProductos);
+    _productos = List<Producto>.unmodifiable(mockProductos);
   }
 
-  List<Producto> get _filtrados {
-    final query = _busqueda.trim().toLowerCase();
-    return _productos.where((producto) {
-      final texto = producto.nombre.toLowerCase().contains(query) || producto.sabor.toLowerCase().contains(query);
-      return (query.isEmpty || texto) &&
-          (_linea == 'Todas' || producto.linea.toLowerCase() == _linea.toLowerCase()) &&
-          (_sabor == 'Todos' || producto.sabor.trim().toLowerCase() == _sabor.toLowerCase()) &&
-          (_estado == 'Todos' || producto.estado == _estado) &&
-          (_presentacion == 'Todas' || producto.presentacion == _presentacion);
-    }).toList();
-  }
-
-  void _toggleEstado(Producto producto) {
-    final index = _productos.indexWhere((item) => item.id == producto.id);
-    if (index < 0) return;
-    setState(() {
-      _productos[index] = Producto(
-        id: producto.id,
-        nombre: producto.nombre,
-        linea: producto.linea,
-        sabor: producto.sabor,
-        presentacion: producto.presentacion,
-        precioDetalle: producto.precioDetalle,
-        precioMayoreo: producto.precioMayoreo,
-        estado: producto.estado == 'Activo' ? 'Inactivo' : 'Activo',
-        imgUrl: producto.imgUrl,
-      );
-    });
-  }
-
-  Future<void> _abrirDetalle(Producto producto) async {
-    final productoActualizado = await Navigator.of(context).push<Producto>(
-      MaterialPageRoute<Producto>(
+  void _abrirDetalle(Producto producto) {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
         builder: (_) => ProductoDetalleScreen(producto: producto),
       ),
     );
-    if (productoActualizado != null && mounted) {
-      _guardarProducto(productoActualizado);
-    }
   }
 
-  Future<void> _abrirFormulario({Producto? producto}) async {
-    final resultado = await Navigator.of(context).push<Producto>(
-      MaterialPageRoute<Producto>(
+  void _abrirFormulario({Producto? producto}) {
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
         builder: (_) => ProductoFormScreen(producto: producto),
       ),
     );
-    if (resultado == null || !mounted) return;
-
-    if (producto == null) {
-      setState(() {
-        _productos.add(resultado);
-        _busqueda = '';
-        _linea = 'Todas';
-        _sabor = 'Todos';
-        _estado = 'Todos';
-        _presentacion = 'Todas';
-        _paginaActual = (_productos.length / _productosPorPagina).ceil();
-      });
-    } else {
-      _guardarProducto(resultado);
-    }
-  }
-
-  void _guardarProducto(Producto producto) {
-    final index = _productos.indexWhere((item) => item.id == producto.id);
-    if (index < 0) return;
-    setState(() => _productos[index] = producto);
   }
 
   void _mostrarFiltros() {
-    var linea = _linea;
-    var sabor = _sabor;
-    var estado = _estado;
-    var presentacion = _presentacion;
+    var linea = 'Todas';
+    var sabor = 'Todos';
+    var presentacion = 'Todas';
+    var estado = 'Todos';
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder: (context) => StatefulBuilder(
         builder: (context, setModalState) => Padding(
           padding: EdgeInsets.fromLTRB(16, 10, 16, MediaQuery.viewInsetsOf(context).bottom + 24),
@@ -145,14 +66,14 @@ class _ProductosScreenState extends State<ProductosScreen> {
                 const Expanded(child: Text('Filtrar productos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800))),
                 IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
               ]),
-              _dropdown('Línea', linea, _lineas, (value) => setModalState(() => linea = value!)),
-              _dropdown('Sabor', sabor, _sabores, (value) => setModalState(() => sabor = value!)),
-              _dropdown('Presentación', presentacion, _presentaciones, (value) => setModalState(() => presentacion = value!)),
-              _dropdown('Estado', estado, const ['Todos', 'Activo', 'Inactivo'], (value) => setModalState(() => estado = value!)),
+              _campoFiltro('Línea', linea, ['Todas', ...mockLineas.map((item) => item.nombre)], (value) => setModalState(() => linea = value!)),
+              _campoFiltro('Sabor', sabor, ['Todos', ...mockSabores.map((item) => item.nombre)], (value) => setModalState(() => sabor = value!)),
+              _campoFiltro('Presentación', presentacion, ['Todas', ...mockPresentaciones.map((item) => item.nombre)], (value) => setModalState(() => presentacion = value!)),
+              _campoFiltro('Estado', estado, const ['Todos', 'Activo', 'Inactivo'], (value) => setModalState(() => estado = value!)),
               Row(children: [
-                Expanded(child: TextButton(onPressed: () => setModalState(() { linea = 'Todas'; sabor = 'Todos'; estado = 'Todos'; presentacion = 'Todas'; }), child: const Text('Limpiar'))),
+                Expanded(child: TextButton(onPressed: () => setModalState(() { linea = 'Todas'; sabor = 'Todos'; presentacion = 'Todas'; estado = 'Todos'; }), child: const Text('Limpiar'))),
                 const SizedBox(width: 8),
-                Expanded(child: ElevatedButton(onPressed: () { setState(() { _linea = linea; _sabor = sabor; _estado = estado; _presentacion = presentacion; _paginaActual = 1; }); Navigator.pop(context); }, child: const Text('Aplicar'))),
+                Expanded(child: ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Aplicar'))),
               ]),
             ],
           ),
@@ -161,7 +82,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
     );
   }
 
-  Widget _dropdown(String label, String value, List<String> options, ValueChanged<String?> onChanged) {
+  Widget _campoFiltro(String label, String value, List<String> options, ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: DropdownButtonFormField<String>(
@@ -173,10 +94,46 @@ class _ProductosScreenState extends State<ProductosScreen> {
     );
   }
 
+  Widget _barraBusqueda() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(color: AppColors.lavender, borderRadius: BorderRadius.circular(14)),
+            child: Row(children: [
+              const Icon(Icons.search, color: AppColors.muted),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Buscar por nombre...',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(fontSize: 13, color: AppColors.muted),
+                  ),
+                ),
+              ),
+            ]),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(color: AppColors.card, borderRadius: BorderRadius.circular(14)),
+          child: IconButton(
+            icon: const Icon(Icons.tune, color: AppColors.ink, size: 28),
+            onPressed: _mostrarFiltros,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final activos = _productos.where((producto) => producto.estado == 'Activo').length;
-    final filtrados = _filtrados;
+    final filtrados = _productos;
     final totalPaginas = (filtrados.length / _productosPorPagina).ceil();
     final effectivePage = totalPaginas > 0 && _paginaActual > totalPaginas
       ? totalPaginas
@@ -209,7 +166,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
             HStatCard(title: 'Inactivos', value: '${_productos.length - activos}', bgColor: AppToneColors.soft[AppTone.red]!, iconColor: AppToneColors.intense[AppTone.red]!, icon: Icons.block_outlined),
           ])),
           const SizedBox(height: 16),
-          SearchFilterRow(hintText: 'Buscar por nombre...', onSearchChanged: (value) { setState(() { _busqueda = value; _paginaActual = 1; }); }, onFilterTap: _mostrarFiltros),
+          _barraBusqueda(),
           const SizedBox(height: 16),
           Row(children: [const Text('Resultados', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)), const SizedBox(width: 8), Container(padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3), decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(99)), child: Text('${filtrados.length}', style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w800)))]),
           const SizedBox(height: 12),
@@ -230,7 +187,6 @@ class _ProductosScreenState extends State<ProductosScreen> {
                         child: ProductoCard(
                           producto: productosDePagina[index],
                           onTap: () => _abrirDetalle(productosDePagina[index]),
-                          onEstadoChanged: (_) => _toggleEstado(productosDePagina[index]),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -239,7 +195,6 @@ class _ProductosScreenState extends State<ProductosScreen> {
                             ? ProductoCard(
                             producto: productosDePagina[index + 1],
                                 onTap: () => _abrirDetalle(productosDePagina[index + 1]),
-                            onEstadoChanged: (_) => _toggleEstado(productosDePagina[index + 1]),
                               )
                             : const SizedBox(),
                       ),

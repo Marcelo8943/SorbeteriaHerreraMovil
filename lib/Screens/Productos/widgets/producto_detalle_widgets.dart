@@ -119,13 +119,13 @@ class TarjetaInformacion extends StatelessWidget {
               Expanded(
                 child: DatoCelda(
                   label: 'PRECIO DETALLE',
-                  valor: 'C\$${producto.precioDetalle.toStringAsFixed(2)}',
+                  valor: 'C\$ ${producto.precioDetalle.toStringAsFixed(2)}',
                 ),
               ),
               Expanded(
                 child: DatoCelda(
                   label: 'PRECIO MAYOREO',
-                  valor: 'C\$${producto.precioMayoreo.toStringAsFixed(2)}',
+                  valor: 'C\$ ${producto.precioMayoreo.toStringAsFixed(2)}',
                 ),
               ),
             ],
