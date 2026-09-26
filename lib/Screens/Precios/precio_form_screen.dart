@@ -4,7 +4,7 @@ import '../../models/app_models.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/precios_form_widgets.dart';
 
-/// Panel inferior que permite editar los precios de una presentación.
+/// Vista de ejemplo de precios para una presentación.
 class PrecioFormScreen extends StatefulWidget {
   final PrecioGeneral precio;
 
@@ -15,7 +15,6 @@ class PrecioFormScreen extends StatefulWidget {
 }
 
 class _PrecioFormScreenState extends State<PrecioFormScreen> {
-  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _detalleController;
   late final TextEditingController _mayoreoController;
 
@@ -40,27 +39,8 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
     super.dispose();
   }
 
-  String? _validarPrecio(String? valor) {
-    if (valor == null || valor.trim().isEmpty) return 'Ingrese un precio';
-    final numero = double.tryParse(valor.trim());
-    if (numero == null || !numero.isFinite || numero < 0) {
-      return 'Ingrese un valor válido';
-    }
-    return null;
-  }
-
-  void _guardar() {
-    if (!_formKey.currentState!.validate()) return;
-    Navigator.of(context).pop(
-      PrecioGeneral(
-        id: widget.precio.id,
-        linea: widget.precio.linea,
-        presentacion: widget.precio.presentacion,
-        precioDetalle: double.parse(_detalleController.text.trim()),
-        precioMayoreo: double.parse(_mayoreoController.text.trim()),
-        cantidadProductos: widget.precio.cantidadProductos,
-      ),
-    );
+  void _cerrarVistaPrevia() {
+    Navigator.of(context).pop();
   }
 
   @override
@@ -86,7 +66,6 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
               AppSpacing.md,
             ),
             child: Form(
-              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -136,7 +115,6 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                       child: PrecioFormField(
                         etiqueta: 'PRECIO DETALLE (C\$)',
                         controller: _detalleController,
-                        validator: _validarPrecio,
                       ),
                     ),
                     const SizedBox(width: AppSpacing.md),
@@ -144,7 +122,6 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                       child: PrecioFormField(
                         etiqueta: 'PRECIO MAYOREO (C\$)',
                         controller: _mayoreoController,
-                        validator: _validarPrecio,
                       ),
                     ),
                   ],
@@ -152,8 +129,8 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                 const SizedBox(height: AppSpacing.md),
                 const Divider(height: 1, color: AppColors.line),
                 const SizedBox(height: AppSpacing.md),
-                // Guarda ambos valores y devuelve el precio actualizado.
-                PrecioFormSaveButton(onPressed: _guardar),
+                // Acción visual: cierra el formulario de ejemplo sin guardar datos.
+                PrecioFormActionButton(onPressed: _cerrarVistaPrevia),
                 ],
               ),
             ),

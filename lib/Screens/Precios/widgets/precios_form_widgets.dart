@@ -6,13 +6,13 @@ import '../../../theme/app_theme.dart';
 class PrecioFormField extends StatelessWidget {
   final String etiqueta;
   final TextEditingController controller;
-  final String? Function(String?) validator;
+  final String? Function(String?)? validator;
 
   const PrecioFormField({
     super.key,
     required this.etiqueta,
     required this.controller,
-    required this.validator,
+    this.validator,
   });
 
   @override
@@ -70,10 +70,10 @@ class PrecioFormField extends StatelessWidget {
 }
 
 /// Botón ancho de confirmación para guardar los precios editados.
-class PrecioFormSaveButton extends StatelessWidget {
+class PrecioFormActionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const PrecioFormSaveButton({super.key, required this.onPressed});
+  const PrecioFormActionButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

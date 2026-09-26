@@ -1,5 +1,7 @@
 import '../app_models.dart';
 
+const String mockPreciosUltimaActualizacion = '23/06/26, 04:56 p. m.';
+
 /// Precios sugeridos y de distribución por línea y presentación.
 /// Los valores coinciden con los precios definidos en mock_productos.dart.
 final List<PrecioGeneral> mockPreciosGenerales = [

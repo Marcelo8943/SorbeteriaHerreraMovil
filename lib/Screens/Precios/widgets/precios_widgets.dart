@@ -3,7 +3,7 @@
 import '../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
-/// Tarjeta de resumen que muestra un indicador del mÃ³dulo, como precios
+/// Tarjeta de resumen que muestra un indicador del módulo, como precios
 /// configurados o precios especiales.
 class PrecioResumenCard extends StatelessWidget {
   final String titulo;
@@ -57,7 +57,7 @@ class PrecioResumenCard extends StatelessWidget {
   }
 }
 
-/// Selector horizontal para filtrar los precios generales por lÃ­nea.
+/// Selector horizontal decorativo de líneas para la maqueta de precios.
 class PreciosLineaSelector extends StatelessWidget {
   final String seleccionada;
   final ValueChanged<String> onSeleccionar;
@@ -108,8 +108,8 @@ class PreciosLineaSelector extends StatelessWidget {
   }
 }
 
-/// Tarjeta con la presentaciÃ³n, cantidad de productos y precios de detalle
-/// y mayoreo de una lÃ­nea.
+/// Tarjeta con la presentación, cantidad de productos y precios de detalle
+/// y mayoreo de una línea.
 class PrecioGeneralCard extends StatelessWidget {
   final PrecioGeneral precio;
   final String nombreLinea;
@@ -182,7 +182,7 @@ class PrecioGeneralCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$nombreLinea Â· ${precio.cantidadProductos} productos',
+                      '$nombreLinea · ${precio.cantidadProductos} productos',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -230,7 +230,7 @@ class PrecioGeneralCard extends StatelessWidget {
   }
 }
 
-/// Tarjeta visual para mostrar una promociÃ³n o precio especial de producto.
+/// Tarjeta visual para mostrar una promoción o precio especial de producto.
 class PrecioEspecialCard extends StatelessWidget {
   final PrecioEspecial precio;
 
@@ -281,7 +281,7 @@ class PrecioEspecialCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: Text(
-                  '${precio.motivo ?? 'Precio especial'} Â· Inicio: ${precio.fechaInicio}',
+                  '${precio.motivo ?? 'Precio especial'} · Inicio: ${precio.fechaInicio}',
                   style: TextStyle(
                     color: color,
                     fontSize: 11.5,
