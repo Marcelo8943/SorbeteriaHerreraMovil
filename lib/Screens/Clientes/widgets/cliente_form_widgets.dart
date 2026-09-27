@@ -123,6 +123,40 @@ class CustomFormDropdown extends StatelessWidget {
   }
 }
 
+class ClienteEstadoSwitch extends StatelessWidget {
+  final bool activo;
+  final ValueChanged<bool> onChanged;
+
+  const ClienteEstadoSwitch({
+    super.key,
+    required this.activo,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Cliente activo',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: AppColors.ink,
+          ),
+        ),
+        Switch.adaptive(
+          value: activo,
+          onChanged: onChanged,
+          activeColor: Colors.white,
+          activeTrackColor: AppColors.primary,
+        ),
+      ],
+    );
+  }
+}
+
 class FormSubmitButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;

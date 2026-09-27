@@ -6,6 +6,7 @@ class Cliente {
   final String municipio;
   final String puntoVenta;
   final String clienteDesde;
+  final String estado;
   final String? iniciales; // ej. "J.D." para "Juan Díaz"
 
   const Cliente({
@@ -16,6 +17,7 @@ class Cliente {
     required this.municipio,
     required this.puntoVenta,
     required this.clienteDesde,
+    this.estado = 'Activo',
     this.iniciales,
   });
 }

@@ -200,14 +200,17 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Estado del producto
-                  ProductoEstadoSwitch(
-                    activo: _esActivo,
-                    onChanged: (val) {
-                      setState(() => _esActivo = val);
-                    },
-                  ),
-                  const SizedBox(height: 24),
+                  if (esEdicion) ...[
+                    // Estado del producto
+                    ProductoEstadoSwitch(
+                      activo: _esActivo,
+                      onChanged: (val) {
+                        setState(() => _esActivo = val);
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                  ] else
+                    const SizedBox(height: 24),
 
                   // Botón Guardar
                   SizedBox(

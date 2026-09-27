@@ -20,6 +20,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   late TextEditingController _telefonoCtrl;
   String? _departamento;
   String? _municipio;
+  bool _esActivo = true;
 
   static const _departamentos = [
     'Masaya',
@@ -61,6 +62,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
     _telefonoCtrl = TextEditingController(text: widget.cliente?.telefono ?? '');
     _departamento = widget.cliente?.departamento;
     _municipio = widget.cliente?.municipio;
+    _esActivo = widget.cliente?.estado == 'Inactivo' ? false : true;
   }
 
   @override
@@ -90,6 +92,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
         departamento: _departamento!,
         municipio: _municipio!,
         clienteDesde: widget.cliente?.clienteDesde ?? '22/09/2026',
+        estado: _esActivo ? 'Activo' : 'Inactivo',
         iniciales: widget.cliente?.iniciales ?? inicialesCalc,
       );
 
@@ -191,6 +194,13 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                           ? 'Ingrese el punto de venta'
                           : null,
                     ),
+                    if (_esEdicion) ...[
+                      const SizedBox(height: 16),
+                      ClienteEstadoSwitch(
+                        activo: _esActivo,
+                        onChanged: (activo) => setState(() => _esActivo = activo),
+                      ),
+                    ],
                   ],
                 ),
               ),

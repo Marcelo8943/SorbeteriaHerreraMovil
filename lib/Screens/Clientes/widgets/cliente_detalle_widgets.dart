@@ -80,9 +80,9 @@ class ClienteDetalleHero extends StatelessWidget {
               color: Colors.white.withOpacity(0.25),
               borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
             ),
-            child: const Text(
-              'Activo',
-              style: TextStyle(
+            child: Text(
+              cliente.estado,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 11.5,
                 fontWeight: FontWeight.w600,

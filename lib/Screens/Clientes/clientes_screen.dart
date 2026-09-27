@@ -5,6 +5,7 @@ import 'cliente_detalle_screen.dart';
 import 'cliente_form_screen.dart';
 import '../../widgets/search_filter_row.dart';
 import '../../widgets/h_stat_card.dart';
+import '../../widgets/app_top_bar.dart';
 
 // Importación de modelos y mock por entidad
 import '../../models/app_models.dart';
@@ -21,30 +22,14 @@ class _ClientesScreenState extends State<ClientesScreen> {
   int _currentPage = 1;
   final int _itemsPerPage = 10;
 
-  String _searchQuery = '';
-  String _selectedDepartamento = 'Todos';
-  String _selectedMunicipio = 'Todos';
-
   // Fuente de datos desde mock_clientes.dart
-  final List<Cliente> _allClientes = List<Cliente>.from(mockClientes);
+  final List<Cliente> _allClientes = List<Cliente>.unmodifiable(mockClientes);
 
-  Future<void> _openClientForm({Cliente? cliente}) async {
-    final resultado = await Navigator.push<Cliente>(
+  void _openClientForm({Cliente? cliente}) {
+    Navigator.push<void>(
       context,
-      MaterialPageRoute(builder: (_) => ClienteFormScreen(cliente: cliente)),
+      MaterialPageRoute<void>(builder: (_) => ClienteFormScreen(cliente: cliente)),
     );
-
-    if (!mounted || resultado == null) return;
-
-    setState(() {
-      final index = _allClientes.indexWhere((item) => item.id == resultado.id);
-      if (index == -1) {
-        _allClientes.insert(0, resultado);
-      } else {
-        _allClientes[index] = resultado;
-      }
-      _currentPage = 1;
-    });
   }
 
   final List<String> _departamentos = [
@@ -77,32 +62,14 @@ class _ClientesScreenState extends State<ClientesScreen> {
     'Masaya',
   ];
 
-  // Búsqueda filtrada ÚNICAMENTE por nombre del cliente
-  List<Cliente> get _filteredClientes {
-    return _allClientes.where((cliente) {
-      final matchesSearch = cliente.nombre.toLowerCase().contains(
-        _searchQuery.toLowerCase(),
-      );
-
-      final matchesDepto =
-          _selectedDepartamento == 'Todos' ||
-          cliente.departamento == _selectedDepartamento;
-
-      final matchesMuni =
-          _selectedMunicipio == 'Todos' ||
-          cliente.municipio == _selectedMunicipio;
-
-      return matchesSearch && matchesDepto && matchesMuni;
-    }).toList();
-  }
-
   void _showFilterModal() {
-    String tempDepto = _selectedDepartamento;
-    String tempMuni = _selectedMunicipio;
+    String tempDepto = 'Todos';
+    String tempMuni = 'Todos';
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: AppColors.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -110,9 +77,10 @@ class _ClientesScreenState extends State<ClientesScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
-            return Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -255,14 +223,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedDepartamento = tempDepto;
-                              _selectedMunicipio = tempMuni;
-                              _currentPage = 1;
-                            });
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -282,6 +243,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
                     ],
                   ),
                 ],
+                ),
               ),
             );
           },
@@ -292,112 +254,39 @@ class _ClientesScreenState extends State<ClientesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredList = _filteredClientes;
+    final clientes = _allClientes;
 
-    final int totalPages = (filteredList.length / _itemsPerPage).ceil();
+    final int totalPages = (clientes.length / _itemsPerPage).ceil();
     final int effectivePage = _currentPage > totalPages && totalPages > 0
         ? totalPages
         : _currentPage;
 
     final int startIndex = (effectivePage - 1) * _itemsPerPage;
-    final int endIndex = (startIndex + _itemsPerPage < filteredList.length)
+    final int endIndex = (startIndex + _itemsPerPage < clientes.length)
         ? startIndex + _itemsPerPage
-        : filteredList.length;
+        : clientes.length;
 
-    final List<Cliente> displayedClientes = filteredList.isEmpty
+    final List<Cliente> displayedClientes = clientes.isEmpty
         ? []
-        : filteredList.sublist(startIndex, endIndex);
+        : clientes.sublist(startIndex, endIndex);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            // Topbar
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: 12,
-              ),
-              color: AppColors.lavender,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      // LOGO NATIVO
-                      Container(
-                        width: 42,
-                        height: 42,
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF00684F),
-                            borderRadius: BorderRadius.circular(9),
-                            border: Border.all(
-                              color: const Color(0xFF004B39),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: const FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              'Herrera',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.italic,
-                                fontFamily: 'serif',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Sorbetería Herrera',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: AppColors.ink,
-                            ),
-                          ),
-                          Text(
-                            'Gestión de clientes',
-                            style: TextStyle(
-                              color: AppColors.muted,
-                              fontSize: 11.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  ElevatedButton(
-                    onPressed: _openClientForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(12),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      color: AppColors.textOnPrimary,
-                    ),
-                  ),
-                ],
+            AppTopBar(
+              subtitle: 'Gestión de clientes',
+              trailing: ElevatedButton(
+                onPressed: _openClientForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(12),
+                ),
+                child: const Icon(Icons.add, color: AppColors.textOnPrimary),
               ),
             ),
-
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppSpacing.md),
@@ -455,10 +344,6 @@ class _ClientesScreenState extends State<ClientesScreen> {
                     // Llamada a SearchFilterRow
                     SearchFilterRow(
                       hintText: 'Buscar clientes...',
-                      onSearchChanged: (val) => setState(() {
-                        _searchQuery = val;
-                        _currentPage = 1;
-                      }),
                       onFilterTap: _showFilterModal,
                     ),
                     const SizedBox(height: 18),
@@ -484,7 +369,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            '${filteredList.length}',
+                            '${clientes.length}',
                             style: const TextStyle(
                               color: AppColors.textOnPrimary,
                               fontSize: 11,
@@ -505,9 +390,9 @@ class _ClientesScreenState extends State<ClientesScreen> {
                           cliente: cliente,
                           index: index,
                           onTap: () {
-                            Navigator.push<Cliente>(
+                            Navigator.push<void>(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute<void>(
                                 builder: (context) => ClienteDetalleScreen(
                                   cliente: cliente,
                                   avatarColor: ClienteCardItem.colorForIndex(
@@ -515,17 +400,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
                                   ),
                                 ),
                               ),
-                            ).then((resultado) {
-                              if (!mounted || resultado == null) return;
-                              setState(() {
-                                final clienteIndex = _allClientes.indexWhere(
-                                  (item) => item.id == resultado.id,
-                                );
-                                if (clienteIndex != -1) {
-                                  _allClientes[clienteIndex] = resultado;
-                                }
-                              });
-                            });
+                            );
                           },
                         );
                       }),
