@@ -127,6 +127,7 @@ const List<Cliente> mockClientes = [
     departamento: 'Masaya',
     puntoVenta: 'Distribuidora Ruiz',
     clienteDesde: '12/04/2025',
+    estado: 'Inactivo',
     iniciales: 'VR',
 
   ),

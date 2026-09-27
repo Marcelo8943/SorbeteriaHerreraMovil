@@ -4,6 +4,7 @@ import '../../models/app_models.dart';
 import '../../models/mocks/mock_catalogo.dart';
 import '../../models/mocks/mock_productos.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_top_bar.dart';
 import '../../widgets/h_stat_card.dart';
 import 'producto_form_screen.dart';
 import 'producto_detalle_screen.dart';
@@ -51,12 +52,14 @@ class _ProductosScreenState extends State<ProductosScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: AppColors.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Padding(
+        builder: (context, setModalState) => SafeArea(
+          child: Padding(
           padding: EdgeInsets.fromLTRB(16, 10, 16, MediaQuery.viewInsetsOf(context).bottom + 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -76,6 +79,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
                 Expanded(child: ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Aplicar'))),
               ]),
             ],
+          ),
           ),
         ),
       ),
@@ -150,7 +154,18 @@ class _ProductosScreenState extends State<ProductosScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ProductoTopBar(onAdd: () => _abrirFormulario()),
+            AppTopBar(
+              subtitle: 'Catálogo de productos',
+              trailing: ElevatedButton(
+                onPressed: () => _abrirFormulario(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(12),
+                ),
+                child: const Icon(Icons.add, color: AppColors.textOnPrimary),
+              ),
+            ),
             Expanded(
               child: ListView(padding: const EdgeInsets.fromLTRB(16, 16, 16, 24), children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -15,14 +15,11 @@ class ClienteDetalleScreen extends StatelessWidget {
     required this.avatarColor,
   });
 
-  Future<void> _openEditForm(BuildContext context) async {
-    final resultado = await Navigator.push<Cliente>(
+  void _openEditForm(BuildContext context) {
+    Navigator.push<void>(
       context,
-      MaterialPageRoute(builder: (_) => ClienteFormScreen(cliente: cliente)),
+      MaterialPageRoute<void>(builder: (_) => ClienteFormScreen(cliente: cliente)),
     );
-    if (context.mounted && resultado != null) {
-      Navigator.pop(context, resultado);
-    }
   }
 
   @override
