@@ -8,12 +8,11 @@ import '../../models/mocks/mock_transacciones.dart';
 import '../../models/dashboard_metrics.dart';
 
 import 'widgets/greeting_banner.dart';
-import 'widgets/quick_access_row.dart';
+
 import 'widgets/recent_transactions_list.dart';
 import 'widgets/sales_by_period_chart.dart';
 import 'widgets/top_products_chart.dart';
 import 'widgets/average_ticket_chart.dart';
-
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -62,36 +61,6 @@ class DashboardScreen extends StatelessWidget {
             userName: userName,
             userRole: userRole,
             fechaFormateada: fechaFormateada,
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          QuickAccessRow(
-            items: [
-              QuickAccessItem(
-                icon: Icons.layers_outlined,
-                label: 'Info Prod.',
-                tone: AppTone.teal,
-                onTap: () {},
-              ),
-              QuickAccessItem(
-                icon: Icons.sell_outlined,
-                label: 'Precios',
-                tone: AppTone.purple,
-                onTap: () {},
-              ),
-              QuickAccessItem(
-                icon: Icons.inventory_2_outlined,
-                label: 'Inventario',
-                tone: AppTone.blue,
-                onTap: () {},
-              ),
-              QuickAccessItem(
-                icon: Icons.attach_money,
-                label: 'Transacc.',
-                tone: AppTone.teal,
-                onTap: () {},
-              ),
-            ],
           ),
           const SizedBox(height: AppSpacing.md),
 
@@ -149,7 +118,6 @@ class DashboardScreen extends StatelessWidget {
           // TODO(yahir): falta rotacionInventario (pendiente del dato de
           // stock, RF31).
           RecentTransactionsList(
-
             transacciones: transacciones,
             onVerTodo: () {
               // TODO(yahir): navegar a AppRoutes.transacciones cuando esa

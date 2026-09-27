@@ -30,6 +30,8 @@ class Producto {
   final double precioMayoreo;
   final String estado; // "Activo" | "Inactivo"
   final String imgUrl;
+  final int stockMinimo;
+  final int stockActual;
 
   const Producto({
     required this.id,
@@ -41,6 +43,8 @@ class Producto {
     required this.precioMayoreo,
     required this.estado,
     required this.imgUrl,
+    required this.stockMinimo,
+    required this.stockActual,
   });
 }
 

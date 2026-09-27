@@ -18,7 +18,12 @@ class GreetingBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(AppSpacing.md, AppSpacing.md, AppSpacing.md, 0),
+      margin: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.md,
+        AppSpacing.md,
+        0,
+      ),
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -56,16 +61,24 @@ class GreetingBanner extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                'Herrera',
-                style: TextStyle(
-                  color: Color(0xFF00684F),
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.italic,
-                  fontFamily: 'serif',
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: const Color(0xFF00684F),
+                borderRadius: BorderRadius.circular(9),
+                border: Border.all(color: const Color(0xFF004B39), width: 1.5),
+              ),
+              child: const FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Herrera',
+                  style: TextStyle(
+                    color: Color(0xFFFFFFFF),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: 'serif',
+                  ),
                 ),
               ),
             ),
