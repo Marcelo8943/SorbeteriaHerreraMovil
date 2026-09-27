@@ -196,6 +196,14 @@ class _AuthenticatedShell extends StatelessWidget {
       onTap: () => _showPending(context, 'Logs del Sistema'),
     ),
     AppDrawerItem(
+      icon: Icons.account_tree_outlined,
+      label: 'Preferencias del Sistema',
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.preferencias);
+      },
+    ),
+    AppDrawerItem(
       icon: Icons.settings_outlined,
       label: 'Configuración',
       onTap: () {
