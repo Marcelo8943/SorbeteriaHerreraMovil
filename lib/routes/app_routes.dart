@@ -6,6 +6,7 @@ import '../Screens/Configuraciones/DatosNegocio/datos_negocio_screen.dart';
 import '../Screens/Configuraciones/MiPerfil/mi_perfil_screen.dart';
 import '../Screens/Configuraciones/Seguridad/seguridad_screen.dart';
 import '../Screens/Login/login_screen.dart';
+import '../Screens/PreferenciasSistema/sistema_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
@@ -94,6 +95,12 @@ class AppRoutes {
       case acercaDe:
         return MaterialPageRoute(
           builder: (_) => const AcercaDeScreen(),
+          settings: settings,
+        );
+
+      case preferencias:
+        return MaterialPageRoute(
+          builder: (_) => const PreferenciasSistemaScreen(),
           settings: settings,
         );
 
