@@ -10,6 +10,7 @@ import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
+import '../Screens/info_Producto/info_producto_screen.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -103,6 +104,12 @@ class AppRoutes {
           settings: settings,
         );
 
+      case infoProducto:
+        return MaterialPageRoute(
+          builder: (_) => const InfoProductoScreen(),
+          settings: settings,
+        );
+
       default:
         final title = _titleFor(settings.name);
         return MaterialPageRoute(
@@ -167,7 +174,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.info_outline,
       label: 'Info del Producto',
-      onTap: () => _showPending(context, 'Info del Producto'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.infoProducto);
+      },
     ),
     AppDrawerItem(
       icon: Icons.inventory_outlined,

@@ -199,20 +199,24 @@ class LogEvento {
 class Linea {
   final int id;
   final String nombre;
+  final String estado;
 
   const Linea({
     required this.id,
     required this.nombre,
+    this.estado = 'Activo',
   });
 }
 
 class Presentacion {
   final int id;
   final String nombre;
+  final String estado;
 
   const Presentacion({
     required this.id,
     required this.nombre,
+    this.estado = 'Activo',
   });
 }
 

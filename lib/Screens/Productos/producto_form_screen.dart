@@ -88,11 +88,11 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.card,
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: AppColors.ink.withValues(alpha: 0.04),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
@@ -220,18 +220,19 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                       onPressed: _cerrarVistaPrevia,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.textOnPrimary,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      icon: const Icon(Icons.check, size: 20, color: Colors.white),
+                      icon: const Icon(Icons.check, size: 20),
                       label: Text(
                         esEdicion ? 'Confirmar Edición' : 'Crear',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          color: AppColors.textOnPrimary,
                         ),
                       ),
                     ),
