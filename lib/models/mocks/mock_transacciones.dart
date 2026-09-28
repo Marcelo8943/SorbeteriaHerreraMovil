@@ -11,7 +11,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 09:40 a.m.',
     fechaRelativa: 'hace 2 h',
     realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -35,7 +35,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 07:15 a.m.',
     fechaRelativa: 'hace 5 h',
     realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -61,7 +61,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 10:15 a.m.',
     fechaRelativa: 'hace 1 h',
     realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -87,7 +87,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 11:00 a.m.',
     fechaRelativa: 'hace 30 min',
     realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -112,7 +112,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 12:30 p.m.',
     fechaRelativa: 'hace 15 min',
     realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -137,7 +137,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 01:15 p.m.',
     fechaRelativa: 'hace 5 min',
     realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -148,6 +148,154 @@ const List<Transaccion> mockTransacciones = [
       ItemTransaccion(
         producto: 'Nieve de Chocolate 1/4 Galón',
         cantidad: 4,
+        precio: 110,
+      ),
+    ],
+  ),
+
+  Transaccion(
+    id: 7,
+    folio: 'V-00132',
+    tipo: 'Venta',
+    relacionado: 'Lucía Ramírez',
+    detalle: 'Pulperia cermen · Masaya',
+    tipoVenta: 'Detalle',
+    fecha: '12/09/26, 02:00 p.m.',
+    fechaRelativa: 'hace 2 min',
+    realizadoPor: 'William Cortez',
+    rol: 'Administrador',
+    estado: 'Completado',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Fresa 4 Oz',
+        cantidad: 12,
+        precio: 45,
+      ),
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Coco 8 Oz',
+        cantidad: 6,
+        precio: 70,
+      ),
+    ],
+  ),
+  Transaccion(
+    id: 8,
+    folio: 'V-00133',
+    tipo: 'Venta',
+    relacionado: 'Jorge Luis Pérez',
+    detalle: 'Distribuidora La Fe · entrega 22/08',
+    fecha: '15/09/26, 03:30 p.m.',
+    fechaRelativa: 'hace 1 min',
+    realizadoPor: 'María Herrera',
+    rol: 'Administrador',
+    estado: 'Completado',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Vainilla 8 Oz',
+        cantidad: 25,
+        precio: 70,
+      ),
+      ItemTransaccion(
+        producto: 'Nieve de Chocolate 1/4 Galón',
+        cantidad: 15,
+        precio: 110,
+      ),
+    ],
+  ),
+  Transaccion(
+    id: 9,
+    folio: 'P-00066',
+    tipo: 'Pedido',
+    relacionado: 'María Fernanda López',
+    detalle: 'Heladería & Snacks Masaya · Catarina',
+    fecha: '15/09/26, 04:45 p.m.',
+    fechaRelativa: 'hace 3 min',
+    realizadoPor: 'William Cortez',
+    rol: 'Administrador',
+    estado: 'Pendiente',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Fresa 4 Oz',
+        cantidad: 30,
+        precio: 45,
+      ),
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Coco 8 Oz',
+        cantidad: 20,
+        precio: 70,
+      ),
+    ],
+  ),
+  Transaccion(
+    id: 10,
+    folio: 'P-00067',
+    tipo: 'Pedido',
+    relacionado: 'Ana Sofía Sevilla',
+    detalle: 'Pulperia cermen · Masaya',
+    tipoVenta: 'Detalle',
+    fecha: '15/09/26, 05:30 p.m.',
+    fechaRelativa: 'hace 4 min',
+    realizadoPor: 'María Herrera',
+    rol: 'Administrador',
+    estado: 'Completado',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Vainilla 8 Oz',
+        cantidad: 18,
+        precio: 70,
+      ),
+      ItemTransaccion(
+        producto: 'Nieve de Chocolate 1/4 Galón',
+        cantidad: 12,
+        precio: 110,
+      ),
+    ],
+  ),
+  Transaccion(
+    id: 11,
+    folio: 'V-00134',
+    tipo: 'Venta',
+    relacionado: 'Carlos Martínez',
+    detalle: 'Distribuidora La Fe · entrega 22/08',
+    fecha: '20/08/26, 06:15 p.m.',
+    fechaRelativa: 'hace 5 min',
+    realizadoPor: 'William Cortez',
+    rol: 'Administrador',
+    estado: 'Completado',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Fresa 4 Oz',
+        cantidad: 20,
+        precio: 45,
+      ),
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Coco 8 Oz',
+        cantidad: 10,
+        precio: 70,
+      ),
+    ],
+  ),
+  Transaccion(
+    id: 12,
+    folio: 'V-00135',
+    tipo: 'Venta',
+    relacionado: 'Lucía Ramírez',
+    detalle: 'Heladería & Snacks Masaya · Catarina',
+    tipoVenta: 'Detalle',
+    fecha: '5/09/26, 07:00 p.m.',
+    fechaRelativa: 'hace 10 min',
+    realizadoPor: 'María Herrera',
+    rol: 'Administrador',
+    estado: 'Completado',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Vainilla 8 Oz',
+        cantidad: 15,
+        precio: 70,
+      ),
+      ItemTransaccion(
+        producto: 'Nieve de Chocolate 1/4 Galón',
+        cantidad: 8,
         precio: 110,
       ),
     ],

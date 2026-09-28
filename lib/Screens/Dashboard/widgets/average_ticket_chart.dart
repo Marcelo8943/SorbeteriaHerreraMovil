@@ -58,12 +58,24 @@ class AverageTicketChart extends StatelessWidget {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
+            reservedSize: 32,
             getTitlesWidget: (value, meta) {
               final index = value.toInt();
               if (index < 0 || index >= datos.length) return const SizedBox();
-              return Text(
-                datos[index].etiqueta,
-                style: const TextStyle(fontSize: 10, color: AppColors.muted),
+
+              // Muestra 1 de cada "5" etiquetas, para que no se amontonen.
+              final salto = (datos.length / 5).ceil().clamp(1, datos.length);
+              if (index % salto != 0) return const SizedBox();
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Transform.rotate(
+                  angle: -0.5,
+                  child: Text(
+                    datos[index].etiqueta,
+                    style: const TextStyle(fontSize: 9, color: AppColors.muted),
+                  ),
+                ),
               );
             },
           ),
