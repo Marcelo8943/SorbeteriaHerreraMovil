@@ -15,6 +15,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/albaricoque.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 2,
@@ -26,6 +28,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/almendras.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 3,
@@ -37,6 +41,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/cafe.png',
+    stockMinimo: 20,
+    stockActual: 30,
   ),
   Producto(
     id: 4,
@@ -48,6 +54,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/cereales.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 5,
@@ -59,6 +67,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/ciruelas.png',
+    stockMinimo: 10,
+    stockActual: 10,
   ),
   Producto(
     id: 6,
@@ -70,6 +80,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/coco.png',
+    stockMinimo: 10,
+    stockActual: 11,
   ),
   Producto(
     id: 7,
@@ -81,6 +93,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Inactivo',
     imgUrl: 'assets/images/productos/chocolate.png',
+    stockMinimo: 10,
+    stockActual: 5,
   ),
   Producto(
     id: 8,
@@ -92,6 +106,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/fresas.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 9,
@@ -103,6 +119,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/frutas.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 10,
@@ -114,6 +132,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/guanabana.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 11,
@@ -125,6 +145,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/mango.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 12,
@@ -136,6 +158,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/pitahaya.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 13,
@@ -147,6 +171,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/ron_pasas.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 14,
@@ -158,6 +184,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/vainilla.png',
+    stockMinimo: 8,
+    stockActual: 6,
   ),
   Producto(
     id: 15,
@@ -169,6 +197,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/zapote.png',
+    stockMinimo: 8,
+    stockActual: 12,
   ),
 
   // ==========================================
@@ -185,6 +215,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/albaricoque_light.png',
+    stockMinimo: 12,
+    stockActual: 18,
   ),
   Producto(
     id: 17,
@@ -196,6 +228,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 140.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/ciruela_light.png',
+    stockMinimo: 8,
+    stockActual: 11,
   ),
   Producto(
     id: 18,
@@ -207,6 +241,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 240.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/frutas_light.png',
+    stockMinimo: 10,
+    stockActual: 7,
   ),
   Producto(
     id: 19,
@@ -218,6 +254,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/vainilla_light.png',
+    stockMinimo: 9,
+    stockActual: 15,
   ),
   Producto(
     id: 20,
@@ -229,6 +267,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 140.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/albaricoque_light.png',
+    stockMinimo: 6,
+    stockActual: 5,
   ),
   Producto(
     id: 21,
@@ -240,6 +280,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/ciruela_light.png',
+    stockMinimo: 10,
+    stockActual: 16,
   ),
   Producto(
     id: 22,
@@ -251,6 +293,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/frutas_light.png',
+    stockMinimo: 8,
+    stockActual: 9,
   ),
   Producto(
     id: 23,
@@ -262,6 +306,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 140.0,
     estado: 'Inactivo',
     imgUrl: 'assets/images/productos/vainilla_light.png',
+    stockMinimo: 7,
+    stockActual: 5,
   ),
   Producto(
     id: 24,
@@ -273,6 +319,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 240.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/albaricoque_light.png',
+    stockMinimo: 9,
+    stockActual: 17,
   ),
   Producto(
     id: 25,
@@ -284,6 +332,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 240.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/ciruela_light.png',
+    stockMinimo: 6,
+    stockActual: 8,
   ),
   Producto(
     id: 26,
@@ -295,6 +345,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 140.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/frutas_light.png',
+    stockMinimo: 10,
+    stockActual: 18,
   ),
   Producto(
     id: 27,
@@ -306,6 +358,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 240.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/vainilla_light.png',
+    stockMinimo: 11,
+    stockActual: 9,
   ),
   Producto(
     id: 28,
@@ -317,6 +371,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/albaricoque_light.png',
+    stockMinimo: 7,
+    stockActual: 13,
   ),
   Producto(
     id: 29,
@@ -328,6 +384,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/ciruela_light.png',
+    stockMinimo: 8,
+    stockActual: 10,
   ),
   Producto(
     id: 30,
@@ -339,6 +397,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 68.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/vainilla_light.png',
+    stockMinimo: 9,
+    stockActual: 11,
   ),
 
   // ==========================================
@@ -355,6 +415,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 200.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 12,
+    stockActual: 20,
   ),
   Producto(
     id: 32,
@@ -366,6 +428,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 280.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 10,
+    stockActual: 8,
   ),
   Producto(
     id: 33,
@@ -377,6 +441,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 380.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 15,
+    stockActual: 18,
   ),
   Producto(
     id: 34,
@@ -388,6 +454,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 280.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/mamey.png',
+    stockMinimo: 12,
+    stockActual: 11,
   ),
   Producto(
     id: 35,
@@ -399,6 +467,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 380.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/mamey.png',
+    stockMinimo: 10,
+    stockActual: 9,
   ),
   Producto(
     id: 36,
@@ -410,6 +480,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 200.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 11,
+    stockActual: 17,
   ),
   Producto(
     id: 37,
@@ -421,6 +493,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 280.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 8,
+    stockActual: 7,
   ),
   Producto(
     id: 38,
@@ -432,6 +506,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 380.0,
     estado: 'Inactivo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 13,
+    stockActual: 6,
   ),
   Producto(
     id: 39,
@@ -443,6 +519,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 200.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 10,
+    stockActual: 14,
   ),
   Producto(
     id: 40,
@@ -454,6 +532,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 280.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 9,
+    stockActual: 12,
   ),
   Producto(
     id: 41,
@@ -465,6 +545,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 380.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 12,
+    stockActual: 20,
   ),
   Producto(
     id: 42,
@@ -476,6 +558,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 200.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 8,
+    stockActual: 15,
   ),
   Producto(
     id: 43,
@@ -487,6 +571,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 280.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 9,
+    stockActual: 9,
   ),
   Producto(
     id: 44,
@@ -498,6 +584,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 380.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 11,
+    stockActual: 18,
   ),
   Producto(
     id: 45,
@@ -509,6 +597,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 380.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/borrachito.png',
+    stockMinimo: 10,
+    stockActual: 7,
   ),
 
   // ==========================================
@@ -525,6 +615,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/tamarindo.png',
+    stockMinimo: 9,
+    stockActual: 16,
   ),
   Producto(
     id: 47,
@@ -536,6 +628,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/fresa.png',
+    stockMinimo: 8,
+    stockActual: 13,
   ),
   Producto(
     id: 48,
@@ -547,6 +641,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/frutas.png',
+    stockMinimo: 11,
+    stockActual: 9,
   ),
   Producto(
     id: 49,
@@ -558,6 +654,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/guayaba.png',
+    stockMinimo: 10,
+    stockActual: 17,
   ),
   Producto(
     id: 50,
@@ -569,6 +667,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/nancite.png',
+    stockMinimo: 8,
+    stockActual: 7,
   ),
   Producto(
     id: 51,
@@ -580,6 +680,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/tamarindo.png',
+    stockMinimo: 12,
+    stockActual: 19,
   ),
   Producto(
     id: 52,
@@ -591,6 +693,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/maracuya.png',
+    stockMinimo: 9,
+    stockActual: 14,
   ),
   Producto(
     id: 53,
@@ -602,6 +706,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/guayaba.png',
+    stockMinimo: 10,
+    stockActual: 8,
   ),
   Producto(
     id: 54,
@@ -613,6 +719,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Inactivo',
     imgUrl: 'assets/images/productos/nancite.png',
+    stockMinimo: 11,
+    stockActual: 5,
   ),
   Producto(
     id: 55,
@@ -624,6 +732,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 65.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/mango.png',
+    stockMinimo: 9,
+    stockActual: 15,
   ),
   Producto(
     id: 56,
@@ -635,6 +745,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/pitahaya.png',
+    stockMinimo: 8,
+    stockActual: 10,
   ),
   Producto(
     id: 57,
@@ -646,6 +758,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/tamarindo.png',
+    stockMinimo: 10,
+    stockActual: 17,
   ),
   Producto(
     id: 58,
@@ -657,6 +771,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/maracuya.png',
+    stockMinimo: 9,
+    stockActual: 9,
   ),
   Producto(
     id: 59,
@@ -668,6 +784,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 135.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/guayaba.png',
+    stockMinimo: 12,
+    stockActual: 20,
   ),
   Producto(
     id: 60,
@@ -679,6 +797,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 225.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/nancite.png',
+    stockMinimo: 10,
+    stockActual: 12,
   ),
 
   // ==========================================
@@ -695,6 +815,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_fresa.png',
+    stockMinimo: 8,
+    stockActual: 14,
   ),
   Producto(
     id: 62,
@@ -706,6 +828,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_coco.png',
+    stockMinimo: 9,
+    stockActual: 10,
   ),
   Producto(
     id: 63,
@@ -717,6 +841,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_chocolate.png',
+    stockMinimo: 7,
+    stockActual: 6,
   ),
   Producto(
     id: 64,
@@ -728,6 +854,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_mango.png',
+    stockMinimo: 8,
+    stockActual: 17,
   ),
   Producto(
     id: 65,
@@ -739,6 +867,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_guanabana.png',
+    stockMinimo: 10,
+    stockActual: 15,
   ),
   Producto(
     id: 66,
@@ -750,6 +880,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_tamarindo.png',
+    stockMinimo: 9,
+    stockActual: 11,
   ),
   Producto(
     id: 67,
@@ -761,6 +893,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Inactivo',
     imgUrl: 'assets/images/productos/paleta_ron_pasas.png',
+    stockMinimo: 8,
+    stockActual: 4,
   ),
   Producto(
     id: 68,
@@ -772,6 +906,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_vainilla.png',
+    stockMinimo: 7,
+    stockActual: 12,
   ),
   Producto(
     id: 69,
@@ -783,6 +919,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_zapote.png',
+    stockMinimo: 10,
+    stockActual: 14,
   ),
   Producto(
     id: 70,
@@ -794,6 +932,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_pitahaya.png',
+    stockMinimo: 11,
+    stockActual: 19,
   ),
   Producto(
     id: 71,
@@ -805,6 +945,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_maracuya.png',
+    stockMinimo: 9,
+    stockActual: 12,
   ),
   Producto(
     id: 72,
@@ -816,6 +958,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_nancite.png',
+    stockMinimo: 8,
+    stockActual: 9,
   ),
   Producto(
     id: 73,
@@ -827,6 +971,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_almendras.png',
+    stockMinimo: 6,
+    stockActual: 10,
   ),
   Producto(
     id: 74,
@@ -838,6 +984,8 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_cafe.png',
+    stockMinimo: 7,
+    stockActual: 8,
   ),
   Producto(
     id: 75,
@@ -849,5 +997,7 @@ const List<Producto> mockProductos = [
     precioMayoreo: 40.0,
     estado: 'Activo',
     imgUrl: 'assets/images/productos/paleta_cereales.png',
+    stockMinimo: 8,
+    stockActual: 13,
   ),
 ];
