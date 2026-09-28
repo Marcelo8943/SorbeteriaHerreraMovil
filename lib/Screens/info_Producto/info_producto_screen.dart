@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/mocks/mock_info_producto.dart';
+import '../../models/mocks/mock_catalogo.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
 import 'info_producto_detalle_screen.dart';
@@ -17,24 +17,24 @@ class InfoProductoScreen extends StatefulWidget {
 class _InfoProductoScreenState extends State<InfoProductoScreen> {
   bool _mostrarLineas = true;
 
-  List<InfoProductoMockItem> get _items =>
-      _mostrarLineas ? mockInfoLineas : mockInfoPresentaciones;
+  int get _total => mockLineas.length + mockPresentaciones.length;
 
-  int get _total => mockInfoLineas.length + mockInfoPresentaciones.length;
+  int get _activos =>
+      mockLineas.where((item) => item.estado == 'Activo').length +
+      mockPresentaciones.where((item) => item.estado == 'Activo').length;
 
-  int get _activos => [
-        ...mockInfoLineas,
-        ...mockInfoPresentaciones,
-      ].where((item) => item.estado == 'Activo').length;
-
-  void _mostrarDetalle(InfoProductoMockItem item) {
+  void _mostrarDetalle(String nombre, String estado) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (_) => SafeArea(
-        child: InfoProductoDetalleScreen(item: item, esLinea: _mostrarLineas),
+        child: InfoProductoDetalleScreen(
+          nombre: nombre,
+          estado: estado,
+          esLinea: _mostrarLineas,
+        ),
       ),
     );
   }
@@ -111,13 +111,6 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
                     icon: Icons.check,
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  HStatCard(
-                    title: 'Inactivos',
-                    value: '${_total - _activos}',
-                    bgColor: AppToneColors.soft[AppTone.red]!,
-                    iconColor: AppToneColors.intense[AppTone.red]!,
-                    icon: Icons.close,
-                  ),
                 ],
               ),
             ),
@@ -128,11 +121,21 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
                   setState(() => _mostrarLineas = mostrarLineas),
             ),
             const SizedBox(height: AppSpacing.md),
-            for (final item in _items)
+            if (_mostrarLineas)
+              for (final item in mockLineas)
+                InfoProductoItemCard(
+                  nombre: item.nombre,
+                  estado: item.estado,
+                  esLinea: true,
+                  onTap: () => _mostrarDetalle(item.nombre, item.estado),
+                )
+            else
+              for (final item in mockPresentaciones)
               InfoProductoItemCard(
-                item: item,
-                esLinea: _mostrarLineas,
-                onTap: () => _mostrarDetalle(item),
+                nombre: item.nombre,
+                estado: item.estado,
+                esLinea: false,
+                onTap: () => _mostrarDetalle(item.nombre, item.estado),
               ),
             const SizedBox(height: AppSpacing.sm),
             const Center(

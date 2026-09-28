@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/mocks/mock_info_producto.dart';
 import '../../../theme/app_theme.dart';
 
 /// Encabezado de sección para alternar entre líneas y presentaciones.
@@ -81,13 +80,15 @@ class _OpcionSeccion extends StatelessWidget {
 
 /// Tarjeta que muestra la información de una línea o presentación.
 class InfoProductoItemCard extends StatelessWidget {
-  final InfoProductoMockItem item;
+  final String nombre;
+  final String estado;
   final bool esLinea;
   final VoidCallback? onTap;
 
   const InfoProductoItemCard({
     super.key,
-    required this.item,
+    required this.nombre,
+    required this.estado,
     required this.esLinea,
     this.onTap,
   });
@@ -133,7 +134,7 @@ class InfoProductoItemCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.nombre,
+                  nombre,
                   style: const TextStyle(
                     color: AppColors.ink,
                     fontSize: 15,
@@ -153,7 +154,7 @@ class InfoProductoItemCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          _EstadoCatalogoBadge(estado: item.estado),
+          _EstadoCatalogoBadge(estado: estado),
           const SizedBox(width: 6),
           const Icon(Icons.chevron_right, color: AppColors.muted, size: 23),
         ],

@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../models/mocks/mock_info_producto.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/info_producto_detalle_widgets.dart';
 
 /// Hoja inferior de detalle visual para una línea o presentación del catálogo.
 class InfoProductoDetalleScreen extends StatefulWidget {
-  final InfoProductoMockItem item;
+  final String nombre;
+  final String estado;
   final bool esLinea;
 
   const InfoProductoDetalleScreen({
     super.key,
-    required this.item,
+    required this.nombre,
+    required this.estado,
     required this.esLinea,
   });
 
@@ -27,8 +28,8 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
   @override
   void initState() {
     super.initState();
-    _nombreController = TextEditingController(text: widget.item.nombre);
-    _activo = widget.item.estado == 'Activo';
+    _nombreController = TextEditingController(text: widget.nombre);
+    _activo = widget.estado == 'Activo';
   }
 
   @override
