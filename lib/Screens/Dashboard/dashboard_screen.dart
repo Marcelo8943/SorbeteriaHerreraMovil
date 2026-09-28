@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/models/mocks/mock_productos.dart';
 
 import '../../theme/app_theme.dart';
 import '../../widgets/app_top_bar.dart';
@@ -25,13 +26,13 @@ class DashboardScreen extends StatelessWidget {
     const fechaFormateada = 'domingo, 16 de agosto de 2026';
 
     final List<Transaccion> transacciones = mockTransacciones;
+    final List<Producto> productos = mockProductos;
 
     final ventasDiarias = ventasPorPeriodo(
       transacciones,
       agruparPor: (t) => t.fecha.split(',').first,
     );
 
-    // --- KPIs (RF24 parcial: ticket promedio ya calculado de verdad) ---
     final ticketHoy = ticketPromedio(transacciones);
 
     final ventasHoy = transacciones
@@ -42,10 +43,9 @@ class DashboardScreen extends StatelessWidget {
         .where((t) => t.tipo == 'Pedido' && t.estado == 'Pendiente')
         .length;
 
-    // TODO(yahir): "Stock crítico" depende de un umbral de inventario que
-    // todavía no existe en el modelo Producto (ver RF31 del TDR: umbral de
-    // alerta de stock bajo, configurable). Placeholder mientras tanto.
-    const stockCritico = 0;
+    final stockCritico = productos
+        .where((p) => p.stockActual <= p.stockMinimo)
+        .length;
 
     return SingleChildScrollView(
       child: Column(
@@ -115,14 +115,9 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
 
-          // TODO(yahir): falta rotacionInventario (pendiente del dato de
-          // stock, RF31).
           RecentTransactionsList(
             transacciones: transacciones,
-            onVerTodo: () {
-              // TODO(yahir): navegar a AppRoutes.transacciones cuando esa
-              // pantalla exista.
-            },
+            onVerTodo: () {},
           ),
         ],
       ),
