@@ -13,6 +13,7 @@ import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
 import '../Screens/Usuarios/usuarios_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
+import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -160,10 +161,10 @@ class _AuthenticatedShell extends StatelessWidget {
         ProductosScreen(),
       ],
       drawerBuilder: (context) => AppDrawer(
-        userName: 'Marcelo Herrera',
-        userRole: 'Administrador',
-        userInitials: 'MH',
-        isAdmin: true,
+        userName: Session.nombre,
+        userRole: Session.rolNombre,
+        userInitials: Session.iniciales,
+        isAdmin: Session.esAdmin,
         onProfileTap: () => _showPending(context, 'Perfil'),
         items: _drawerItems(context),
       ),
@@ -241,9 +242,14 @@ class _AuthenticatedShell extends StatelessWidget {
       icon: Icons.logout,
       label: 'Cerrar sesión',
       destructive: true,
-      onTap: () => _showPending(context, 'Cerrar sesión'),
+      onTap: () => _logout(context),
     ),
   ];
+
+  void _logout(BuildContext context) {
+    Session.cerrarSesion();
+    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+  }
 
   void _showPending(BuildContext context, String destination) {
     Navigator.of(context).pop(); // cierra el drawer

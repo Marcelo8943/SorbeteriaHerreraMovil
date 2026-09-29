@@ -10,6 +10,7 @@ import '../../widgets/app_top_bar.dart';
 // Importación de modelos y mock por entidad
 import '../../models/app_models.dart';
 import '../../models/mocks/mock_clientes.dart';
+import '../../session.dart';
 
 class ClientesScreen extends StatefulWidget {
   const ClientesScreen({super.key});
@@ -277,15 +278,20 @@ class _ClientesScreenState extends State<ClientesScreen> {
           children: [
             AppTopBar(
               subtitle: 'Gestión de clientes',
-              trailing: ElevatedButton(
-                onPressed: _openClientForm,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(12),
-                ),
-                child: const Icon(Icons.add, color: AppColors.textOnPrimary),
-              ),
+              trailing: Session.esAdmin
+                  ? ElevatedButton(
+                      onPressed: _openClientForm,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(12),
+                      ),
+                      child: const Icon(
+                        Icons.add,
+                        color: AppColors.textOnPrimary,
+                      ),
+                    )
+                  : const SizedBox(width: 48, height: 48),
             ),
             Expanded(
               child: SingleChildScrollView(

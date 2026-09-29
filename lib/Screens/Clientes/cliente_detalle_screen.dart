@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/app_models.dart';
+import '../../session.dart';
 import '../../theme/app_theme.dart';
 import 'cliente_form_screen.dart';
 import 'widgets/cliente_detalle_widgets.dart';
@@ -47,17 +48,18 @@ class ClienteDetalleScreen extends StatelessWidget {
                 child: ClienteDetalleCardData(cliente: cliente),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.md,
-                0,
-                AppSpacing.md,
-                AppSpacing.lg,
+            if (Session.esAdmin)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  0,
+                  AppSpacing.md,
+                  AppSpacing.lg,
+                ),
+                child: ClienteDetalleEditButton(
+                  onPressed: () => _openEditForm(context),
+                ),
               ),
-              child: ClienteDetalleEditButton(
-                onPressed: () => _openEditForm(context),
-              ),
-            ),
           ],
         ),
       ),

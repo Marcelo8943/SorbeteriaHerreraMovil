@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/conf_widgets.dart';
 
@@ -8,6 +9,7 @@ class ConfiguracionesScreen extends StatelessWidget {
   const ConfiguracionesScreen({super.key});
 
   void _logout(BuildContext context) {
+    Session.cerrarSesion();
     Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 
@@ -37,9 +39,10 @@ class ConfiguracionesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ConfigurationProfileCard(
-                          name: 'Marcelo Mena',
-                          description: 'Administrador · Marcelomena@gmail.com',
-                          initials: 'MM',
+                          name: Session.nombre,
+                          description:
+                              '${Session.rolNombre} · ${Session.usuarioActual?.correo ?? ''}',
+                          initials: Session.iniciales,
                           onTap: () =>
                               Navigator.of(context).pushNamed(AppRoutes.miPerfil),
                         ),
