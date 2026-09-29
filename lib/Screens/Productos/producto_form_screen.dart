@@ -19,8 +19,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
 
   late TextEditingController _nombreController;
   late TextEditingController _imagenUrlController;
-  late TextEditingController _precioDetalleController;
-  late TextEditingController _precioMayoreoController;
+  late TextEditingController _stockMinimoController;
 
   late String _lineaSeleccionada;
   late String _presentacionSeleccionada;
@@ -34,11 +33,8 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
 
     _nombreController = TextEditingController(text: p?.nombre ?? '');
     _imagenUrlController = TextEditingController(text: p?.imgUrl ?? '');
-    _precioDetalleController = TextEditingController(
-      text: p != null ? p.precioDetalle.toStringAsFixed(p.precioDetalle.truncateToDouble() == p.precioDetalle ? 0 : 2) : '',
-    );
-    _precioMayoreoController = TextEditingController(
-      text: p != null ? p.precioMayoreo.toStringAsFixed(p.precioMayoreo.truncateToDouble() == p.precioMayoreo ? 0 : 2) : '',
+    _stockMinimoController = TextEditingController(
+      text: p?.stockMinimo.toString() ?? '0',
     );
 
     _lineaSeleccionada = p?.linea ?? mockLineas.first.nombre;
@@ -51,8 +47,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   void dispose() {
     _nombreController.dispose();
     _imagenUrlController.dispose();
-    _precioDetalleController.dispose();
-    _precioMayoreoController.dispose();
+    _stockMinimoController.dispose();
     super.dispose();
   }
 
@@ -180,23 +175,13 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Precio detalle
+                  // Stock mínimo del producto
                   ProductoFormField(
-                    label: 'Precio detalle (C\$) *',
-                    controller: _precioDetalleController,
-                    hintText: '45.00',
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    validator: _validarPrecio,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Precio mayoreo
-                  ProductoFormField(
-                    label: 'Precio mayoreo (C\$) *',
-                    controller: _precioMayoreoController,
-                    hintText: '40.00',
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    validator: _validarPrecio,
+                    label: 'Mínimo stock',
+                    controller: _stockMinimoController,
+                    hintText: '0',
+                    keyboardType: TextInputType.number,
+                    validator: _validarStockMinimo,
                   ),
                   const SizedBox(height: 20),
 
@@ -249,11 +234,13 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   List<String> _opcionesConValor(List<String> opciones, String valorActual) =>
       {...opciones, valorActual}.toList();
 
-  String? _validarPrecio(String? valor) {
-    if (valor == null || valor.trim().isEmpty) return 'Ingrese el precio';
-    final precio = double.tryParse(valor.trim());
-    if (precio == null || !precio.isFinite || precio < 0) {
-      return 'Ingrese un precio válido';
+  String? _validarStockMinimo(String? valor) {
+    if (valor == null || valor.trim().isEmpty) {
+      return 'Ingrese el mínimo de stock';
+    }
+    final stockMinimo = int.tryParse(valor.trim());
+    if (stockMinimo == null || stockMinimo < 0) {
+      return 'Ingrese una cantidad entera igual o mayor que 0';
     }
     return null;
   }

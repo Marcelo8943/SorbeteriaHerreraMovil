@@ -16,7 +16,9 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nombreCtrl;
+  late TextEditingController _apellidoCtrl;
   late TextEditingController _puntoVentaCtrl;
+  late TextEditingController _direccionPuntoVentaCtrl;
   late TextEditingController _telefonoCtrl;
   String? _departamento;
   String? _municipio;
@@ -56,8 +58,14 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   void initState() {
     super.initState();
     _nombreCtrl = TextEditingController(text: widget.cliente?.nombre ?? '');
+    _apellidoCtrl = TextEditingController(
+      text: widget.cliente?.apellido ?? '',
+    );
     _puntoVentaCtrl = TextEditingController(
       text: widget.cliente?.puntoVenta ?? '',
+    );
+    _direccionPuntoVentaCtrl = TextEditingController(
+      text: widget.cliente?.direccionPuntoVenta ?? '',
     );
     _telefonoCtrl = TextEditingController(text: widget.cliente?.telefono ?? '');
     _departamento = widget.cliente?.departamento;
@@ -68,32 +76,33 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   @override
   void dispose() {
     _nombreCtrl.dispose();
+    _apellidoCtrl.dispose();
     _puntoVentaCtrl.dispose();
+    _direccionPuntoVentaCtrl.dispose();
     _telefonoCtrl.dispose();
     super.dispose();
   }
 
   void _guardarFormulario() {
     if (_formKey.currentState!.validate()) {
-      final partesNombre = _nombreCtrl.text.trim().split(' ');
-      String? inicialesCalc;
-      if (partesNombre.length >= 2) {
-        inicialesCalc = '${partesNombre[0][0]}${partesNombre[1][0]}'
-            .toUpperCase();
-      } else if (partesNombre.isNotEmpty && partesNombre[0].isNotEmpty) {
-        inicialesCalc = partesNombre[0][0].toUpperCase();
-      }
+      final nombre = _nombreCtrl.text.trim();
+      final apellido = _apellidoCtrl.text.trim();
+      final inicialesCalc = apellido.isNotEmpty
+          ? '${nombre[0]}${apellido[0]}'.toUpperCase()
+          : nombre[0].toUpperCase();
 
       final clienteResultado = Cliente(
         id: widget.cliente?.id ?? DateTime.now().millisecondsSinceEpoch,
-        nombre: _nombreCtrl.text.trim(),
+        nombre: nombre,
+        apellido: apellido,
         puntoVenta: _puntoVentaCtrl.text.trim(),
+        direccionPuntoVenta: _direccionPuntoVentaCtrl.text.trim(),
         telefono: _telefonoCtrl.text.trim(),
         departamento: _departamento!,
         municipio: _municipio!,
         clienteDesde: widget.cliente?.clienteDesde ?? '22/09/2026',
         estado: _esActivo ? 'Activo' : 'Inactivo',
-        iniciales: widget.cliente?.iniciales ?? inicialesCalc,
+        iniciales: inicialesCalc,
       );
 
       Navigator.pop(context, clienteResultado);
@@ -147,11 +156,20 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                 child: Column(
                   children: [
                     CustomFormField(
-                      label: 'Nombre completo',
+                      label: 'Nombre',
                       controller: _nombreCtrl,
                       icon: Icons.person_outline,
                       validator: (val) => val == null || val.trim().isEmpty
                           ? 'Ingrese el nombre'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomFormField(
+                      label: 'Apellido',
+                      controller: _apellidoCtrl,
+                      icon: Icons.person_outline,
+                      validator: (val) => val == null || val.trim().isEmpty
+                          ? 'Ingrese el apellido'
                           : null,
                     ),
                     const SizedBox(height: 16),
@@ -193,6 +211,12 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                       validator: (val) => val == null || val.trim().isEmpty
                           ? 'Ingrese el punto de venta'
                           : null,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomFormField(
+                      label: 'Dirección del punto de venta',
+                      controller: _direccionPuntoVentaCtrl,
+                      icon: Icons.location_on_outlined,
                     ),
                     if (_esEdicion) ...[
                       const SizedBox(height: 16),
