@@ -178,7 +178,6 @@ class _ProductosScreenState extends State<ProductosScreen> {
             const SizedBox(width: 10),
             HStatCard(title: 'Activos', value: '$activos', bgColor: AppToneColors.soft[AppTone.purple]!, iconColor: AppToneColors.intense[AppTone.purple]!, icon: Icons.check_circle_outline),
             const SizedBox(width: 10),
-            HStatCard(title: 'Inactivos', value: '${_productos.length - activos}', bgColor: AppToneColors.soft[AppTone.red]!, iconColor: AppToneColors.intense[AppTone.red]!, icon: Icons.block_outlined),
           ])),
           const SizedBox(height: 16),
           _barraBusqueda(),

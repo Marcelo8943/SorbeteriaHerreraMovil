@@ -55,12 +55,16 @@ class CustomFormField extends StatelessWidget {
 
   String? _hintFor(String field) {
     switch (field) {
-      case 'Nombre completo':
-        return 'Ej. Roberto Argüello';
+      case 'Nombre':
+        return 'Ej. Roberto';
+      case 'Apellido':
+        return 'Ej. Pérez';
       case 'Teléfono':
         return 'Ej. 8777-6543';
       case 'Punto de venta':
         return 'Ej. Heladería & Snacks Masaya';
+      case 'Dirección del punto de venta':
+        return 'Ej. Del semáforo 2c al norte';
       default:
         return null;
     }

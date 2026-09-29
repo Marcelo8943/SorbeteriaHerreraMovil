@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/app_models.dart';
-import '../../../../theme/app_theme.dart';
+import '../../../models/app_models.dart';
+import '../../../theme/app_theme.dart';
 
 class BusinessAppBar extends StatelessWidget {
   const BusinessAppBar({super.key, required this.onBack});

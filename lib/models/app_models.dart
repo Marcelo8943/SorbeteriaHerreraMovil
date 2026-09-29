@@ -1,10 +1,12 @@
 class Cliente {
   final int id;
   final String nombre;
+  final String apellido;
   final String telefono;
   final String departamento;
   final String municipio;
   final String puntoVenta;
+  final String direccionPuntoVenta;
   final String clienteDesde;
   final String estado;
   final String? iniciales; // ej. "J.D." para "Juan Díaz"
@@ -12,14 +14,18 @@ class Cliente {
   const Cliente({
     required this.id,
     required this.nombre,
+    required this.apellido,
     required this.telefono,
     required this.departamento,
     required this.municipio,
     required this.puntoVenta,
+    required this.direccionPuntoVenta,
     required this.clienteDesde,
     this.estado = 'Activo',
     this.iniciales,
   });
+
+  String get nombreCompleto => '$nombre $apellido'.trim();
 }
 
 class Producto {
@@ -199,20 +205,24 @@ class LogEvento {
 class Linea {
   final int id;
   final String nombre;
+  final String estado;
 
   const Linea({
     required this.id,
     required this.nombre,
+    this.estado = 'Activo',
   });
 }
 
 class Presentacion {
   final int id;
   final String nombre;
+  final String estado;
 
   const Presentacion({
     required this.id,
     required this.nombre,
+    this.estado = 'Activo',
   });
 }
 

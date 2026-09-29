@@ -17,13 +17,12 @@ class ClienteDetalleHero extends StatelessWidget {
     if (cliente.iniciales != null && cliente.iniciales!.isNotEmpty) {
       return cliente.iniciales!;
     }
-    final partes = cliente.nombre.trim().split(' ');
-    if (partes.length >= 2) {
-      return '${partes[0][0]}${partes[1][0]}'.toUpperCase();
-    }
-    return partes.isNotEmpty && partes[0].isNotEmpty
-        ? partes[0][0].toUpperCase()
-        : 'CL';
+    final nombre = cliente.nombre.trim();
+    final apellido = cliente.apellido.trim();
+    if (nombre.isEmpty) return 'CL';
+    return apellido.isNotEmpty
+        ? '${nombre[0]}${apellido[0]}'.toUpperCase()
+        : nombre[0].toUpperCase();
   }
 
   @override
@@ -56,7 +55,7 @@ class ClienteDetalleHero extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            cliente.nombre,
+            cliente.nombreCompleto,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
@@ -177,6 +176,11 @@ class ClienteDetalleCardData extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          _LabelValue(
+            'DIRECCIÓN DEL PUNTO DE VENTA',
+            cliente.direccionPuntoVenta,
           ),
         ],
       ),

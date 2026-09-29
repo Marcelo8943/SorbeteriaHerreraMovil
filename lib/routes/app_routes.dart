@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../Screens/Configuraciones/conf_screen.dart';
-import '../Screens/Configuraciones/AcercaDe/acerca_de_screen.dart';
-import '../Screens/Configuraciones/DatosNegocio/datos_negocio_screen.dart';
-import '../Screens/Configuraciones/MiPerfil/mi_perfil_screen.dart';
-import '../Screens/Configuraciones/Seguridad/seguridad_screen.dart';
+import '../Screens/AcercaDe/acerca_de_screen.dart';
+import '../Screens/DatosNegocio/datos_negocio_screen.dart';
+import '../Screens/MiPerfil/mi_perfil_screen.dart';
+import '../Screens/Seguridad/seguridad_screen.dart';
 import '../Screens/Login/login_screen.dart';
+import '../Screens/PreferenciasSistema/sistema_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
 import '../Screens/Usuarios/usuarios_screen.dart';
+import '../Screens/info_Producto/info_producto_screen.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -98,6 +100,12 @@ class AppRoutes {
           settings: settings,
         );
 
+      case preferencias:
+        return MaterialPageRoute(
+          builder: (_) => const PreferenciasSistemaScreen(),
+          settings: settings,
+        );
+
       case precios:
         return MaterialPageRoute(
           builder: (_) => const PreciosScreen(),
@@ -107,6 +115,11 @@ class AppRoutes {
       case usuarios:
         return MaterialPageRoute(
           builder: (_) => const UsuariosScreen(),
+          settings: settings,
+        );
+      case infoProducto:
+        return MaterialPageRoute(
+          builder: (_) => const InfoProductoScreen(),
           settings: settings,
         );
 
@@ -174,7 +187,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.info_outline,
       label: 'Info del Producto',
-      onTap: () => _showPending(context, 'Info del Producto'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.infoProducto);
+      },
     ),
     AppDrawerItem(
       icon: Icons.inventory_outlined,
