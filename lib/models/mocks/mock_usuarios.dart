@@ -20,7 +20,6 @@ const List<Usuario> mockUsuarios = [
     rol: 'Administrador',
     estado: 'Activo',
   ),
-
   Usuario(
     id: 2,
     nombre: 'William Cortez',

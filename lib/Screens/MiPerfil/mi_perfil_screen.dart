@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/mocks/mock_usuarios.dart';
+import '../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/mi_perfil_widgets.dart';
 
@@ -9,7 +10,8 @@ class MiPerfilScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nameParts = usuarioActual.nombre.split(' ');
+    final usuario = Session.usuarioActual ?? mockUsuarios.first;
+    final nameParts = usuario.nombre.split(' ');
     final firstName = nameParts.first;
     final lastName = nameParts.skip(1).join(' ');
 
@@ -43,11 +45,11 @@ class MiPerfilScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSpacing.md),
                         UserInformationCard(
-                          username: usuarioActual.usuario,
-                          role: usuarioActual.rol,
+                          username: usuario.usuario,
+                          role: usuario.rol,
                           firstName: firstName,
                           lastName: lastName,
-                          email: usuarioActual.correo,
+                          email: usuario.correo,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         const Padding(

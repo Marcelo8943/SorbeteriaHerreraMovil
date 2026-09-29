@@ -7,6 +7,7 @@ import '../../widgets/h_stat_card.dart';
 import '../../models/app_models.dart';
 import '../../models/mocks/mock_transacciones.dart';
 import '../../models/dashboard_metrics.dart';
+import '../../session.dart';
 
 import 'widgets/greeting_banner.dart';
 
@@ -20,9 +21,9 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const userName = 'Marcelo';
-    const userRole = 'Administrador';
-    const userInitials = 'MA';
+    final userName = Session.nombreCorto;
+    final userRole = Session.rolNombre;
+    final userInitials = Session.iniciales;
     const fechaFormateada = 'domingo, 16 de agosto de 2026';
 
     final List<Transaccion> transacciones = mockTransacciones;
@@ -51,13 +52,13 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AppTopBar(
+          AppTopBar(
             subtitle: 'Hecho en familia',
             userInitials: userInitials,
           ),
           const SizedBox(height: AppSpacing.md),
 
-          const GreetingBanner(
+          GreetingBanner(
             userName: userName,
             userRole: userRole,
             fechaFormateada: fechaFormateada,

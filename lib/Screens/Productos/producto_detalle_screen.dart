@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/app_models.dart';
+import '../../session.dart';
 import '../../theme/app_theme.dart';
 import 'producto_form_screen.dart';
 import 'widgets/producto_detalle_widgets.dart';
@@ -39,15 +40,17 @@ class ProductoDetalleScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TarjetaInformacion(producto: producto),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton.icon(
-                        onPressed: () => _abrirFicha(context),
-                        icon: const Icon(Icons.edit_outlined, size: 18),
-                        label: const Text('Editar producto'),
+                    if (Session.esAdmin) ...[
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () => _abrirFicha(context),
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          label: const Text('Editar producto'),
+                        ),
                       ),
-                    ),
+                    ],
                     const SizedBox(height: 32),
                   ],
                 ),
