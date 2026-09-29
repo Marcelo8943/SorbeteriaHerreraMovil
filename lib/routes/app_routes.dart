@@ -10,6 +10,7 @@ import '../Screens/Dashboard/dashboard_screen.dart';
 import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
+import '../Screens/Usuarios/usuarios_screen.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -103,6 +104,12 @@ class AppRoutes {
           settings: settings,
         );
 
+      case usuarios:
+        return MaterialPageRoute(
+          builder: (_) => const UsuariosScreen(),
+          settings: settings,
+        );
+
       default:
         final title = _titleFor(settings.name);
         return MaterialPageRoute(
@@ -188,7 +195,10 @@ class _AuthenticatedShell extends StatelessWidget {
       icon: Icons.people_alt_outlined,
       label: 'Usuarios',
       adminOnly: true,
-      onTap: () => _showPending(context, 'Usuarios'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.usuarios);
+      },
     ),
     AppDrawerItem(
       icon: Icons.history_outlined,
