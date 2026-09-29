@@ -24,11 +24,12 @@ class ClienteCardItem extends StatelessWidget {
     if (cliente.iniciales != null && cliente.iniciales!.isNotEmpty) {
       return cliente.iniciales!;
     }
-    List<String> partes = cliente.nombre.trim().split(' ');
-    if (partes.length >= 2) {
-      return '${partes[0][0]}${partes[1][0]}'.toUpperCase();
-    }
-    return partes.isNotEmpty ? partes[0][0].toUpperCase() : '';
+    final nombre = cliente.nombre.trim();
+    final apellido = cliente.apellido.trim();
+    if (nombre.isEmpty) return '';
+    return apellido.isNotEmpty
+        ? '${nombre[0]}${apellido[0]}'.toUpperCase()
+        : nombre[0].toUpperCase();
   }
 
   @override
@@ -71,7 +72,7 @@ class ClienteCardItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        cliente.nombre,
+                        cliente.nombreCompleto,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

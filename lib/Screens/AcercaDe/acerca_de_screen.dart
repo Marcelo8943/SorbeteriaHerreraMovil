@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/app_theme.dart';
+import '../../theme/app_theme.dart';
 import 'widgets/acerca_de_widgets.dart';
 
 class AcercaDeScreen extends StatelessWidget {

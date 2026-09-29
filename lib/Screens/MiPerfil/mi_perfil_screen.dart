@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/mocks/mock_usuarios.dart';
-import '../../../theme/app_theme.dart';
+import '../../models/mocks/mock_usuarios.dart';
+import '../../theme/app_theme.dart';
 import 'widgets/mi_perfil_widgets.dart';
 
 class MiPerfilScreen extends StatelessWidget {
