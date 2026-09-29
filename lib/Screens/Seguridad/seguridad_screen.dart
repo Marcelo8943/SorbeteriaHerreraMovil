@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/mocks/mock_negocio.dart';
-import '../../../theme/app_theme.dart';
-import 'widgets/datos_negocio_widgets.dart';
+import '../../theme/app_theme.dart';
+import 'widgets/seguridad_widgets.dart';
 
-class DatosNegocioScreen extends StatelessWidget {
-  const DatosNegocioScreen({super.key});
+class SeguridadScreen extends StatelessWidget {
+  const SeguridadScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +17,7 @@ class DatosNegocioScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 720),
             child: Column(
               children: [
-                BusinessAppBar(
-                  onBack: () => Navigator.of(context).maybePop(),
-                ),
+                SecurityAppBar(onBack: () => Navigator.of(context).maybePop()),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(
@@ -29,7 +26,7 @@ class DatosNegocioScreen extends StatelessWidget {
                       AppSpacing.md,
                       AppSpacing.xl,
                     ),
-                    child: BusinessInformationCard(negocio: negocioActual),
+                    child: const SecurityFormCard(),
                   ),
                 ),
               ],

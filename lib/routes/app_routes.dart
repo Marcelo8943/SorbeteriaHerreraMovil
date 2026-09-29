@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../Screens/Configuraciones/conf_screen.dart';
-import '../Screens/Configuraciones/AcercaDe/acerca_de_screen.dart';
-import '../Screens/Configuraciones/DatosNegocio/datos_negocio_screen.dart';
-import '../Screens/Configuraciones/MiPerfil/mi_perfil_screen.dart';
-import '../Screens/Configuraciones/Seguridad/seguridad_screen.dart';
+import '../Screens/AcercaDe/acerca_de_screen.dart';
+import '../Screens/DatosNegocio/datos_negocio_screen.dart';
+import '../Screens/MiPerfil/mi_perfil_screen.dart';
+import '../Screens/Seguridad/seguridad_screen.dart';
 import '../Screens/Login/login_screen.dart';
 import '../Screens/PreferenciasSistema/sistema_screen.dart';
 import '../Screens/Dashboard/dashboard_screen.dart';
