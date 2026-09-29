@@ -30,7 +30,6 @@ class SistemaAppBar extends StatelessWidget {
     );
   }
 }
-
 class GlobalMonitoringCard extends StatelessWidget {
   const GlobalMonitoringCard({super.key});
 
@@ -73,46 +72,6 @@ class GlobalMonitoringCard extends StatelessWidget {
     );
   }
 }
-
-class ProductThresholdCard extends StatelessWidget {
-  const ProductThresholdCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return PreferenceCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
-          PreferenceTitle(
-            title: 'Umbral de stock bajo por producto',
-            description:
-                'Sobrescribe el umbral global para productos específicos.',
-            reference: 'RF30',
-          ),
-          SizedBox(height: AppSpacing.lg),
-          PreferenceLabel(label: 'Producto'),
-          SizedBox(height: AppSpacing.sm),
-          PreferenceValueField(
-            value: 'Sorbete Tradicional Albaricoque 4 Onzas',
-            showsArrow: true,
-          ),
-          SizedBox(height: AppSpacing.md),
-          PreferenceLabel(label: 'Umbral personalizado (und)'),
-          SizedBox(height: AppSpacing.sm),
-          PreferenceValueField(value: 'Ej. 20', isPlaceholder: true),
-          SizedBox(height: AppSpacing.lg),
-          PreferenceSecondaryButton(),
-          SizedBox(height: AppSpacing.lg),
-          Text(
-            'Sin umbrales personalizados: se aplica el umbral global a todos los productos.',
-            style: TextStyle(color: AppColors.muted, fontSize: 13, height: 1.35),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class PreferenceCard extends StatelessWidget {
   const PreferenceCard({super.key, required this.child});
 
@@ -132,7 +91,6 @@ class PreferenceCard extends StatelessWidget {
     );
   }
 }
-
 class PreferenceTitle extends StatelessWidget {
   const PreferenceTitle({
     super.key,
@@ -292,36 +250,6 @@ class PreferencePrimaryButton extends StatelessWidget {
           const Icon(Icons.check_rounded, color: AppColors.textOnPrimary),
           const SizedBox(width: AppSpacing.sm),
           Text(label, style: Theme.of(context).textTheme.labelLarge),
-        ],
-      ),
-    );
-  }
-}
-
-class PreferenceSecondaryButton extends StatelessWidget {
-  const PreferenceSecondaryButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.line),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.add_rounded, color: AppColors.muted),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            'Asignar umbral',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.muted,
-                  fontWeight: FontWeight.w700,
-                ),
-          ),
         ],
       ),
     );

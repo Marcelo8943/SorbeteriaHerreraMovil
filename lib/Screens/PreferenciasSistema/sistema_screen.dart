@@ -29,8 +29,6 @@ class PreferenciasSistemaScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         GlobalMonitoringCard(),
-                        SizedBox(height: AppSpacing.lg),
-                        ProductThresholdCard(),
                       ],
                     ),
                   ),
