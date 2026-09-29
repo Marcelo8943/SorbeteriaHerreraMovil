@@ -47,21 +47,18 @@ class GlobalMonitoringCard extends StatelessWidget {
           SizedBox(height: AppSpacing.lg),
           PreferenceLabel(
             label: 'Umbral global de stock bajo (und)',
-            reference: 'RF30',
           ),
           SizedBox(height: AppSpacing.sm),
           PreferenceValueField(value: '10'),
           SizedBox(height: AppSpacing.md),
           PreferenceLabel(
             label: 'Días para alertar vencimiento de lotes',
-            reference: 'RF31',
           ),
           SizedBox(height: AppSpacing.sm),
           PreferenceValueField(value: '15'),
           SizedBox(height: AppSpacing.md),
           PreferenceLabel(
             label: 'Unidades de visualización del panel',
-            reference: 'RF32',
           ),
           SizedBox(height: AppSpacing.sm),
           PreferenceValueField(value: 'Unidades (und)', showsArrow: true),
