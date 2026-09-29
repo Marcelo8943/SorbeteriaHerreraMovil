@@ -259,7 +259,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                         children: [
                           HStatCard(
                             title: 'Activos',
-                            value: '4',
+                            value: '3',
                             bgColor: AppToneColors.soft[AppTone.teal]!,
                             iconColor: AppToneColors.intense[AppTone.teal]!,
                             icon: Icons.people_outline,
@@ -351,7 +351,6 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
 
                     const SizedBox(height: 14),
 
-                    // Control de Paginación idéntico al de Clientes
                     UsuarioPaginationRow(
                       currentPage: _currentPage,
                       totalPages:
