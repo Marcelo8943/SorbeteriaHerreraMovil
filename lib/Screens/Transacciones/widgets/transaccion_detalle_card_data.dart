@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
-/// Card principal del detalle de la transacción con selector de pestañas
-/// "General" y "Detalle", desglosando información de venta, pedido o reabastecimiento.
 class TransaccionDetalleCardData extends StatefulWidget {
   final Transaccion transaccion;
 
-  const TransaccionDetalleCardData({
-    super.key,
-    required this.transaccion,
-  });
+  const TransaccionDetalleCardData({super.key, required this.transaccion});
 
   @override
   State<TransaccionDetalleCardData> createState() =>
@@ -34,7 +29,6 @@ class _TransaccionDetalleCardDataState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Selector de Pestañas (General / Detalle) ──────────────────────
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
@@ -62,7 +56,6 @@ class _TransaccionDetalleCardDataState
           ),
           const SizedBox(height: 20),
 
-          // ── Contenido de la pestaña activa ──────────────────────────────
           if (_selectedTabIndex == 0)
             _buildGeneralTab()
           else
@@ -70,15 +63,11 @@ class _TransaccionDetalleCardDataState
 
           const SizedBox(height: 24),
 
-          // ── Pie de solo lectura ──────────────────────────────────────────
           const Center(
             child: Text(
               'Consulta de solo lectura · gestionado en el sistema web.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.muted,
-              ),
+              style: TextStyle(fontSize: 12, color: AppColors.muted),
             ),
           ),
           const SizedBox(height: 8),
@@ -87,7 +76,6 @@ class _TransaccionDetalleCardDataState
     );
   }
 
-  // ── Vista Pestaña General ─────────────────────────────────────────────────
   Widget _buildGeneralTab() {
     final t = widget.transaccion;
     final isReabastecimiento = t.tipo == 'Reabastecimiento';
@@ -176,7 +164,6 @@ class _TransaccionDetalleCardDataState
     );
   }
 
-  // ── Vista Pestaña Detalle ─────────────────────────────────────────────────
   Widget _buildDetalleTab() {
     final t = widget.transaccion;
     final isReabastecimiento = t.tipo == 'Reabastecimiento';
@@ -330,7 +317,10 @@ class _TransaccionDetalleCardDataState
 
   String _formatMonto(double monto) {
     final entero = monto.toInt();
-    final decimales = ((monto - entero) * 100).toInt().toString().padLeft(2, '0');
+    final decimales = ((monto - entero) * 100).toInt().toString().padLeft(
+      2,
+      '0',
+    );
     if (entero >= 1000) {
       final miles = entero ~/ 1000;
       final resto = (entero % 1000).toString().padLeft(3, '0');
@@ -340,7 +330,6 @@ class _TransaccionDetalleCardDataState
   }
 }
 
-// ── Botón de pestaña individual ───────────────────────────────────────────────
 class _TabButton extends StatelessWidget {
   final String title;
   final bool isSelected;
@@ -378,7 +367,6 @@ class _TabButton extends StatelessWidget {
   }
 }
 
-// ── Fila de dos columnas para metadatos (Folio / Fecha, etc.) ──────────────────
 class _TwoColumnsRow extends StatelessWidget {
   final String label1;
   final String value1;
@@ -474,11 +462,7 @@ class _IconDetailRow extends StatelessWidget {
             color: AppToneColors.soft[tone],
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon,
-            size: 19,
-            color: AppToneColors.intense[tone],
-          ),
+          child: Icon(icon, size: 19, color: AppToneColors.intense[tone]),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -510,7 +494,6 @@ class _IconDetailRow extends StatelessWidget {
   }
 }
 
-// ── Línea divisoria suave ─────────────────────────────────────────────────────
 class _CustomDivider extends StatelessWidget {
   const _CustomDivider();
 
@@ -518,11 +501,7 @@ class _CustomDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.symmetric(vertical: 12),
-      child: Divider(
-        height: 1,
-        thickness: 1,
-        color: AppColors.line,
-      ),
+      child: Divider(height: 1, thickness: 1, color: AppColors.line),
     );
   }
 }

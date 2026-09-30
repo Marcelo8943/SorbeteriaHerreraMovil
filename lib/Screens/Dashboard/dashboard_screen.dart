@@ -52,10 +52,7 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppTopBar(
-            subtitle: 'Hecho en familia',
-            userInitials: userInitials,
-          ),
+          AppTopBar(subtitle: 'Hecho en familia', userInitials: userInitials),
           const SizedBox(height: AppSpacing.md),
 
           GreetingBanner(
@@ -118,7 +115,9 @@ class DashboardScreen extends StatelessWidget {
 
           RecentTransactionsList(
             transacciones: transacciones,
-            onVerTodo: () {},
+            onVerTodo: () {
+              Navigator.pushNamed(context, '/transacciones');
+            },
           ),
         ],
       ),

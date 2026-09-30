@@ -442,52 +442,6 @@ class _TransaccionesScreenState extends State<TransaccionesScreen> {
       ),
     );
   }
-
-  void _onSelectDateChip(String rango) {
-    setState(() {
-      _filtroRangoFecha = rango;
-      _currentPage = 1;
-    });
-  }
-}
-
-class _DateChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _DateChip({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.card,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected
-              ? null
-              : Border.all(color: AppColors.line.withValues(alpha: 0.6)),
-          boxShadow: isSelected ? AppSpacing.cardShadow : null,
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-            color: isSelected ? AppColors.textOnPrimary : AppColors.ink,
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class _FilterLabel extends StatelessWidget {
