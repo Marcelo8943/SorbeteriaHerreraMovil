@@ -25,7 +25,17 @@ class SalesByPeriodChart extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.ink),
           ),
           const SizedBox(height: 12),
-          SizedBox(height: 180, child: LineChart(_buildChartData())),
+          SizedBox(
+            height: 180,
+            child: datos.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Sin datos suficientes',
+                      style: TextStyle(color: AppColors.muted),
+                    ),
+                  )
+                : LineChart(_buildChartData()),
+          ),
         ],
       ),
     );
