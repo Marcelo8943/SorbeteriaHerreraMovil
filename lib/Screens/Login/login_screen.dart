@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes/app_routes.dart';
+import '../../models/mocks/mock_usuarios.dart';
+import '../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/login_widgets.dart';
 
@@ -17,8 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
     'https://www.facebook.com/SorbetesHerrera/',
   );
 
-  final _userController = TextEditingController(text: 'Marcelo');
-  final _passwordController = TextEditingController(text: 'herrera');
+  final _userController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _hidePassword = true;
 
   @override
@@ -43,7 +45,25 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _showPendingLoginMessage() {
+  void _login() {
+    final user = _userController.text.trim();
+    final password = _passwordController.text;
+
+    final matchedUsers = mockUsuarios.where(
+      (usuario) =>
+          usuario.usuario.toLowerCase() == user.toLowerCase() &&
+          password == '123',
+    );
+
+    if (matchedUsers.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuario o contraseña incorrectos')),
+      );
+      return;
+    }
+
+    Session.iniciarSesion(matchedUsers.first);
+
     Navigator.of(context).pushReplacementNamed(AppRoutes.shell);
   }
 
@@ -79,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPasswordVisibilityChanged: () {
                         setState(() => _hidePassword = !_hidePassword);
                       },
-                      onLogin: _showPendingLoginMessage,
+                      onLogin: _login,
                       onForgotPassword: _showPasswordRecoveryMessage,
                     ),
                   ),

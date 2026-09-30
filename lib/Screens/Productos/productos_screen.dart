@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/app_models.dart';
 import '../../models/mocks/mock_catalogo.dart';
 import '../../models/mocks/mock_productos.dart';
+import '../../session.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_top_bar.dart';
 import '../../widgets/h_stat_card.dart';
@@ -156,15 +157,20 @@ class _ProductosScreenState extends State<ProductosScreen> {
           children: [
             AppTopBar(
               subtitle: 'Catálogo de productos',
-              trailing: ElevatedButton(
-                onPressed: () => _abrirFormulario(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(12),
-                ),
-                child: const Icon(Icons.add, color: AppColors.textOnPrimary),
-              ),
+              trailing: Session.esAdmin
+                  ? ElevatedButton(
+                      onPressed: () => _abrirFormulario(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(12),
+                      ),
+                      child: const Icon(
+                        Icons.add,
+                        color: AppColors.textOnPrimary,
+                      ),
+                    )
+                  : const SizedBox(width: 48, height: 48),
             ),
             Expanded(
               child: ListView(padding: const EdgeInsets.fromLTRB(16, 16, 16, 24), children: [

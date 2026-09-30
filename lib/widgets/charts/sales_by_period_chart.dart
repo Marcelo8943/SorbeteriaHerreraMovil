@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../theme/app_theme.dart';
-import '../../../models/dashboard_metrics.dart';
+import '../../theme/app_theme.dart';
+import '../../models/dashboard_metrics.dart';
 
 class SalesByPeriodChart extends StatelessWidget {
   final List<PuntoVenta> datos;
@@ -25,14 +25,23 @@ class SalesByPeriodChart extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.ink),
           ),
           const SizedBox(height: 12),
-          SizedBox(height: 180, child: LineChart(_buildChartData())),
+          SizedBox(
+            height: 180,
+            child: datos.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Sin datos suficientes',
+                      style: TextStyle(color: AppColors.muted),
+                    ),
+                  )
+                : LineChart(_buildChartData()),
+          ),
         ],
       ),
     );
   }
 
   LineChartData _buildChartData() {
-    // Paso A: convertir cada PuntoVenta en un FlSpot (x, y) que fl_chart entiende.
     final spots = <FlSpot>[
       for (int i = 0; i < datos.length; i++)
         FlSpot(i.toDouble(), datos[i].monto),
@@ -54,7 +63,6 @@ class SalesByPeriodChart extends StatelessWidget {
               final index = value.toInt();
               if (index < 0 || index >= datos.length) return const SizedBox();
 
-              // Muestra 1 de cada "5" etiquetas, para que no se amontonen.
               final salto = (datos.length / 5).ceil().clamp(1, datos.length);
               if (index % salto != 0) return const SizedBox();
 
@@ -82,7 +90,7 @@ class SalesByPeriodChart extends StatelessWidget {
           dotData: const FlDotData(show: true),
           belowBarData: BarAreaData(
             show: true,
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
           ),
         ),
       ],

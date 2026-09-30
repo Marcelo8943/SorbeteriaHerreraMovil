@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../theme/app_theme.dart';
-import '../../../models/dashboard_metrics.dart';
+import '../../theme/app_theme.dart';
+import '../../models/dashboard_metrics.dart';
 
-class TopProductsChart extends StatelessWidget {
-  final List<ProductoVendido> datos;
+class AverageTicketChart extends StatelessWidget {
+  final List<PuntoVenta> datos;
 
-  const TopProductsChart({super.key, required this.datos});
+  const AverageTicketChart({super.key, required this.datos});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class TopProductsChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Productos más vendidos',
+            'Ticket promedio por período',
             style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.ink),
           ),
           const SizedBox(height: 12),
@@ -34,30 +34,20 @@ class TopProductsChart extends StatelessWidget {
                       style: TextStyle(color: AppColors.muted),
                     ),
                   )
-                : BarChart(_buildChartData()),
+                : LineChart(_buildChartData()),
           ),
         ],
       ),
     );
   }
 
-  BarChartData _buildChartData() {
-    final groups = <BarChartGroupData>[
+  LineChartData _buildChartData() {
+    final spots = <FlSpot>[
       for (int i = 0; i < datos.length; i++)
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: datos[i].cantidad.toDouble(),
-              color: AppColors.primary,
-              width: 14,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ],
-        ),
+        FlSpot(i.toDouble(), datos[i].monto),
     ];
 
-    return BarChartData(
+    return LineChartData(
       gridData: const FlGridData(show: false),
       titlesData: FlTitlesData(
         leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -68,22 +58,42 @@ class TopProductsChart extends StatelessWidget {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
+            reservedSize: 32,
             getTitlesWidget: (value, meta) {
               final index = value.toInt();
               if (index < 0 || index >= datos.length) return const SizedBox();
-              final nombre = datos[index].nombre;
-              final etiqueta =
-                  nombre.length > 8 ? '${nombre.substring(0, 8)}...' : nombre;
-              return Text(
-                etiqueta,
-                style: const TextStyle(fontSize: 10, color: AppColors.muted),
+
+              final salto = (datos.length / 5).ceil().clamp(1, datos.length);
+              if (index % salto != 0) return const SizedBox();
+
+              return Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Transform.rotate(
+                  angle: -0.5,
+                  child: Text(
+                    datos[index].etiqueta,
+                    style: const TextStyle(fontSize: 9, color: AppColors.muted),
+                  ),
+                ),
               );
             },
           ),
         ),
       ),
       borderData: FlBorderData(show: false),
-      barGroups: groups,
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: true,
+          color: AppColors.primary,
+          barWidth: 3,
+          dotData: const FlDotData(show: true),
+          belowBarData: BarAreaData(
+            show: true,
+            color: AppColors.primary.withValues(alpha: 0.1),
+          ),
+        ),
+      ],
     );
   }
 }

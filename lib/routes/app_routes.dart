@@ -12,8 +12,14 @@ import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
 import '../Screens/Usuarios/usuarios_screen.dart';
+import '../Screens/Inventario/inventario_screen.dart';
+import '../Screens/Movimientos/movimientos_screen.dart';
+import '../Screens/Transacciones/transacciones_screen.dart';
+import '../Screens/Transacciones/transaccion_detalle_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
 import '../Screens/Logs/logs_screen.dart';
+import '../Screens/Reportes/reportes_screen.dart';
+import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -118,6 +124,31 @@ class AppRoutes {
           builder: (_) => const UsuariosScreen(),
           settings: settings,
         );
+
+      case inventario:
+        return MaterialPageRoute(
+          builder: (_) => const InventarioScreen(),
+          settings: settings,
+        );
+
+      case movimientos:
+        return MaterialPageRoute(
+          builder: (_) => const MovimientosScreen(),
+          settings: settings,
+        );
+
+      case transacciones:
+        return MaterialPageRoute(
+          builder: (_) => const TransaccionesScreen(),
+          settings: settings,
+        );
+
+      case transaccionDetalle:
+        return MaterialPageRoute(
+          builder: (_) => const TransaccionDetalleScreen(),
+          settings: settings,
+        );
+
       case infoProducto:
         return MaterialPageRoute(
           builder: (_) => const InfoProductoScreen(),
@@ -127,6 +158,9 @@ class AppRoutes {
       case logs:
         return MaterialPageRoute(
           builder: (_) => const LogsScreen(),
+      case reportes:
+        return MaterialPageRoute(
+          builder: (_) => const ReportesScreen(),
           settings: settings,
         );
 
@@ -167,11 +201,14 @@ class _AuthenticatedShell extends StatelessWidget {
         ProductosScreen(),
       ],
       drawerBuilder: (context) => AppDrawer(
-        userName: 'Marcelo Herrera',
-        userRole: 'Administrador',
-        userInitials: 'MH',
-        isAdmin: true,
-        onProfileTap: () => _showPending(context, 'Perfil'),
+        userName: Session.nombre,
+        userRole: Session.rolNombre,
+        userInitials: Session.iniciales,
+        isAdmin: Session.esAdmin,
+        onProfileTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed(AppRoutes.miPerfil);
+        },
         items: _drawerItems(context),
       ),
     );
@@ -181,7 +218,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.assessment_outlined,
       label: 'Reportes',
-      onTap: () => _showPending(context, 'Reportes'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.reportes);
+      },
     ),
     AppDrawerItem(
       icon: Icons.sell_outlined,
@@ -202,17 +242,26 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.inventory_outlined,
       label: 'Inventario',
-      onTap: () => _showPending(context, 'Inventario'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.inventario);
+      },
     ),
     AppDrawerItem(
       icon: Icons.receipt_long_outlined,
       label: 'Transacciones',
-      onTap: () => _showPending(context, 'Transacciones'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.transacciones);
+      },
     ),
     AppDrawerItem(
       icon: Icons.swap_horiz,
       label: 'Movimientos de Inventario',
-      onTap: () => _showPending(context, 'Movimientos de Inventario'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.movimientos);
+      },
     ),
     AppDrawerItem(
       icon: Icons.people_alt_outlined,
@@ -251,9 +300,16 @@ class _AuthenticatedShell extends StatelessWidget {
       icon: Icons.logout,
       label: 'Cerrar sesión',
       destructive: true,
-      onTap: () => _showPending(context, 'Cerrar sesión'),
+      onTap: () => _logout(context),
     ),
   ];
+
+  void _logout(BuildContext context) {
+    Session.cerrarSesion();
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+  }
 
   void _showPending(BuildContext context, String destination) {
     Navigator.of(context).pop(); // cierra el drawer

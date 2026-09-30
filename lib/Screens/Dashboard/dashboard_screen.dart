@@ -7,22 +7,23 @@ import '../../widgets/h_stat_card.dart';
 import '../../models/app_models.dart';
 import '../../models/mocks/mock_transacciones.dart';
 import '../../models/dashboard_metrics.dart';
+import '../../session.dart';
 
 import 'widgets/greeting_banner.dart';
 
 import 'widgets/recent_transactions_list.dart';
-import 'widgets/sales_by_period_chart.dart';
-import 'widgets/top_products_chart.dart';
-import 'widgets/average_ticket_chart.dart';
+import '../../widgets/charts/sales_by_period_chart.dart';
+import '../../widgets/charts/top_products_chart.dart';
+import '../../widgets/charts/average_ticket_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const userName = 'Marcelo';
-    const userRole = 'Administrador';
-    const userInitials = 'MA';
+    final userName = Session.nombreCorto;
+    final userRole = Session.rolNombre;
+    final userInitials = Session.iniciales;
     const fechaFormateada = 'domingo, 16 de agosto de 2026';
 
     final List<Transaccion> transacciones = mockTransacciones;
@@ -51,13 +52,10 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const AppTopBar(
-            subtitle: 'Hecho en familia',
-            userInitials: userInitials,
-          ),
+          AppTopBar(subtitle: 'Hecho en familia', userInitials: userInitials),
           const SizedBox(height: AppSpacing.md),
 
-          const GreetingBanner(
+          GreetingBanner(
             userName: userName,
             userRole: userRole,
             fechaFormateada: fechaFormateada,
@@ -117,7 +115,9 @@ class DashboardScreen extends StatelessWidget {
 
           RecentTransactionsList(
             transacciones: transacciones,
-            onVerTodo: () {},
+            onVerTodo: () {
+              Navigator.pushNamed(context, '/transacciones');
+            },
           ),
         ],
       ),
