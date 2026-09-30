@@ -17,6 +17,7 @@ import '../Screens/Movimientos/movimientos_screen.dart';
 import '../Screens/Transacciones/transacciones_screen.dart';
 import '../Screens/Transacciones/transaccion_detalle_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
+import '../Screens/Reportes/reportes_screen.dart';
 import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
@@ -153,6 +154,12 @@ class AppRoutes {
           settings: settings,
         );
 
+      case reportes:
+        return MaterialPageRoute(
+          builder: (_) => const ReportesScreen(),
+          settings: settings,
+        );
+
       default:
         final title = _titleFor(settings.name);
         return MaterialPageRoute(
@@ -207,7 +214,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.assessment_outlined,
       label: 'Reportes',
-      onTap: () => _showPending(context, 'Reportes'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.reportes);
+      },
     ),
     AppDrawerItem(
       icon: Icons.sell_outlined,

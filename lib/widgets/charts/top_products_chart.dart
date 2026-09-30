@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../../theme/app_theme.dart';
-import '../../../models/dashboard_metrics.dart';
+import '../../theme/app_theme.dart';
+import '../../models/dashboard_metrics.dart';
 
-class AverageTicketChart extends StatelessWidget {
-  final List<PuntoVenta> datos;
+class TopProductsChart extends StatelessWidget {
+  final List<ProductoVendido> datos;
 
-  const AverageTicketChart({super.key, required this.datos});
+  const TopProductsChart({super.key, required this.datos});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class AverageTicketChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Ticket promedio por período',
+            'Productos más vendidos',
             style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.ink),
           ),
           const SizedBox(height: 12),
@@ -34,20 +34,30 @@ class AverageTicketChart extends StatelessWidget {
                       style: TextStyle(color: AppColors.muted),
                     ),
                   )
-                : LineChart(_buildChartData()),
+                : BarChart(_buildChartData()),
           ),
         ],
       ),
     );
   }
 
-  LineChartData _buildChartData() {
-    final spots = <FlSpot>[
+  BarChartData _buildChartData() {
+    final groups = <BarChartGroupData>[
       for (int i = 0; i < datos.length; i++)
-        FlSpot(i.toDouble(), datos[i].monto),
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: datos[i].cantidad.toDouble(),
+              color: AppColors.primary,
+              width: 14,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ],
+        ),
     ];
 
-    return LineChartData(
+    return BarChartData(
       gridData: const FlGridData(show: false),
       titlesData: FlTitlesData(
         leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -58,43 +68,23 @@ class AverageTicketChart extends StatelessWidget {
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 32,
             getTitlesWidget: (value, meta) {
               final index = value.toInt();
               if (index < 0 || index >= datos.length) return const SizedBox();
-
-              // Muestra 1 de cada "5" etiquetas, para que no se amontonen.
-              final salto = (datos.length / 5).ceil().clamp(1, datos.length);
-              if (index % salto != 0) return const SizedBox();
-
-              return Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Transform.rotate(
-                  angle: -0.5,
-                  child: Text(
-                    datos[index].etiqueta,
-                    style: const TextStyle(fontSize: 9, color: AppColors.muted),
-                  ),
-                ),
+              final nombre = datos[index].nombre;
+              final etiqueta = nombre.length > 8
+                  ? '${nombre.substring(0, 8)}...'
+                  : nombre;
+              return Text(
+                etiqueta,
+                style: const TextStyle(fontSize: 10, color: AppColors.muted),
               );
             },
           ),
         ),
       ),
       borderData: FlBorderData(show: false),
-      lineBarsData: [
-        LineChartBarData(
-          spots: spots,
-          isCurved: true,
-          color: AppColors.primary,
-          barWidth: 3,
-          dotData: const FlDotData(show: true),
-          belowBarData: BarAreaData(
-            show: true,
-            color: AppColors.primary.withValues(alpha: 0.1),
-          ),
-        ),
-      ],
+      barGroups: groups,
     );
   }
 }

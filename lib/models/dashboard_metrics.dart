@@ -81,7 +81,16 @@ double rotacionInventario(
   List<Transaccion> transacciones,
   List<Producto> productos,
 ) {
-  return 0;
+  final unidadesVendidas = transacciones
+      .where((t) => t.tipo == 'Venta')
+      .expand((t) => t.items)
+      .fold<int>(0, (sum, i) => sum + i.cantidad);
+  if (productos.isEmpty) return 0;
+  final stockPromedio =
+      productos.fold<int>(0, (sum, p) => sum + p.stockActual) /
+      productos.length;
+  if (stockPromedio == 0) return 0;
+  return unidadesVendidas / stockPromedio;
 }
 
 double ticketPromedio(List<Transaccion> transacciones) {
