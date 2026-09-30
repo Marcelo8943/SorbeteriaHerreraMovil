@@ -12,6 +12,7 @@ import '../Screens/Clientes/clientes_screen.dart';
 import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
 import '../Screens/Usuarios/usuarios_screen.dart';
+import '../Screens/Inventario/inventario_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
 import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
@@ -118,6 +119,13 @@ class AppRoutes {
           builder: (_) => const UsuariosScreen(),
           settings: settings,
         );
+
+      case inventario:
+        return MaterialPageRoute(
+          builder: (_) => const InventarioScreen(),
+          settings: settings,
+        );
+
       case infoProducto:
         return MaterialPageRoute(
           builder: (_) => const InfoProductoScreen(),
@@ -196,7 +204,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.inventory_outlined,
       label: 'Inventario',
-      onTap: () => _showPending(context, 'Inventario'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.inventario);
+      },
     ),
     AppDrawerItem(
       icon: Icons.receipt_long_outlined,
@@ -248,7 +259,9 @@ class _AuthenticatedShell extends StatelessWidget {
 
   void _logout(BuildContext context) {
     Session.cerrarSesion();
-    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 
   void _showPending(BuildContext context, String destination) {

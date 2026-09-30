@@ -198,7 +198,6 @@ class LogEvento {
     this.fechaEdicion,
     required this.fechaRelativa,
   });
-
 }
 
 // Modelo de catalogos.
@@ -207,11 +206,7 @@ class Linea {
   final String nombre;
   final String estado;
 
-  const Linea({
-    required this.id,
-    required this.nombre,
-    this.estado = 'Activo',
-  });
+  const Linea({required this.id, required this.nombre, this.estado = 'Activo'});
 }
 
 class Presentacion {
@@ -230,10 +225,7 @@ class Sabor {
   final int id;
   final String nombre;
 
-  const Sabor({
-    required this.id,
-    required this.nombre,
-  });
+  const Sabor({required this.id, required this.nombre});
 }
 
 /// Representa un precio base configurado por línea y presentación.
@@ -255,15 +247,49 @@ class PrecioGeneral {
   });
 }
 
+/// Snapshot de stock de un producto por ubicación, tal como lo devuelve
+/// el backend (InventoryProductDto). Los datos son fijos del mock.
+class InventarioProducto {
+  final int productoId;
+  final String nombreProducto;
+  final String linea;
+  final String presentacion;
+  final String sabor;
+  final int stockMostrador;
+  final int stockBodega;
+  final int stockReservado;
+  final int stockTotal;
+  final int stockMinimo;
+
+  const InventarioProducto({
+    required this.productoId,
+    required this.nombreProducto,
+    required this.linea,
+    required this.presentacion,
+    required this.sabor,
+    required this.stockMostrador,
+    required this.stockBodega,
+    required this.stockReservado,
+    required this.stockTotal,
+    required this.stockMinimo,
+  });
+
+  /// true cuando el stock total ya alcanzó o bajó del mínimo configurado.
+  /// Mismo patrón que Usuario.esAdministrador — solo una comparación sobre
+  /// datos ya fijos del mock, sin lógica de negocio dinámica.
+  bool get stockBajo => stockTotal <= stockMinimo;
+}
+
 /// Representa una tarifa o promoción con precio especial para un producto
 class PrecioEspecial {
   final int id;
   final int productoId;
   final String productoNombre;
   final double precioEspecial;
-  final String? motivo;      // ej. "40% Descuento", "Especial Día de Madres"
-  final String fechaInicio;   // ej. "03/03/25"
-  final String? colorTag;     // Identificador de estilo para la card (púrpura, amarillo, etc.)
+  final String? motivo; // ej. "40% Descuento", "Especial Día de Madres"
+  final String fechaInicio; // ej. "03/03/25"
+  final String?
+  colorTag; // Identificador de estilo para la card (púrpura, amarillo, etc.)
 
   const PrecioEspecial({
     required this.id,
