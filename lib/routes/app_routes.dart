@@ -165,7 +165,10 @@ class _AuthenticatedShell extends StatelessWidget {
         userRole: Session.rolNombre,
         userInitials: Session.iniciales,
         isAdmin: Session.esAdmin,
-        onProfileTap: () => _showPending(context, 'Perfil'),
+        onProfileTap: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed(AppRoutes.miPerfil);
+        },
         items: _drawerItems(context),
       ),
     );
