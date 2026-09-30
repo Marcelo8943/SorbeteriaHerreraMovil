@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/app_models.dart';
 import '../../models/mocks/mock_logs.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
@@ -17,9 +18,10 @@ class _LogsScreenState extends State<LogsScreen> {
   int _currentPage = 1;
   static const int _itemsPerPage = 10;
 
-  String _tempTipo = 'Todos';
-  String _tempModulo = 'Todos';
-  String _tempRangoFecha = 'Últimos 7 días';
+  String _searchQuery = '';
+  String _filtroTipo = 'Todos';
+  String _filtroModulo = 'Todos';
+  String _filtroRangoFecha = 'Todos';
 
   static const List<String> _tiposEvento = [
     'Todos',
@@ -46,7 +48,65 @@ class _LogsScreenState extends State<LogsScreen> {
     'Este año',
   ];
 
+  List<LogEvento> get _filteredLogs {
+    return mockLogs.where((l) {
+      final query = _searchQuery.toLowerCase();
+      final matchSearch =
+          query.isEmpty ||
+          l.descripcion.toLowerCase().contains(query) ||
+          l.usuario.toLowerCase().contains(query) ||
+          l.modulo.toLowerCase().contains(query);
+
+      final matchTipo =
+          _filtroTipo == 'Todos' ||
+          l.tipo.toLowerCase() == _filtroTipo.toLowerCase() ||
+          (_filtroTipo.toLowerCase() == 'desactivado' &&
+              l.tipo == 'Desactivación');
+
+      final matchModulo =
+          _filtroModulo == 'Todos' ||
+          l.modulo.toLowerCase() == _filtroModulo.toLowerCase() ||
+          l.modulo.toLowerCase().startsWith(
+            _filtroModulo.toLowerCase().substring(0, 4),
+          );
+
+      // 4. Rango de fecha
+      final matchFecha = _evaluarRangoFecha(l, _filtroRangoFecha);
+
+      return matchSearch && matchTipo && matchModulo && matchFecha;
+    }).toList();
+  }
+
+  bool _evaluarRangoFecha(LogEvento l, String rango) {
+    switch (rango) {
+      case 'Hoy':
+        return l.fecha == '16/08/2026' || l.fechaRelativa.startsWith('hace');
+      case 'Últimos 7 días':
+        return l.fechaRelativa.startsWith('hace') ||
+            l.fechaRelativa == 'ayer' ||
+            (l.fecha.endsWith('/08/2026') &&
+                (l.fecha.startsWith('10') ||
+                    l.fecha.startsWith('11') ||
+                    l.fecha.startsWith('12') ||
+                    l.fecha.startsWith('13') ||
+                    l.fecha.startsWith('14') ||
+                    l.fecha.startsWith('15') ||
+                    l.fecha.startsWith('16')));
+      case 'Este mes':
+        return l.fecha.contains('/08/2026');
+      case 'Este año':
+        return l.fecha.contains('/2026');
+      case 'Todos':
+      default:
+        return true;
+    }
+  }
+
   void _showFilterModal() {
+    String tempTipo = _filtroTipo;
+    String tempModulo = _filtroModulo;
+    String tempRangoFecha = _filtroRangoFecha;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -113,9 +173,9 @@ class _LogsScreenState extends State<LogsScreen> {
                     const _FilterLabel('Tipo de evento'),
                     const SizedBox(height: 6),
                     _FilterDropdown(
-                      value: _tempTipo,
+                      value: tempTipo,
                       items: _tiposEvento,
-                      onChanged: (val) => setModalState(() => _tempTipo = val!),
+                      onChanged: (val) => setModalState(() => tempTipo = val!),
                     ),
                     const SizedBox(height: 16),
 
@@ -123,10 +183,10 @@ class _LogsScreenState extends State<LogsScreen> {
                     const _FilterLabel('Módulo'),
                     const SizedBox(height: 6),
                     _FilterDropdown(
-                      value: _tempModulo,
+                      value: tempModulo,
                       items: _modulos,
                       onChanged: (val) =>
-                          setModalState(() => _tempModulo = val!),
+                          setModalState(() => tempModulo = val!),
                     ),
                     const SizedBox(height: 16),
 
@@ -134,10 +194,10 @@ class _LogsScreenState extends State<LogsScreen> {
                     const _FilterLabel('Rango de fecha'),
                     const SizedBox(height: 6),
                     _FilterDropdown(
-                      value: _tempRangoFecha,
+                      value: tempRangoFecha,
                       items: _rangosFecha,
                       onChanged: (val) =>
-                          setModalState(() => _tempRangoFecha = val!),
+                          setModalState(() => tempRangoFecha = val!),
                     ),
                     const SizedBox(height: 24),
 
@@ -148,9 +208,9 @@ class _LogsScreenState extends State<LogsScreen> {
                           child: TextButton(
                             onPressed: () {
                               setModalState(() {
-                                _tempTipo = 'Todos';
-                                _tempModulo = 'Todos';
-                                _tempRangoFecha = 'Todos';
+                                tempTipo = 'Todos';
+                                tempModulo = 'Todos';
+                                tempRangoFecha = 'Todos';
                               });
                             },
                             style: TextButton.styleFrom(
@@ -172,7 +232,15 @@ class _LogsScreenState extends State<LogsScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () {
+                              setState(() {
+                                _filtroTipo = tempTipo;
+                                _filtroModulo = tempModulo;
+                                _filtroRangoFecha = tempRangoFecha;
+                                _currentPage = 1;
+                              });
+                              Navigator.pop(context);
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               padding: const EdgeInsets.symmetric(vertical: 14),
@@ -203,15 +271,28 @@ class _LogsScreenState extends State<LogsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final int totalPages = (mockLogs.length / _itemsPerPage).ceil();
+    final int eventosMes = mockLogs
+        .where((l) => l.fecha.contains('/08/2026'))
+        .length;
+    final int iniciosSesion = mockLogs
+        .where((l) => l.tipo == 'Inicio de sesión')
+        .length;
+    final int ediciones = mockLogs.where((l) => l.tipo == 'Edición').length;
+
+    final filtered = _filteredLogs;
+    final int totalPages = filtered.isEmpty
+        ? 1
+        : (filtered.length / _itemsPerPage).ceil();
     final int effectivePage = (_currentPage > totalPages && totalPages > 0)
         ? totalPages
         : _currentPage;
     final int startIndex = (effectivePage - 1) * _itemsPerPage;
-    final int endIndex = (startIndex + _itemsPerPage < mockLogs.length)
+    final int endIndex = (startIndex + _itemsPerPage < filtered.length)
         ? startIndex + _itemsPerPage
-        : mockLogs.length;
-    final displayedLogs = mockLogs.sublist(startIndex, endIndex);
+        : filtered.length;
+    final displayedLogs = filtered.isEmpty
+        ? <LogEvento>[]
+        : filtered.sublist(startIndex, endIndex);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -228,7 +309,7 @@ class _LogsScreenState extends State<LogsScreen> {
                 children: [
                   HStatCard(
                     title: 'Eventos (mes)',
-                    value: '48',
+                    value: eventosMes.toString(),
                     bgColor: AppToneColors.soft[AppTone.teal]!,
                     iconColor: AppToneColors.intense[AppTone.teal]!,
                     icon: Icons.description_outlined,
@@ -236,7 +317,7 @@ class _LogsScreenState extends State<LogsScreen> {
                   const SizedBox(width: AppSpacing.md),
                   HStatCard(
                     title: 'Inicios de sesión',
-                    value: '21',
+                    value: iniciosSesion.toString(),
                     bgColor: AppToneColors.soft[AppTone.blue]!,
                     iconColor: AppToneColors.intense[AppTone.blue]!,
                     icon: Icons.lock_outline,
@@ -244,7 +325,7 @@ class _LogsScreenState extends State<LogsScreen> {
                   const SizedBox(width: AppSpacing.md),
                   HStatCard(
                     title: 'Ediciones',
-                    value: '19',
+                    value: ediciones.toString(),
                     bgColor: AppToneColors.soft[AppTone.yellow]!,
                     iconColor: AppToneColors.intense[AppTone.yellow]!,
                     icon: Icons.edit_outlined,
@@ -258,6 +339,12 @@ class _LogsScreenState extends State<LogsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: SearchFilterRow(
                 hintText: 'Buscar evento, usuario o módulo...',
+                onSearchChanged: (val) {
+                  setState(() {
+                    _searchQuery = val.trim();
+                    _currentPage = 1;
+                  });
+                },
                 onFilterTap: _showFilterModal,
               ),
             ),
@@ -289,7 +376,7 @@ class _LogsScreenState extends State<LogsScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${mockLogs.length}',
+                      '${filtered.length}',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -302,24 +389,38 @@ class _LogsScreenState extends State<LogsScreen> {
             ),
             const SizedBox(height: 4),
 
-            Column(
-              children: displayedLogs.map((log) => LogCard(log: log)).toList(),
-            ),
+            if (displayedLogs.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: Center(
+                  child: Text(
+                    'Sin resultados para los filtros aplicados.',
+                    style: TextStyle(color: AppColors.muted, fontSize: 13),
+                  ),
+                ),
+              )
+            else
+              Column(
+                children: displayedLogs
+                    .map((log) => LogCard(log: log))
+                    .toList(),
+              ),
             const SizedBox(height: 12),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              child: ProductoPaginationRow(
-                currentPage: effectivePage,
-                totalPages: totalPages,
-                onPrevious: effectivePage > 1
-                    ? () => setState(() => _currentPage = effectivePage - 1)
-                    : null,
-                onNext: effectivePage < totalPages
-                    ? () => setState(() => _currentPage = effectivePage + 1)
-                    : null,
+            if (totalPages > 1)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: ProductoPaginationRow(
+                  currentPage: effectivePage,
+                  totalPages: totalPages,
+                  onPrevious: effectivePage > 1
+                      ? () => setState(() => _currentPage = effectivePage - 1)
+                      : null,
+                  onNext: effectivePage < totalPages
+                      ? () => setState(() => _currentPage = effectivePage + 1)
+                      : null,
+                ),
               ),
-            ),
           ],
         ),
       ),
