@@ -247,8 +247,6 @@ class PrecioGeneral {
   });
 }
 
-/// Snapshot de stock de un producto por ubicación, tal como lo devuelve
-/// el backend (InventoryProductDto). Los datos son fijos del mock.
 class InventarioProducto {
   final int productoId;
   final String nombreProducto;
@@ -274,13 +272,9 @@ class InventarioProducto {
     required this.stockMinimo,
   });
 
-  /// true cuando el stock total ya alcanzó o bajó del mínimo configurado.
-  /// Mismo patrón que Usuario.esAdministrador — solo una comparación sobre
-  /// datos ya fijos del mock, sin lógica de negocio dinámica.
   bool get stockBajo => stockTotal <= stockMinimo;
 }
 
-/// Representa una tarifa o promoción con precio especial para un producto
 class PrecioEspecial {
   final int id;
   final int productoId;
