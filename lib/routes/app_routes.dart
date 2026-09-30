@@ -158,6 +158,8 @@ class AppRoutes {
       case logs:
         return MaterialPageRoute(
           builder: (_) => const LogsScreen(),
+          settings: settings,
+        );
       case reportes:
         return MaterialPageRoute(
           builder: (_) => const ReportesScreen(),
@@ -309,13 +311,6 @@ class _AuthenticatedShell extends StatelessWidget {
     Navigator.of(
       context,
     ).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
-  }
-
-  void _showPending(BuildContext context, String destination) {
-    Navigator.of(context).pop(); // cierra el drawer
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('$destination — en construcción')));
   }
 }
 
