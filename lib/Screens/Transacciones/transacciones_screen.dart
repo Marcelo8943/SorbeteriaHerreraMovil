@@ -173,9 +173,7 @@ class _TransaccionesScreenState extends State<TransaccionesScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    const _FilterLabel(
-                      'Tipo de venta (opcional, no confirmado en API)',
-                    ),
+                    const _FilterLabel('Tipo de venta'),
                     const SizedBox(height: 6),
                     _FilterDropdown(
                       value: tempTipoVenta,
