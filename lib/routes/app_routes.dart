@@ -17,6 +17,7 @@ import '../Screens/Movimientos/movimientos_screen.dart';
 import '../Screens/Transacciones/transacciones_screen.dart';
 import '../Screens/Transacciones/transaccion_detalle_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
+import '../Screens/Logs/logs_screen.dart';
 import '../Screens/Reportes/reportes_screen.dart';
 import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
@@ -154,6 +155,9 @@ class AppRoutes {
           settings: settings,
         );
 
+      case logs:
+        return MaterialPageRoute(
+          builder: (_) => const LogsScreen(),
       case reportes:
         return MaterialPageRoute(
           builder: (_) => const ReportesScreen(),
@@ -271,7 +275,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.history_outlined,
       label: 'Logs del Sistema',
-      onTap: () => _showPending(context, 'Logs del Sistema'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.logs);
+      },
     ),
     AppDrawerItem(
       icon: Icons.account_tree_outlined,
