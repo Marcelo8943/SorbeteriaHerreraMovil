@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
-/// Card de un producto en el listado de inventario.
-/// Muestra nombre, desglose por ubicación, badge de estado y stock total.
-/// Sigue el mismo estilo visual de ClienteCardItem/ProductoCard:
-/// Container con AppColors.card, AppSpacing.cardRadius y AppSpacing.cardShadow.
 class InventarioProductoCard extends StatelessWidget {
   final InventarioProducto producto;
 
@@ -57,14 +53,12 @@ class InventarioProductoCard extends StatelessWidget {
 
           const SizedBox(width: AppSpacing.md),
 
-          // ── Badge + stock total ──────────────────────────────────────────
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Badge: "OK" o "Stock bajo" — patrón de ProductoStatusBadge
               _InventarioBadge(stockBajo: producto.stockBajo),
               const SizedBox(height: 6),
-              // Stock total con sufijo "und"
+
               RichText(
                 text: TextSpan(
                   children: [
@@ -95,8 +89,6 @@ class InventarioProductoCard extends StatelessWidget {
   }
 }
 
-/// Badge de estado de stock — teal si OK, red si stock bajo.
-/// Mismo patrón visual que ProductoStatusBadge en el módulo de Productos.
 class _InventarioBadge extends StatelessWidget {
   final bool stockBajo;
   const _InventarioBadge({required this.stockBajo});
