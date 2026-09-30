@@ -14,6 +14,8 @@ import '../Screens/Precios/precios_screen.dart';
 import '../Screens/Usuarios/usuarios_screen.dart';
 import '../Screens/Inventario/inventario_screen.dart';
 import '../Screens/Movimientos/movimientos_screen.dart';
+import '../Screens/Transacciones/transacciones_screen.dart';
+import '../Screens/Transacciones/transaccion_detalle_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
 import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
@@ -133,6 +135,18 @@ class AppRoutes {
           settings: settings,
         );
 
+      case transacciones:
+        return MaterialPageRoute(
+          builder: (_) => const TransaccionesScreen(),
+          settings: settings,
+        );
+
+      case transaccionDetalle:
+        return MaterialPageRoute(
+          builder: (_) => const TransaccionDetalleScreen(),
+          settings: settings,
+        );
+
       case infoProducto:
         return MaterialPageRoute(
           builder: (_) => const InfoProductoScreen(),
@@ -222,7 +236,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.receipt_long_outlined,
       label: 'Transacciones',
-      onTap: () => _showPending(context, 'Transacciones'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.transacciones);
+      },
     ),
     AppDrawerItem(
       icon: Icons.swap_horiz,
