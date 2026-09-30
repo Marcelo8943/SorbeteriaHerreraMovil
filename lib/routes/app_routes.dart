@@ -13,6 +13,7 @@ import '../Screens/Productos/productos_screen.dart';
 import '../Screens/Precios/precios_screen.dart';
 import '../Screens/Usuarios/usuarios_screen.dart';
 import '../Screens/Inventario/inventario_screen.dart';
+import '../Screens/Movimientos/movimientos_screen.dart';
 import '../Screens/info_Producto/info_producto_screen.dart';
 import '../session.dart';
 import '../widgets/navigation/app_drawer.dart';
@@ -126,6 +127,12 @@ class AppRoutes {
           settings: settings,
         );
 
+      case movimientos:
+        return MaterialPageRoute(
+          builder: (_) => const MovimientosScreen(),
+          settings: settings,
+        );
+
       case infoProducto:
         return MaterialPageRoute(
           builder: (_) => const InfoProductoScreen(),
@@ -220,7 +227,10 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.swap_horiz,
       label: 'Movimientos de Inventario',
-      onTap: () => _showPending(context, 'Movimientos de Inventario'),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed(AppRoutes.movimientos);
+      },
     ),
     AppDrawerItem(
       icon: Icons.people_alt_outlined,
