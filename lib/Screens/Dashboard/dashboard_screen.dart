@@ -12,9 +12,9 @@ import '../../session.dart';
 import 'widgets/greeting_banner.dart';
 
 import 'widgets/recent_transactions_list.dart';
-import 'widgets/sales_by_period_chart.dart';
-import 'widgets/top_products_chart.dart';
-import 'widgets/average_ticket_chart.dart';
+import '../../widgets/charts/sales_by_period_chart.dart';
+import '../../widgets/charts/top_products_chart.dart';
+import '../../widgets/charts/average_ticket_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
