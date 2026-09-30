@@ -10,8 +10,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Detalle',
     fecha: '16/08/26, 09:40 a.m.',
     fechaRelativa: 'hace 2 h',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -37,7 +37,7 @@ const List<Transaccion> mockTransacciones = [
     fecha: '16/08/26, 07:15 a.m.',
     fechaRelativa: 'hace 5 h',
     realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -88,8 +88,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Detalle',
     fecha: '16/08/26, 08:30 a.m.',
     fechaRelativa: 'hace 3 h',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -109,7 +109,7 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '16/08/26, 06:20 a.m.',
     fechaRelativa: 'hace 6 h',
-    realizadoPor: 'Nohelia Cortes',
+    realizadoPor: 'Yahir Lopez',
     rol: 'Administrador',
     estado: 'Completado',
     items: [
@@ -130,8 +130,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Detalle',
     fecha: '16/08/26, 11:00 a.m.',
     fechaRelativa: 'hace 1 h',
-    realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -151,8 +151,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '16/08/26, 10:15 a.m.',
     fechaRelativa: 'hace 2 h',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -172,7 +172,7 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '16/08/26, 05:40 a.m.',
     fechaRelativa: 'hace 7 h',
-    realizadoPor: 'Nohelia Cortes',
+    realizadoPor: 'Yahir Lopez',
     rol: 'Administrador',
     estado: 'Completado',
     items: [
@@ -193,8 +193,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Mayoreo',
     fecha: '16/08/26, 08:00 a.m.',
     fechaRelativa: 'hace 4 h',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -214,8 +214,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Detalle',
     fecha: '16/08/26, 11:30 a.m.',
     fechaRelativa: 'hace 30 min',
-    realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -235,8 +235,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '16/08/26, 10:45 a.m.',
     fechaRelativa: 'hace 1 h',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -256,7 +256,7 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '16/08/26, 04:30 a.m.',
     fechaRelativa: 'hace 8 h',
-    realizadoPor: 'Nohelia Cortes',
+    realizadoPor: 'Yahir Lopez',
     rol: 'Administrador',
     estado: 'Completado',
     items: [
@@ -277,8 +277,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Detalle',
     fecha: '16/08/26, 11:10 a.m.',
     fechaRelativa: 'hace 50 min',
-    realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -298,8 +298,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '16/08/26, 09:00 a.m.',
     fechaRelativa: 'hace 3 h',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -319,8 +319,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Detalle',
     fecha: '15/08/26, 02:00 p.m.',
     fechaRelativa: 'ayer',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
@@ -339,8 +339,8 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '14/08/26, 03:30 p.m.',
     fechaRelativa: '14/08/26',
-    realizadoPor: 'María Herrera',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Pendiente',
     items: [
       ItemTransaccion(
@@ -359,7 +359,7 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: null,
     fecha: '12/08/26, 08:30 a.m.',
     fechaRelativa: '12/08/26',
-    realizadoPor: 'Nohelia Cortes',
+    realizadoPor: 'Yahir Lopez',
     rol: 'Administrador',
     estado: 'Completado',
     items: [
@@ -379,14 +379,35 @@ const List<Transaccion> mockTransacciones = [
     tipoVenta: 'Mayoreo',
     fecha: '25/07/26, 10:00 a.m.',
     fechaRelativa: '25/07/26',
-    realizadoPor: 'William Cortez',
-    rol: 'Gerente',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
     estado: 'Completado',
     items: [
       ItemTransaccion(
         producto: 'Sorbete Tradicional Coco 8 Oz',
         cantidad: 30,
         precio: 60.0,
+      ),
+    ],
+  ),
+
+  Transaccion(
+    id: 19,
+    folio: 'V-00111',
+    tipo: 'Venta',
+    relacionado: 'Café Mirador',
+    detalle: 'Mirador de Catarina · entrega 28/07',
+    tipoVenta: 'Detalle',
+    fecha: '24/07/26, 11:30 a.m.',
+    fechaRelativa: '24/07/26',
+    realizadoPor: 'Yahir Lopez',
+    rol: 'Administrador',
+    estado: 'Completado',
+    items: [
+      ItemTransaccion(
+        producto: 'Sorbete Tradicional Vainilla 8 Oz',
+        cantidad: 25,
+        precio: 70.0,
       ),
     ],
   ),

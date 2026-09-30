@@ -3,17 +3,10 @@ import '../../../models/app_models.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_theme.dart';
 
-/// Card para representar una transacción en la lista principal.
-/// Muestra ícono distintivo según tipo (Venta, Pedido, Reabastecimiento),
-/// cliente o resumen de productos, subtítulo con desglose y tiempo relativo,
-/// badge de tipo y monto formateado (o unidades para reabastecimiento).
 class TransaccionCard extends StatelessWidget {
   final Transaccion transaccion;
 
-  const TransaccionCard({
-    super.key,
-    required this.transaccion,
-  });
+  const TransaccionCard({super.key, required this.transaccion});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +43,6 @@ class TransaccionCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // ── Ícono representativo ──────────────────────────────────
                 Container(
                   width: 42,
                   height: 42,
@@ -66,7 +58,6 @@ class TransaccionCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
 
-                // ── Información central ──────────────────────────────────
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +87,6 @@ class TransaccionCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
 
-                // ── Badge y Monto/Cantidad ───────────────────────────────
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -153,7 +143,7 @@ class TransaccionCard extends StatelessWidget {
     if (transaccion.tipo == 'Reabastecimiento') {
       return '${transaccion.cantidadTotal} und';
     }
-    // Formato moneda de córdobas (ej. C$640, C$2,150)
+    // Formato moneda de córdobas
     final monto = transaccion.monto.toInt();
     if (monto >= 1000) {
       final miles = monto ~/ 1000;
