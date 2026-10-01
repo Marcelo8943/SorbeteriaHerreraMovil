@@ -51,8 +51,25 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     super.dispose();
   }
 
-  void _cerrarVistaPrevia() {
-    Navigator.of(context).pop();
+  void _guardarProducto() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final productoActual = widget.producto;
+    final productoResultado = Producto(
+      id: productoActual?.id ?? DateTime.now().millisecondsSinceEpoch,
+      nombre: _nombreController.text.trim(),
+      linea: _lineaSeleccionada,
+      sabor: _saborSeleccionado,
+      presentacion: _presentacionSeleccionada,
+      precioDetalle: productoActual?.precioDetalle ?? 0,
+      precioMayoreo: productoActual?.precioMayoreo ?? 0,
+      estado: _esActivo ? 'Activo' : 'Inactivo',
+      imgUrl: _imagenUrlController.text.trim(),
+      stockMinimo: int.parse(_stockMinimoController.text.trim()),
+      stockActual: productoActual?.stockActual ?? 0,
+    );
+
+    Navigator.of(context).pop(productoResultado);
   }
 
   @override
@@ -103,7 +120,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     label: 'Nombre del producto *',
                     hintText: 'Ej. Sorbete Tradicional Fresa 4 Oz',
                     controller: _nombreController,
-                    validator: (val) => val == null || val.trim().isEmpty ? 'Requerido' : null,
+                    validator: _validarNombre,
                   ),
                   const SizedBox(height: 16),
 
@@ -202,7 +219,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton.icon(
-                      onPressed: _cerrarVistaPrevia,
+                      onPressed: _guardarProducto,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.textOnPrimary,
@@ -233,6 +250,15 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
 
   List<String> _opcionesConValor(List<String> opciones, String valorActual) =>
       {...opciones, valorActual}.toList();
+
+  String? _validarNombre(String? valor) {
+    final nombre = valor?.trim() ?? '';
+    if (nombre.isEmpty) return 'Ingrese el nombre del producto';
+    if (nombre.length < 3) {
+      return 'El nombre debe tener al menos 3 caracteres';
+    }
+    return null;
+  }
 
   String? _validarStockMinimo(String? valor) {
     if (valor == null || valor.trim().isEmpty) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../models/app_models.dart';
 import '../../models/mocks/mock_catalogo.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
@@ -16,39 +17,112 @@ class InfoProductoScreen extends StatefulWidget {
 
 class _InfoProductoScreenState extends State<InfoProductoScreen> {
   bool _mostrarLineas = true;
+  late final List<Linea> _lineas;
+  late final List<Presentacion> _presentaciones;
 
-  int get _total => mockLineas.length + mockPresentaciones.length;
+  @override
+  void initState() {
+    super.initState();
+    _lineas = List<Linea>.of(mockLineas);
+    _presentaciones = List<Presentacion>.of(mockPresentaciones);
+  }
+
+  int get _total => _lineas.length + _presentaciones.length;
 
   int get _activos =>
-      mockLineas.where((item) => item.estado == 'Activo').length +
-      mockPresentaciones.where((item) => item.estado == 'Activo').length;
+      _lineas.where((item) => item.estado == 'Activo').length +
+      _presentaciones.where((item) => item.estado == 'Activo').length;
 
-  void _mostrarDetalle(String nombre, String estado) {
+  void _mostrarDetalle({
+    required int id,
+    required String nombre,
+    required String estado,
+    required bool esLinea,
+  }) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => SafeArea(
+      builder: (modalContext) => SafeArea(
         child: InfoProductoDetalleScreen(
           nombre: nombre,
           estado: estado,
-          esLinea: _mostrarLineas,
+          esLinea: esLinea,
+          onGuardar: (nombre, estado) {
+            _guardarElemento(
+              id: id,
+              nombre: nombre,
+              estado: estado,
+              esLinea: esLinea,
+            );
+            Navigator.of(modalContext).pop();
+          },
         ),
       ),
     );
   }
 
+  void _guardarElemento({
+    required int id,
+    required String nombre,
+    required String estado,
+    required bool esLinea,
+  }) {
+    setState(() {
+      if (esLinea) {
+        final index = _lineas.indexWhere((item) => item.id == id);
+        if (index != -1) {
+          _lineas[index] = Linea(id: id, nombre: nombre, estado: estado);
+        }
+      } else {
+        final index = _presentaciones.indexWhere((item) => item.id == id);
+        if (index != -1) {
+          _presentaciones[index] = Presentacion(
+            id: id,
+            nombre: nombre,
+            estado: estado,
+          );
+        }
+      }
+    });
+  }
+
   void _mostrarFormulario() {
+    final esLinea = _mostrarLineas;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => SafeArea(
-        child: InfoProductoFormScreen(esLinea: _mostrarLineas),
+      builder: (modalContext) => SafeArea(
+        child: InfoProductoFormScreen(
+          esLinea: esLinea,
+          onCrear: (nombre) {
+            _crearElemento(nombre, esLinea);
+            Navigator.of(modalContext).pop();
+          },
+        ),
       ),
     );
+  }
+
+  void _crearElemento(String nombre, bool esLinea) {
+    setState(() {
+      if (esLinea) {
+        final siguienteId =
+            _lineas.fold<int>(0, (maxId, item) => item.id > maxId ? item.id : maxId) +
+            1;
+        _lineas.add(Linea(id: siguienteId, nombre: nombre));
+      } else {
+        final siguienteId = _presentaciones
+                .fold<int>(0, (maxId, item) => item.id > maxId ? item.id : maxId) +
+            1;
+        _presentaciones.add(
+          Presentacion(id: siguienteId, nombre: nombre),
+        );
+      }
+    });
   }
 
   @override
@@ -122,21 +196,31 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
             ),
             const SizedBox(height: AppSpacing.md),
             if (_mostrarLineas)
-              for (final item in mockLineas)
+              for (final item in _lineas)
                 InfoProductoItemCard(
                   nombre: item.nombre,
                   estado: item.estado,
                   esLinea: true,
-                  onTap: () => _mostrarDetalle(item.nombre, item.estado),
+                  onTap: () => _mostrarDetalle(
+                    id: item.id,
+                    nombre: item.nombre,
+                    estado: item.estado,
+                    esLinea: true,
+                  ),
                 )
             else
-              for (final item in mockPresentaciones)
-              InfoProductoItemCard(
-                nombre: item.nombre,
-                estado: item.estado,
-                esLinea: false,
-                onTap: () => _mostrarDetalle(item.nombre, item.estado),
-              ),
+              for (final item in _presentaciones)
+                InfoProductoItemCard(
+                  nombre: item.nombre,
+                  estado: item.estado,
+                  esLinea: false,
+                  onTap: () => _mostrarDetalle(
+                    id: item.id,
+                    nombre: item.nombre,
+                    estado: item.estado,
+                    esLinea: false,
+                  ),
+                ),
             const SizedBox(height: AppSpacing.sm),
             const Center(
               child: Text(

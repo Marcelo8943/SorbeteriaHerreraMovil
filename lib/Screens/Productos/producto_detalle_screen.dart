@@ -10,12 +10,15 @@ class ProductoDetalleScreen extends StatelessWidget {
 
   const ProductoDetalleScreen({super.key, required this.producto});
 
-  void _abrirFicha(BuildContext context) {
-    Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
+  Future<void> _abrirFicha(BuildContext context) async {
+    final resultado = await Navigator.of(context).push<Producto>(
+      MaterialPageRoute<Producto>(
         builder: (_) => ProductoFormScreen(producto: producto),
       ),
     );
+    if (resultado != null && context.mounted) {
+      Navigator.pop(context, resultado);
+    }
   }
 
   @override

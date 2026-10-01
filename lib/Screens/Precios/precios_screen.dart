@@ -15,26 +15,44 @@ class PreciosScreen extends StatefulWidget {
 
 class _PreciosScreenState extends State<PreciosScreen> {
   String _lineaSeleccionada = 'Todas';
+  late final List<PrecioGeneral> _preciosGenerales;
+
+  @override
+  void initState() {
+    super.initState();
+    _preciosGenerales = List<PrecioGeneral>.of(mockPreciosGenerales);
+  }
 
   List<PrecioGeneral> get _preciosVisibles => _lineaSeleccionada == 'Todas'
-      ? mockPreciosGenerales
-      : mockPreciosGenerales
+      ? _preciosGenerales
+      : _preciosGenerales
           .where((precio) => precio.linea == _lineaSeleccionada)
           .toList();
 
-  int get _productosConPrecio => mockPreciosGenerales.fold(
+  int get _productosConPrecio => _preciosGenerales.fold(
         0,
         (total, precio) => total + precio.cantidadProductos,
       );
 
-  void _abrirFormularioPrecio(BuildContext context, PrecioGeneral precio) {
-    showModalBottomSheet<void>(
+  Future<void> _abrirFormularioPrecio(
+    BuildContext context,
+    PrecioGeneral precio,
+  ) async {
+    final resultado = await showModalBottomSheet<PrecioGeneral>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (_) => PrecioFormScreen(precio: precio),
     );
+    if (resultado == null || !mounted) return;
+
+    setState(() {
+      final index = _preciosGenerales.indexWhere(
+        (item) => item.id == resultado.id,
+      );
+      if (index != -1) _preciosGenerales[index] = resultado;
+    });
   }
 
   @override

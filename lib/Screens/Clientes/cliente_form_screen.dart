@@ -54,13 +54,35 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
 
   bool get _esEdicion => widget.cliente != null;
 
+  String? _validarNombre(String? value, String campo) {
+    final nombre = value?.trim() ?? '';
+    if (nombre.isEmpty) return 'Ingrese el $campo';
+    if (nombre.length < 2 ||
+        !RegExp(r"^[A-Za-zÀ-ÿÑñÜü\s'-]+$").hasMatch(nombre)) {
+      return 'Ingrese un $campo válido';
+    }
+    return null;
+  }
+
+  String? _validarTelefono(String? value) {
+    final telefono = value?.trim() ?? '';
+    if (telefono.isEmpty) return 'Ingrese el teléfono';
+    if (!RegExp(r'^[+\d\s()-]+$').hasMatch(telefono)) {
+      return 'Ingrese un teléfono válido de 8 dígitos';
+    }
+    final digitos = telefono.replaceAll(RegExp(r'\D'), '');
+    if (digitos.length != 8 &&
+        !(digitos.length == 11 && digitos.startsWith('505'))) {
+      return 'Ingrese un teléfono válido de 8 dígitos';
+    }
+    return null;
+  }
+
   @override
   void initState() {
     super.initState();
     _nombreCtrl = TextEditingController(text: widget.cliente?.nombre ?? '');
-    _apellidoCtrl = TextEditingController(
-      text: widget.cliente?.apellido ?? '',
-    );
+    _apellidoCtrl = TextEditingController(text: widget.cliente?.apellido ?? '');
     _puntoVentaCtrl = TextEditingController(
       text: widget.cliente?.puntoVenta ?? '',
     );
@@ -147,7 +169,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -159,18 +181,14 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                       label: 'Nombre',
                       controller: _nombreCtrl,
                       icon: Icons.person_outline,
-                      validator: (val) => val == null || val.trim().isEmpty
-                          ? 'Ingrese el nombre'
-                          : null,
+                      validator: (val) => _validarNombre(val, 'nombre'),
                     ),
                     const SizedBox(height: 16),
                     CustomFormField(
                       label: 'Apellido',
                       controller: _apellidoCtrl,
                       icon: Icons.person_outline,
-                      validator: (val) => val == null || val.trim().isEmpty
-                          ? 'Ingrese el apellido'
-                          : null,
+                      validator: (val) => _validarNombre(val, 'apellido'),
                     ),
                     const SizedBox(height: 16),
                     CustomFormField(
@@ -178,9 +196,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                       controller: _telefonoCtrl,
                       icon: Icons.phone_outlined,
                       keyboardType: TextInputType.phone,
-                      validator: (val) => val == null || val.trim().isEmpty
-                          ? 'Ingrese el teléfono'
-                          : null,
+                      validator: _validarTelefono,
                     ),
                     const SizedBox(height: 16),
                     CustomFormDropdown(
@@ -197,7 +213,12 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                     CustomFormDropdown(
                       label: 'Municipio',
                       value: _municipio,
-                      items: _municipios,
+                      items: [
+                        ..._municipios,
+                        if (_municipio != null &&
+                            !_municipios.contains(_municipio))
+                          _municipio!,
+                      ],
                       icon: Icons.location_city_outlined,
                       onChanged: (value) => setState(() => _municipio = value),
                       validator: (value) =>
@@ -217,12 +238,17 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                       label: 'Dirección del punto de venta',
                       controller: _direccionPuntoVentaCtrl,
                       icon: Icons.location_on_outlined,
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                          ? 'Ingrese la dirección del punto de venta'
+                          : null,
                     ),
                     if (_esEdicion) ...[
                       const SizedBox(height: 16),
                       ClienteEstadoSwitch(
                         activo: _esActivo,
-                        onChanged: (activo) => setState(() => _esActivo = activo),
+                        onChanged: (activo) =>
+                            setState(() => _esActivo = activo),
                       ),
                     ],
                   ],
