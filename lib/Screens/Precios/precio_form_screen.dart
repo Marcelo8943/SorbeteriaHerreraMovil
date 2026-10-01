@@ -15,6 +15,7 @@ class PrecioFormScreen extends StatefulWidget {
 }
 
 class _PrecioFormScreenState extends State<PrecioFormScreen> {
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _detalleController;
   late final TextEditingController _mayoreoController;
 
@@ -39,8 +40,47 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
     super.dispose();
   }
 
-  void _cerrarVistaPrevia() {
-    Navigator.of(context).pop();
+  void _guardarPrecio() {
+    if (!_formKey.currentState!.validate()) return;
+
+    Navigator.of(context).pop(
+      PrecioGeneral(
+        id: widget.precio.id,
+        presentacion: widget.precio.presentacion,
+        linea: widget.precio.linea,
+        precioDetalle: _leerPrecio(_detalleController),
+        precioMayoreo: _leerPrecio(_mayoreoController),
+        cantidadProductos: widget.precio.cantidadProductos,
+      ),
+    );
+  }
+
+  double _leerPrecio(TextEditingController controller) =>
+      double.parse(controller.text.trim().replaceAll(',', '.'));
+
+  double? _parsearPrecio(String? value) =>
+      double.tryParse(value?.trim().replaceAll(',', '.') ?? '');
+
+  String? _validarPrecio(String? value) {
+    final precio = _parsearPrecio(value);
+    if (precio == null || !precio.isFinite || precio <= 0) {
+      return 'Ingrese un precio válido mayor que 0';
+    }
+    return null;
+  }
+
+  String? _validarPrecioMayoreo(String? value) {
+    final error = _validarPrecio(value);
+    if (error != null) return error;
+
+    final precioMayoreo = _parsearPrecio(value);
+    final precioDetalle = _parsearPrecio(_detalleController.text);
+    if (precioMayoreo != null &&
+        precioDetalle != null &&
+        precioMayoreo > precioDetalle) {
+      return 'El precio mayoreo no puede superar el precio detalle';
+    }
+    return null;
   }
 
   @override
@@ -66,6 +106,7 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
               AppSpacing.md,
             ),
             child: Form(
+              key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -115,6 +156,7 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                       child: PrecioFormField(
                         etiqueta: 'PRECIO DETALLE (C\$)',
                         controller: _detalleController,
+                        validator: _validarPrecio,
                       ),
                     ),
                     const SizedBox(width: AppSpacing.md),
@@ -122,6 +164,7 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                       child: PrecioFormField(
                         etiqueta: 'PRECIO MAYOREO (C\$)',
                         controller: _mayoreoController,
+                        validator: _validarPrecioMayoreo,
                       ),
                     ),
                   ],
@@ -129,8 +172,7 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                 const SizedBox(height: AppSpacing.md),
                 const Divider(height: 1, color: AppColors.line),
                 const SizedBox(height: AppSpacing.md),
-                // Acción visual: cierra el formulario de ejemplo sin guardar datos.
-                PrecioFormActionButton(onPressed: _cerrarVistaPrevia),
+                PrecioFormActionButton(onPressed: _guardarPrecio),
                 ],
               ),
             ),

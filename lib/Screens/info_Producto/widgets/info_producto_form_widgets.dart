@@ -65,14 +65,20 @@ class InfoProductoFormEncabezado extends StatelessWidget {
 /// Campo para escribir el nombre del dato de ejemplo.
 class InfoProductoFormNombre extends StatelessWidget {
   final TextEditingController controller;
+  final String? Function(String?)? validator;
 
-  const InfoProductoFormNombre({super.key, required this.controller});
+  const InfoProductoFormNombre({
+    super.key,
+    required this.controller,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       textCapitalization: TextCapitalization.words,
+      validator: validator,
       style: const TextStyle(
         color: AppColors.ink,
         fontSize: 15,

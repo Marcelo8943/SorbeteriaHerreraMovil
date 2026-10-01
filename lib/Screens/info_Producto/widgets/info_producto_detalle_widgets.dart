@@ -64,17 +64,20 @@ class InfoProductoDetalleEncabezado extends StatelessWidget {
 /// Campo de nombre con el valor correspondiente al dato mock seleccionado.
 class InfoProductoDetalleNombre extends StatelessWidget {
   final TextEditingController controller;
+  final String? Function(String?)? validator;
 
   const InfoProductoDetalleNombre({
     super.key,
     required this.controller,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
       textCapitalization: TextCapitalization.words,
+      validator: validator,
       style: const TextStyle(
           color: AppColors.ink,
           fontSize: 15,
