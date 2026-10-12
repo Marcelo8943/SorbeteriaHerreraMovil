@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../../widgets/h_stat_card.dart';
+import '../../../widgets/h_stat_card.dart';
 
 class InventarioStatsRow extends StatelessWidget {
   final int stockBajoCount;

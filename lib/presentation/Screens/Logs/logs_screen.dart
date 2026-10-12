@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../data/models/app_models.dart';
 import '../../../data/mocks/mock_logs.dart';
 import '../../theme/app_theme.dart';
-import '../../../widgets/h_stat_card.dart';
-import '../../../widgets/search_filter_row.dart';
+import '../../widgets/h_stat_card.dart';
+import '../../widgets/search_filter_row.dart';
 import '../Productos/widgets/productos_widgets.dart';
 import 'widgets/log_card.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../presentation/theme/app_theme.dart';
+import '../../theme/app_theme.dart';
 
 class AppTabBarItem {
   const AppTabBarItem({required this.icon, required this.label});

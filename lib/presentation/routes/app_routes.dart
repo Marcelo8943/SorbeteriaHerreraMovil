@@ -20,9 +20,9 @@ import '../Screens/info_Producto/info_producto_screen.dart';
 import '../Screens/Logs/logs_screen.dart';
 import '../Screens/Reportes/reportes_screen.dart';
 import '../../session.dart';
-import '../../widgets/navigation/app_drawer.dart';
-import '../../widgets/navigation/app_shell.dart';
-import '../../widgets/navigation/app_tabbar.dart';
+import '../widgets/navigation/app_drawer.dart';
+import '../widgets/navigation/app_shell.dart';
+import '../widgets/navigation/app_tabbar.dart';
 
 class AppRoutes {
   AppRoutes._();

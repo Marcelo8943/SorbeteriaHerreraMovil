@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../presentation/theme/app_theme.dart';
-import '../../models/dashboard_metrics.dart';
+import '../../theme/app_theme.dart';
+import '../../../services/dashboard_metrics.dart';
 
 class AverageTicketChart extends StatelessWidget {
   final List<PuntoVenta> datos;

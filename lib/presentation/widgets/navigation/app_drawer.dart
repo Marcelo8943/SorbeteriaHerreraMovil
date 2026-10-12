@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../presentation/theme/app_theme.dart';
+import '../../theme/app_theme.dart';
 
 class AppDrawerItem {
   const AppDrawerItem({

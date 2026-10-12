@@ -4,10 +4,10 @@ import '../../../services/dashboard_metrics.dart';
 import '../../../data/mocks/mock_productos.dart';
 import '../../../data/mocks/mock_transacciones.dart';
 import '../../theme/app_theme.dart';
-import '../../../widgets/charts/average_ticket_chart.dart';
-import '../../../widgets/charts/inventory_rotation_chart.dart';
-import '../../../widgets/charts/sales_by_period_chart.dart';
-import '../../../widgets/charts/top_products_chart.dart';
+import '../../widgets/charts/average_ticket_chart.dart';
+import '../../widgets/charts/inventory_rotation_chart.dart';
+import '../../widgets/charts/sales_by_period_chart.dart';
+import '../../widgets/charts/top_products_chart.dart';
 import 'widgets/reportes_filtros_bar.dart';
 
 class ReportesScreen extends StatefulWidget {

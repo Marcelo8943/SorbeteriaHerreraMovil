@@ -3,11 +3,10 @@ import 'widgets/clientes_widgets.dart';
 import '../../theme/app_theme.dart';
 import 'cliente_detalle_screen.dart';
 import 'cliente_form_screen.dart';
-import '../../../widgets/search_filter_row.dart';
-import '../../../widgets/h_stat_card.dart';
-import '../../../widgets/app_top_bar.dart';
+import '../../widgets/search_filter_row.dart';
+import '../../widgets/h_stat_card.dart';
+import '../../widgets/app_top_bar.dart';
 
-// Importación de modelos y mock por entidad
 import '../../../data/models/app_models.dart';
 import '../../../data/mocks/mock_clientes.dart';
 import '../../../session.dart';

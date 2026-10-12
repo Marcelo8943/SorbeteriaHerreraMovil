@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/models/app_models.dart';
 import '../../../data/mocks/mock_catalogo.dart';
 import '../../theme/app_theme.dart';
-import '../../../widgets/h_stat_card.dart';
+import '../../widgets/h_stat_card.dart';
 import 'info_producto_detalle_screen.dart';
 import 'info_producto_form_screen.dart';
 import 'widgets/info_producto_widgets.dart';

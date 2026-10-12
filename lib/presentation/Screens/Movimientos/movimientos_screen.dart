@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../data/models/app_models.dart';
 import '../../../data/mocks/mock_movimientos.dart';
 import '../../theme/app_theme.dart';
-import '../../../widgets/search_filter_row.dart';
+import '../../widgets/search_filter_row.dart';
 import 'widgets/movimientos_stats_row.dart';
 import 'widgets/movimiento_card.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../models/app_models.dart';
-import '../../models/dashboard_metrics.dart';
-import '../../presentation/theme/app_theme.dart';
+import '../../../data/models/app_models.dart';
+import '../../../services/dashboard_metrics.dart';
+import '../../theme/app_theme.dart';
 
 class InventoryRotationChart extends StatelessWidget {
   final List<Producto> productos;
