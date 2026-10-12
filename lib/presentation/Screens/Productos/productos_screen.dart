@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/app_models.dart';
-import '../../../models/mocks/mock_catalogo.dart';
-import '../../../models/mocks/mock_productos.dart';
+import '../../../data/models/app_models.dart';
+import '../../../data/mocks/mock_catalogo.dart';
+import '../../../data/mocks/mock_productos.dart';
 import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import '../../../widgets/app_top_bar.dart';

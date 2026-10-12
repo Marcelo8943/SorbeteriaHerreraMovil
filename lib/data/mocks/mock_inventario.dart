@@ -1,4 +1,4 @@
-import '../app_models.dart';
+import '../models/app_models.dart';
 
 /// KPI de lotes próximos a vencer — dato fijo de mock, no calculado dinámicamente.
 const int mockLotesPorVencer = 4;

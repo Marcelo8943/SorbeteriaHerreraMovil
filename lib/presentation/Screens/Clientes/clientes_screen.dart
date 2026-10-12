@@ -8,8 +8,8 @@ import '../../../widgets/h_stat_card.dart';
 import '../../../widgets/app_top_bar.dart';
 
 // Importación de modelos y mock por entidad
-import '../../../models/app_models.dart';
-import '../../../models/mocks/mock_clientes.dart';
+import '../../../data/models/app_models.dart';
+import '../../../data/mocks/mock_clientes.dart';
 import '../../../session.dart';
 
 class ClientesScreen extends StatefulWidget {

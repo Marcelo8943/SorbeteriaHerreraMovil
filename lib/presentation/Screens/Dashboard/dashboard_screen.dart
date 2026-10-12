@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:herrera_system/models/mocks/mock_productos.dart';
+import 'package:herrera_system/data/mocks/mock_productos.dart';
 
 import '../../theme/app_theme.dart';
 import '../../../widgets/app_top_bar.dart';
 import '../../../widgets/h_stat_card.dart';
-import '../../../models/app_models.dart';
-import '../../../models/mocks/mock_transacciones.dart';
-import '../../../models/dashboard_metrics.dart';
+import '../../../data/models/app_models.dart';
+import '../../../data/mocks/mock_transacciones.dart';
+import '../../../services/dashboard_metrics.dart';
 import '../../../session.dart';
 
 import 'widgets/greeting_banner.dart';

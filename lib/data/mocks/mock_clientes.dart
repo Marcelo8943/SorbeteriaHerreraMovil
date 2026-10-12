@@ -1,4 +1,4 @@
-import 'package:herrera_system/models/app_models.dart';
+import 'package:herrera_system/data/models/app_models.dart';
 
 /// Datos de ejemplo (hardcodeados), adaptados del prototipo, para que
 /// todas las pantallas puedan mostrar contenido real sin esperar a la
@@ -53,8 +53,7 @@ const List<Cliente> mockClientes = [
     clienteDesde: '02/02/2025',
     iniciales: 'ML',
   ),
-  Cliente
-  (
+  Cliente(
     id: 5,
     nombre: 'Ana Sofía',
     apellido: 'Sevilla',
@@ -64,13 +63,13 @@ const List<Cliente> mockClientes = [
     puntoVenta: 'Distribuidora La Fe',
     direccionPuntoVenta: 'Avenida principal, Granada',
     clienteDesde: '12/02/2025',
-    iniciales : 'AS',
+    iniciales: 'AS',
   ),
-  Cliente (
+  Cliente(
     id: 6,
     nombre: 'Jorge Luis',
     apellido: 'Torres',
-    telefono:'3389-7765',
+    telefono: '3389-7765',
     municipio: 'Rivas',
     departamento: 'Rivas',
     puntoVenta: 'Variedades San José',
@@ -78,7 +77,7 @@ const List<Cliente> mockClientes = [
     clienteDesde: '20/02/2025',
     iniciales: 'JT',
   ),
-  Cliente (
+  Cliente(
     id: 7,
     nombre: 'Elena',
     apellido: 'Rostrán',
@@ -102,21 +101,19 @@ const List<Cliente> mockClientes = [
     clienteDesde: '09/03/2025',
     iniciales: 'FS',
   ),
-  Cliente
-  (
-   id: 9,
-   nombre: 'Lucía',
-   apellido: 'Bermúdez',
-  telefono: '8890-1234',
-   municipio: 'Estelí',
-   departamento: 'Estelí',
-   puntoVenta: 'Comercial Bermúdez',
-   direccionPuntoVenta: 'Calle central, Estelí',
-  clienteDesde: '15/03/2025',
-   iniciales: 'LB',
+  Cliente(
+    id: 9,
+    nombre: 'Lucía',
+    apellido: 'Bermúdez',
+    telefono: '8890-1234',
+    municipio: 'Estelí',
+    departamento: 'Estelí',
+    puntoVenta: 'Comercial Bermúdez',
+    direccionPuntoVenta: 'Calle central, Estelí',
+    clienteDesde: '15/03/2025',
+    iniciales: 'LB',
   ),
-  Cliente
-  (
+  Cliente(
     id: 10,
     nombre: 'Gabriel',
     apellido: 'Peralta',
@@ -127,7 +124,6 @@ const List<Cliente> mockClientes = [
     direccionPuntoVenta: 'Costado este del mercado, Matagalpa',
     clienteDesde: '25/03/2025',
     iniciales: 'GP',
-
   ),
   Cliente(
     id: 11,
@@ -153,6 +149,5 @@ const List<Cliente> mockClientes = [
     clienteDesde: '12/04/2025',
     estado: 'Inactivo',
     iniciales: 'VR',
-
   ),
 ];

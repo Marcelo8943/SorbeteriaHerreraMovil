@@ -1,4 +1,4 @@
-import '../models/app_models.dart';
+import '../data/models/app_models.dart';
 
 /// Un punto de la gráfica de ventas por período (ej. un día, una semana).
 class PuntoVenta {

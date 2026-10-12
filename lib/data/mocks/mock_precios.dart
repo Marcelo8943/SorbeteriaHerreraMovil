@@ -1,4 +1,4 @@
-import '../app_models.dart';
+import '../models/app_models.dart';
 
 const String mockPreciosUltimaActualizacion = '23/06/26, 04:56 p. m.';
 

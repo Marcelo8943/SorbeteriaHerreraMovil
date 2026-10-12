@@ -1,4 +1,4 @@
-import 'models/app_models.dart';
+import 'data/models/app_models.dart';
 
 enum Rol { admin, gerente }
 

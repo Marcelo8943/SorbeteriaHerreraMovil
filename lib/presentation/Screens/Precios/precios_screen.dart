@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/app_models.dart';
-import '../../../models/mocks/mock_precios.dart';
+import '../../../data/models/app_models.dart';
+import '../../../data/mocks/mock_precios.dart';
 import '../../theme/app_theme.dart';
 import 'precio_form_screen.dart';
 import 'widgets/precios_widgets.dart';

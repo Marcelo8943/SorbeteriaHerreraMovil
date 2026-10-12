@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../models/mocks/mock_catalogo.dart';
-import '../../../../models/mocks/mock_productos.dart';
-import '../../../../models/mocks/mock_transacciones.dart';
+import '../../../../data/mocks/mock_catalogo.dart';
+import '../../../../data/mocks/mock_productos.dart';
+import '../../../../data/mocks/mock_transacciones.dart';
 import '../../../theme/app_theme.dart';
 
 class ReportesFiltrosBar extends StatelessWidget {

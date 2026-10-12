@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/mocks/mock_usuarios.dart';
+import '../../../data/mocks/mock_usuarios.dart';
 import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/mi_perfil_widgets.dart';

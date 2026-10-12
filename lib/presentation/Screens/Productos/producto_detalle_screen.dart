@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/app_models.dart';
+import '../../../data/models/app_models.dart';
 import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'producto_form_screen.dart';

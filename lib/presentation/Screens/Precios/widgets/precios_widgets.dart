@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
-import '../../../../models/app_models.dart';
+import '../../../../data/models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
 /// Tarjeta de resumen que muestra un indicador del módulo, como precios

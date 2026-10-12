@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../models/app_models.dart';
+import '../../../../data/models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
 class TransaccionDetalleCardData extends StatefulWidget {

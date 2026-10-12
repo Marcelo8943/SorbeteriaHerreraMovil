@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes/app_routes.dart';
-import '../../../models/mocks/mock_usuarios.dart';
+import '../../../data/mocks/mock_usuarios.dart';
 import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/login_widgets.dart';

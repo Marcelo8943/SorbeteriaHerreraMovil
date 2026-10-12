@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../../models/app_models.dart';
+import '../../../../data/models/app_models.dart';
 
 /// Lista de las últimas transacciones, con encabezado y "Ver todo →".
 /// Exclusivo del Dashboard.

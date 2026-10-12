@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/mocks/mock_negocio.dart';
+import '../../../data/mocks/mock_negocio.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/datos_negocio_widgets.dart';
 

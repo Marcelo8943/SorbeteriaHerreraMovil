@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/app_models.dart';
+import '../../../data/models/app_models.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/transaccion_detalle_hero.dart';
 import 'widgets/transaccion_detalle_card_data.dart';

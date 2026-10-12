@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
-import '../../../models/app_models.dart';
-import '../../../models/mocks/mock_usuarios.dart';
+import '../../../data/models/app_models.dart';
+import '../../../data/mocks/mock_usuarios.dart';
 import '../../../widgets/h_stat_card.dart';
 import '../../../widgets/search_filter_row.dart';
 import 'usuario_detalle_screen.dart';

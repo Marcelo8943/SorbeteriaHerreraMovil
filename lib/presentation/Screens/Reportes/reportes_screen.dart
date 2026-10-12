@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../models/app_models.dart';
-import '../../../models/dashboard_metrics.dart';
-import '../../../models/mocks/mock_productos.dart';
-import '../../../models/mocks/mock_transacciones.dart';
+import '../../../data/models/app_models.dart';
+import '../../../services/dashboard_metrics.dart';
+import '../../../data/mocks/mock_productos.dart';
+import '../../../data/mocks/mock_transacciones.dart';
 import '../../theme/app_theme.dart';
 import '../../../widgets/charts/average_ticket_chart.dart';
 import '../../../widgets/charts/inventory_rotation_chart.dart';

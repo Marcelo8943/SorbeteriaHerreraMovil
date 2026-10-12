@@ -1,4 +1,4 @@
-import '../app_models.dart';
+import '../models/app_models.dart';
 
 /// Fecha base de referencia en el mockup: "Hoy · domingo 16/08/2026".
 const String mockFechaHoy = '16/08/2026';

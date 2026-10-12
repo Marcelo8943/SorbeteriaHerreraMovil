@@ -1,4 +1,4 @@
-import '../app_models.dart';
+import '../models/app_models.dart';
 
 const List<Transaccion> mockTransacciones = [
   Transaccion(
