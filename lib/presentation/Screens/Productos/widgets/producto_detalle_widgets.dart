@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/app_models.dart';
+import '../../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
 import 'producto_imagen.dart';
 
@@ -33,7 +33,7 @@ class HeaderSeccion extends StatelessWidget {
                   color: Colors.black12,
                   blurRadius: 20,
                   offset: Offset(0, 10),
-                )
+                ),
               ],
             ),
             child: ProductoImagen(
@@ -136,10 +136,7 @@ class TarjetaInformacion extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: DatoCelda(
-                  label: 'LÍNEA',
-                  valor: producto.linea,
-                ),
+                child: DatoCelda(label: 'LÍNEA', valor: producto.linea),
               ),
               Expanded(
                 child: DatoCelda(
@@ -205,11 +202,7 @@ class DatoCelda extends StatelessWidget {
   final String label;
   final String valor;
 
-  const DatoCelda({
-    super.key,
-    required this.label,
-    required this.valor,
-  });
+  const DatoCelda({super.key, required this.label, required this.valor});
 
   @override
   Widget build(BuildContext context) {
@@ -244,11 +237,7 @@ class TagChip extends StatelessWidget {
   final String texto;
   final AppTone tone;
 
-  const TagChip({
-    super.key,
-    required this.texto,
-    required this.tone,
-  });
+  const TagChip({super.key, required this.texto, required this.tone});
 
   @override
   Widget build(BuildContext context) {

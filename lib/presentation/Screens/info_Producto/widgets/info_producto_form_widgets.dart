@@ -113,10 +113,7 @@ class InfoProductoFormNombre extends StatelessWidget {
 class InfoProductoFormActionButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const InfoProductoFormActionButton({
-    super.key,
-    required this.onPressed,
-  });
+  const InfoProductoFormActionButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

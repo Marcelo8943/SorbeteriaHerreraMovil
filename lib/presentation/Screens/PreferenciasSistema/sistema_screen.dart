@@ -26,11 +26,7 @@ class PreferenciasSistemaScreen extends StatelessWidget {
                       AppSpacing.md,
                       AppSpacing.xl,
                     ),
-                    child: Column(
-                      children: [
-                        GlobalMonitoringCard(),
-                      ],
-                    ),
+                    child: Column(children: [GlobalMonitoringCard()]),
                   ),
                 ),
               ],

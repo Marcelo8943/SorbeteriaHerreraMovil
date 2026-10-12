@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_inventario.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_inventario.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/search_filter_row.dart';
+import '../../../widgets/search_filter_row.dart';
 import 'widgets/inventario_stats_row.dart';
 import 'widgets/inventario_producto_card.dart';
 

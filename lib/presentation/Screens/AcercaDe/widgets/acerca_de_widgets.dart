@@ -75,7 +75,11 @@ class AboutInformationCard extends StatelessWidget {
             'Prototipo móvil de monitoreo y análisis gerencial. '
             'Hecho en familia, gestionado de forma inteligente.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.muted, fontSize: 12, height: 1.45),
+            style: TextStyle(
+              color: AppColors.muted,
+              fontSize: 12,
+              height: 1.45,
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           const Divider(color: AppColors.line),

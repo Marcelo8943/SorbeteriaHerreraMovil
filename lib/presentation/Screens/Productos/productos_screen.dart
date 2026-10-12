@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_catalogo.dart';
-import '../../models/mocks/mock_productos.dart';
-import '../../session.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_catalogo.dart';
+import '../../../models/mocks/mock_productos.dart';
+import '../../../session.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/app_top_bar.dart';
-import '../../widgets/h_stat_card.dart';
+import '../../../widgets/app_top_bar.dart';
+import '../../../widgets/h_stat_card.dart';
 import 'producto_form_screen.dart';
 import 'producto_detalle_screen.dart';
 import 'widgets/productos_widgets.dart';
@@ -115,10 +115,12 @@ class _ProductosScreenState extends State<ProductosScreen> {
                   'Todos',
                   ...mockSabores.map((item) => item.nombre),
                 ], (value) => setModalState(() => sabor = value!)),
-                _campoFiltro('Presentación', presentacion, [
-                  'Todas',
-                  ...mockPresentaciones.map((item) => item.nombre),
-                ], (value) => setModalState(() => presentacion = value!)),
+                _campoFiltro(
+                  'Presentación',
+                  presentacion,
+                  ['Todas', ...mockPresentaciones.map((item) => item.nombre)],
+                  (value) => setModalState(() => presentacion = value!),
+                ),
                 _campoFiltro('Estado', estado, const [
                   'Todos',
                   'Activo',

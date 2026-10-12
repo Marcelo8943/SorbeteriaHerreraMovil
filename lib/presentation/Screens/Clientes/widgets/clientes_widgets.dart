@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../models/app_models.dart';
+import '../../../../models/app_models.dart';
 
 /// Item Individual de Cliente adaptado al modelo de datos Cliente
 class ClienteCardItem extends StatelessWidget {
@@ -82,12 +82,19 @@ class ClienteCardItem extends StatelessWidget {
                       const SizedBox(height: 3),
                       Row(
                         children: [
-                          const Icon(Icons.location_on_outlined, size: 13, color: AppColors.muted),
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 13,
+                            color: AppColors.muted,
+                          ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               '${cliente.municipio} (${cliente.departamento})',
-                              style: const TextStyle(fontSize: 11.5, color: AppColors.muted),
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                color: AppColors.muted,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -96,12 +103,19 @@ class ClienteCardItem extends StatelessWidget {
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Icon(Icons.store_outlined, size: 13, color: AppColors.muted),
+                          const Icon(
+                            Icons.store_outlined,
+                            size: 13,
+                            color: AppColors.muted,
+                          ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               cliente.puntoVenta,
-                              style: const TextStyle(fontSize: 11.5, color: AppColors.muted),
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                color: AppColors.muted,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -110,7 +124,11 @@ class ClienteCardItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: AppColors.muted, size: 20),
+                const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.muted,
+                  size: 20,
+                ),
               ],
             ),
           ),
@@ -159,15 +177,31 @@ class ClientePaginationRow extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.arrow_back_ios_new, size: 11, color: canGoBack ? AppColors.primary : AppColors.muted),
+                Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 11,
+                  color: canGoBack ? AppColors.primary : AppColors.muted,
+                ),
                 const SizedBox(width: 4),
-                Text('Anterior', style: TextStyle(fontSize: 11.5, color: canGoBack ? AppColors.primary : AppColors.muted)),
+                Text(
+                  'Anterior',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: canGoBack ? AppColors.primary : AppColors.muted,
+                  ),
+                ),
               ],
             ),
           ),
           Text(
-            totalPages > 0 ? 'Página $currentPage de $totalPages' : 'Sin resultados',
-            style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.ink),
+            totalPages > 0
+                ? 'Página $currentPage de $totalPages'
+                : 'Sin resultados',
+            style: const TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: AppColors.ink,
+            ),
           ),
           OutlinedButton(
             onPressed: canGoNext ? onNext : null,
@@ -179,9 +213,19 @@ class ClientePaginationRow extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Text('Siguiente', style: TextStyle(fontSize: 11.5, color: canGoNext ? AppColors.primary : AppColors.muted)),
+                Text(
+                  'Siguiente',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    color: canGoNext ? AppColors.primary : AppColors.muted,
+                  ),
+                ),
                 const SizedBox(width: 4),
-                Icon(Icons.arrow_forward_ios, size: 11, color: canGoNext ? AppColors.primary : AppColors.muted),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  size: 11,
+                  color: canGoNext ? AppColors.primary : AppColors.muted,
+                ),
               ],
             ),
           ),

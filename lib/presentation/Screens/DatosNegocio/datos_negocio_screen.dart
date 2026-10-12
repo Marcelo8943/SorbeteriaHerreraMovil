@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../models/mocks/mock_negocio.dart';
+import '../../../models/mocks/mock_negocio.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/datos_negocio_widgets.dart';
 
@@ -18,9 +18,7 @@ class DatosNegocioScreen extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 720),
             child: Column(
               children: [
-                BusinessAppBar(
-                  onBack: () => Navigator.of(context).maybePop(),
-                ),
+                BusinessAppBar(onBack: () => Navigator.of(context).maybePop()),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(

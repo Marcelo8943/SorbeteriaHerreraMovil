@@ -114,50 +114,54 @@ class InfoProductoItemCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: AppToneColors.soft[tono],
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(
-              esLinea ? Icons.icecream_outlined : Icons.layers_outlined,
-              color: color,
-              size: 25,
-            ),
-          ),
-          const SizedBox(width: 13),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  nombre,
-                  style: const TextStyle(
-                    color: AppColors.ink,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: AppToneColors.soft[tono],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    esLinea ? Icons.icecream_outlined : Icons.layers_outlined,
+                    color: color,
+                    size: 25,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  esLinea ? 'Línea de producto' : 'Presentación',
-                  style: const TextStyle(
-                    color: AppColors.muted,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 13),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nombre,
+                        style: const TextStyle(
+                          color: AppColors.ink,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        esLinea ? 'Línea de producto' : 'Presentación',
+                        style: const TextStyle(
+                          color: AppColors.muted,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                const SizedBox(width: 8),
+                _EstadoCatalogoBadge(estado: estado),
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.muted,
+                  size: 23,
                 ),
               ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          _EstadoCatalogoBadge(estado: estado),
-          const SizedBox(width: 6),
-          const Icon(Icons.chevron_right, color: AppColors.muted, size: 23),
-        ],
             ),
           ),
         ),

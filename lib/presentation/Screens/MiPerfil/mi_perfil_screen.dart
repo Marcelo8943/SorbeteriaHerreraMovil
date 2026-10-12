@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../models/mocks/mock_usuarios.dart';
-import '../../session.dart';
+import '../../../models/mocks/mock_usuarios.dart';
+import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/mi_perfil_widgets.dart';
 
@@ -53,7 +53,9 @@ class MiPerfilScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSpacing.md),
                         const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm,
+                          ),
                           child: Text(
                             'Para modificar tu información contacta a administración.',
                             style: TextStyle(

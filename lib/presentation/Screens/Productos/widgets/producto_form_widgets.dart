@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../theme/app_theme.dart';
+import '../../../theme/app_theme.dart';
 
 /// Campo de texto con la etiqueta colocada por encima del Input
 class ProductoFormField extends StatelessWidget {
@@ -50,7 +50,10 @@ class ProductoFormField extends StatelessWidget {
             ),
             filled: true,
             fillColor: AppColors.lavender,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -61,11 +64,17 @@ class ProductoFormField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: AppToneColors.intense[AppTone.red]!, width: 1),
+              borderSide: BorderSide(
+                color: AppToneColors.intense[AppTone.red]!,
+                width: 1,
+              ),
             ),
           ),
         ),
@@ -118,7 +127,10 @@ class ProductoDropdownField extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.lavender,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -129,14 +141,14 @@ class ProductoDropdownField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.5,
+              ),
             ),
           ),
           items: items.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
-            );
+            return DropdownMenuItem<String>(value: item, child: Text(item));
           }).toList(),
         ),
       ],

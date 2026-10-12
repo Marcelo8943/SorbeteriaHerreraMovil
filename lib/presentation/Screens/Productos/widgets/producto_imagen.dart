@@ -17,7 +17,8 @@ class ProductoImagen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uri = Uri.tryParse(referencia);
-    final esUrl = uri != null &&
+    final esUrl =
+        uri != null &&
         (uri.scheme == 'http' || uri.scheme == 'https') &&
         uri.host.isNotEmpty;
     if (esUrl) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_catalogo.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_catalogo.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/producto_form_widgets.dart';
 import 'widgets/producto_imagen.dart';
@@ -38,7 +38,8 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     );
 
     _lineaSeleccionada = p?.linea ?? mockLineas.first.nombre;
-    _presentacionSeleccionada = p?.presentacion ?? mockPresentaciones.first.nombre;
+    _presentacionSeleccionada =
+        p?.presentacion ?? mockPresentaciones.first.nombre;
     _saborSeleccionado = p?.sabor ?? mockSabores.first.nombre;
     _esActivo = (p?.estado ?? 'Activo') == 'Activo';
   }
@@ -82,7 +83,11 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: AppColors.ink),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 18,
+            color: AppColors.ink,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -128,8 +133,12 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ProductoDropdownField(
                     label: 'Línea',
                     value: _lineaSeleccionada,
-                    items: _opcionesConValor(mockLineas.map((e) => e.nombre).toList(), _lineaSeleccionada),
-                    validator: (valor) => valor == null ? 'Seleccione una línea' : null,
+                    items: _opcionesConValor(
+                      mockLineas.map((e) => e.nombre).toList(),
+                      _lineaSeleccionada,
+                    ),
+                    validator: (valor) =>
+                        valor == null ? 'Seleccione una línea' : null,
                     onChanged: (val) {
                       if (val != null) setState(() => _lineaSeleccionada = val);
                     },
@@ -140,10 +149,15 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ProductoDropdownField(
                     label: 'Presentación',
                     value: _presentacionSeleccionada,
-                    items: _opcionesConValor(mockPresentaciones.map((e) => e.nombre).toList(), _presentacionSeleccionada),
-                    validator: (valor) => valor == null ? 'Seleccione una presentación' : null,
+                    items: _opcionesConValor(
+                      mockPresentaciones.map((e) => e.nombre).toList(),
+                      _presentacionSeleccionada,
+                    ),
+                    validator: (valor) =>
+                        valor == null ? 'Seleccione una presentación' : null,
                     onChanged: (val) {
-                      if (val != null) setState(() => _presentacionSeleccionada = val);
+                      if (val != null)
+                        setState(() => _presentacionSeleccionada = val);
                     },
                   ),
                   const SizedBox(height: 16),
@@ -152,8 +166,12 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ProductoDropdownField(
                     label: 'Sabor',
                     value: _saborSeleccionado,
-                    items: _opcionesConValor(mockSabores.map((e) => e.nombre).toList(), _saborSeleccionado),
-                    validator: (valor) => valor == null ? 'Seleccione un sabor' : null,
+                    items: _opcionesConValor(
+                      mockSabores.map((e) => e.nombre).toList(),
+                      _saborSeleccionado,
+                    ),
+                    validator: (valor) =>
+                        valor == null ? 'Seleccione un sabor' : null,
                     onChanged: (val) {
                       if (val != null) setState(() => _saborSeleccionado = val);
                     },

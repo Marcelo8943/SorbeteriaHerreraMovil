@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../models/app_models.dart';
+import '../../../../models/app_models.dart';
 
 class UsuarioCardItem extends StatelessWidget {
   final Usuario usuario;

@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
-import '../../../models/app_models.dart';
+import '../../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
 /// Tarjeta de resumen que muestra un indicador del módulo, como precios
@@ -162,7 +162,7 @@ class PrecioGeneralCard extends StatelessWidget {
                   _unidad,
                   style: TextStyle(
                     color: AppToneColors.intense[AppTone.teal],
-                  fontSize: 21,
+                    fontSize: 21,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -236,7 +236,8 @@ class PrecioEspecialCard extends StatelessWidget {
 
   const PrecioEspecialCard({super.key, required this.precio});
 
-  AppTone get _tono => precio.colorTag == 'yellow' ? AppTone.yellow : AppTone.purple;
+  AppTone get _tono =>
+      precio.colorTag == 'yellow' ? AppTone.yellow : AppTone.purple;
 
   @override
   Widget build(BuildContext context) {

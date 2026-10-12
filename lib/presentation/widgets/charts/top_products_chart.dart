@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../../theme/app_theme.dart';
+import '../../presentation/theme/app_theme.dart';
 import '../../models/dashboard_metrics.dart';
 
 class TopProductsChart extends StatelessWidget {

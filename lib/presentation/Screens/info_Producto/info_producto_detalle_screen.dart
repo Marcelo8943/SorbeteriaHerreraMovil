@@ -43,7 +43,10 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
 
   void _guardar() {
     if (!_formKey.currentState!.validate()) return;
-    widget.onGuardar(_nombreController.text.trim(), _activo ? 'Activo' : 'Inactivo');
+    widget.onGuardar(
+      _nombreController.text.trim(),
+      _activo ? 'Activo' : 'Inactivo',
+    );
   }
 
   @override
@@ -72,7 +75,9 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
                 const Center(child: InfoProductoDetalleHandle()),
                 const SizedBox(height: AppSpacing.md),
                 InfoProductoDetalleEncabezado(
-                  titulo: widget.esLinea ? 'Editar línea' : 'Editar presentación',
+                  titulo: widget.esLinea
+                      ? 'Editar línea'
+                      : 'Editar presentación',
                   onCerrar: () => Navigator.of(context).maybePop(),
                 ),
                 const SizedBox(height: AppSpacing.md),

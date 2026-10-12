@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../models/app_models.dart';
+import '../../../../models/app_models.dart';
 
 /// Lista de las últimas transacciones, con encabezado y "Ver todo →".
 /// Exclusivo del Dashboard.
@@ -30,13 +30,21 @@ class RecentTransactionsList extends StatelessWidget {
             children: [
               const Text(
                 'Transacciones recientes',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.ink),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.ink,
+                ),
               ),
               GestureDetector(
                 onTap: onVerTodo,
                 child: const Text(
                   'Ver todo →',
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppColors.primary),
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
             ],
@@ -88,7 +96,11 @@ class _TransaccionRow extends StatelessWidget {
               children: [
                 Text(
                   transaccion.relacionado,
-                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold, color: AppColors.ink),
+                  style: const TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.ink,
+                  ),
                 ),
                 Text(
                   '${transaccion.tipo} · ${transaccion.cantidadTotal} und · ${transaccion.fechaRelativa}',
@@ -108,13 +120,21 @@ class _TransaccionRow extends StatelessWidget {
                 ),
                 child: Text(
                   transaccion.tipo,
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: AppToneColors.intense[tone]),
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: AppToneColors.intense[tone],
+                  ),
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 'C\$${transaccion.monto.toStringAsFixed(0)}',
-                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: AppColors.ink),
+                style: const TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.ink,
+                ),
               ),
             ],
           ),

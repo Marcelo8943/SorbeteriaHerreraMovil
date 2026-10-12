@@ -79,9 +79,9 @@ class InfoProductoDetalleNombre extends StatelessWidget {
       textCapitalization: TextCapitalization.words,
       validator: validator,
       style: const TextStyle(
-          color: AppColors.ink,
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
+        color: AppColors.ink,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
       ),
       decoration: InputDecoration(
         filled: true,
@@ -145,8 +145,7 @@ class InfoProductoDetalleEstado extends StatelessWidget {
             ),
             child: AnimatedAlign(
               duration: const Duration(milliseconds: 160),
-              alignment:
-                  activo ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: activo ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
                 width: 26,
                 height: 26,
@@ -167,10 +166,7 @@ class InfoProductoDetalleEstado extends StatelessWidget {
 class InfoProductoDetalleBotonGuardar extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const InfoProductoDetalleBotonGuardar({
-    super.key,
-    required this.onPressed,
-  });
+  const InfoProductoDetalleBotonGuardar({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -37,7 +37,9 @@ class _InfoProductoFormScreenState extends State<InfoProductoFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final titulo = widget.esLinea ? 'Agregar nueva línea' : 'Agregar nueva presentación';
+    final titulo = widget.esLinea
+        ? 'Agregar nueva línea'
+        : 'Agregar nueva presentación';
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 180),

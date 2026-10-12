@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'routes/app_routes.dart';
-import 'theme/app_theme.dart';
+import 'presentation/routes/app_routes.dart';
+import 'presentation/theme/app_theme.dart';
 
 void main() {
   runApp(const HerreraApp());

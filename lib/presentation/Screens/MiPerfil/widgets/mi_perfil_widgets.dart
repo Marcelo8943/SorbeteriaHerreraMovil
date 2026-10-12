@@ -77,7 +77,9 @@ class UserInformationCard extends StatelessWidget {
                   value: username,
                 ),
               ),
-              Expanded(child: ProfileDataItem(label: 'ROL', value: role)),
+              Expanded(
+                child: ProfileDataItem(label: 'ROL', value: role),
+              ),
             ],
           ),
           const Divider(height: AppSpacing.lg, color: AppColors.line),

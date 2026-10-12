@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../models/app_models.dart';
-import '../../models/dashboard_metrics.dart';
-import '../../models/mocks/mock_productos.dart';
-import '../../models/mocks/mock_transacciones.dart';
+import '../../../models/app_models.dart';
+import '../../../models/dashboard_metrics.dart';
+import '../../../models/mocks/mock_productos.dart';
+import '../../../models/mocks/mock_transacciones.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/charts/average_ticket_chart.dart';
-import '../../widgets/charts/inventory_rotation_chart.dart';
-import '../../widgets/charts/sales_by_period_chart.dart';
-import '../../widgets/charts/top_products_chart.dart';
+import '../../../widgets/charts/average_ticket_chart.dart';
+import '../../../widgets/charts/inventory_rotation_chart.dart';
+import '../../../widgets/charts/sales_by_period_chart.dart';
+import '../../../widgets/charts/top_products_chart.dart';
 import 'widgets/reportes_filtros_bar.dart';
 
 class ReportesScreen extends StatefulWidget {
@@ -135,22 +135,22 @@ class _ReportesScreenState extends State<ReportesScreen> {
       final f = _parseFecha(t.fecha);
       if (f != null) {
         if (_fechaDesde != null &&
-            f.isBefore(DateTime(
-              _fechaDesde!.year,
-              _fechaDesde!.month,
-              _fechaDesde!.day,
-            ))) {
+            f.isBefore(
+              DateTime(_fechaDesde!.year, _fechaDesde!.month, _fechaDesde!.day),
+            )) {
           return false;
         }
         if (_fechaHasta != null &&
-            f.isAfter(DateTime(
-              _fechaHasta!.year,
-              _fechaHasta!.month,
-              _fechaHasta!.day,
-              23,
-              59,
-              59,
-            ))) {
+            f.isAfter(
+              DateTime(
+                _fechaHasta!.year,
+                _fechaHasta!.month,
+                _fechaHasta!.day,
+                23,
+                59,
+                59,
+              ),
+            )) {
           return false;
         }
       }
@@ -160,67 +160,71 @@ class _ReportesScreenState extends State<ReportesScreen> {
   }
 
   List<Transaccion> get _transaccionesFiltradas {
-    return mockTransacciones.where((t) {
-      // 1. Tipo de venta
-      if (_filtroTipoVenta != 'Todos') {
-        if (t.tipoVenta == null || t.tipoVenta != _filtroTipoVenta) {
-          return false;
-        }
-      }
+    return mockTransacciones
+        .where((t) {
+          // 1. Tipo de venta
+          if (_filtroTipoVenta != 'Todos') {
+            if (t.tipoVenta == null || t.tipoVenta != _filtroTipoVenta) {
+              return false;
+            }
+          }
 
-      // 2. Rango de fecha
-      if (!_evaluarFecha(t)) {
-        return false;
-      }
+          // 2. Rango de fecha
+          if (!_evaluarFecha(t)) {
+            return false;
+          }
 
-      // 3. Producto
-      if (_filtroProducto != 'Todos') {
-        final matches = t.items.any(
-          (item) => _coincideProducto(item.producto, _filtroProducto),
-        );
-        if (!matches) return false;
-      }
+          // 3. Producto
+          if (_filtroProducto != 'Todos') {
+            final matches = t.items.any(
+              (item) => _coincideProducto(item.producto, _filtroProducto),
+            );
+            if (!matches) return false;
+          }
 
-      // 4. Línea
-      if (_filtroLinea != 'Todas') {
-        final matches = t.items.any(
-          (item) => _productoPerteneceALinea(item.producto, _filtroLinea),
-        );
-        if (!matches) return false;
-      }
+          // 4. Línea
+          if (_filtroLinea != 'Todas') {
+            final matches = t.items.any(
+              (item) => _productoPerteneceALinea(item.producto, _filtroLinea),
+            );
+            if (!matches) return false;
+          }
 
-      return true;
-    }).map((t) {
-      if (_filtroProducto == 'Todos' && _filtroLinea == 'Todas') {
-        return t;
-      }
-      final itemsFiltrados = t.items.where((item) {
-        if (_filtroProducto != 'Todos' &&
-            !_coincideProducto(item.producto, _filtroProducto)) {
-          return false;
-        }
-        if (_filtroLinea != 'Todas' &&
-            !_productoPerteneceALinea(item.producto, _filtroLinea)) {
-          return false;
-        }
-        return true;
-      }).toList();
+          return true;
+        })
+        .map((t) {
+          if (_filtroProducto == 'Todos' && _filtroLinea == 'Todas') {
+            return t;
+          }
+          final itemsFiltrados = t.items.where((item) {
+            if (_filtroProducto != 'Todos' &&
+                !_coincideProducto(item.producto, _filtroProducto)) {
+              return false;
+            }
+            if (_filtroLinea != 'Todas' &&
+                !_productoPerteneceALinea(item.producto, _filtroLinea)) {
+              return false;
+            }
+            return true;
+          }).toList();
 
-      return Transaccion(
-        id: t.id,
-        folio: t.folio,
-        tipo: t.tipo,
-        relacionado: t.relacionado,
-        detalle: t.detalle,
-        tipoVenta: t.tipoVenta,
-        fecha: t.fecha,
-        fechaRelativa: t.fechaRelativa,
-        realizadoPor: t.realizadoPor,
-        rol: t.rol,
-        estado: t.estado,
-        items: itemsFiltrados,
-      );
-    }).where((t) => t.items.isNotEmpty).toList();
+          return Transaccion(
+            id: t.id,
+            folio: t.folio,
+            tipo: t.tipo,
+            relacionado: t.relacionado,
+            detalle: t.detalle,
+            tipoVenta: t.tipoVenta,
+            fecha: t.fecha,
+            fechaRelativa: t.fechaRelativa,
+            realizadoPor: t.realizadoPor,
+            rol: t.rol,
+            estado: t.estado,
+            items: itemsFiltrados,
+          );
+        })
+        .where((t) => t.items.isNotEmpty)
+        .toList();
   }
 
   List<Producto> get _productosFiltrados {
@@ -336,19 +340,13 @@ class _ReportesScreenState extends State<ReportesScreen> {
               onFiltrosAplicados: _aplicarFiltros,
               onRemoverFiltro: _removerFiltro,
             ),
-            SalesByPeriodChart(
-              datos: datosVentas,
-            ),
-            TopProductsChart(
-              datos: datosTopProductos,
-            ),
+            SalesByPeriodChart(datos: datosVentas),
+            TopProductsChart(datos: datosTopProductos),
             InventoryRotationChart(
               productos: productos,
               transacciones: transacciones,
             ),
-            AverageTicketChart(
-              datos: datosTicket,
-            ),
+            AverageTicketChart(datos: datosTicket),
             const SizedBox(height: AppSpacing.xl),
           ],
         ),

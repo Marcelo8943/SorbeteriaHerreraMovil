@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
-import '../../session.dart';
+import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/conf_widgets.dart';
 
@@ -10,7 +10,9 @@ class ConfiguracionesScreen extends StatelessWidget {
 
   void _logout(BuildContext context) {
     Session.cerrarSesion();
-    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+    Navigator.of(
+      context,
+    ).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 
   @override
@@ -43,8 +45,9 @@ class ConfiguracionesScreen extends StatelessWidget {
                           description:
                               '${Session.rolNombre} · ${Session.usuarioActual?.correo ?? ''}',
                           initials: Session.iniciales,
-                          onTap: () =>
-                              Navigator.of(context).pushNamed(AppRoutes.miPerfil),
+                          onTap: () => Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.miPerfil),
                         ),
                         const SizedBox(height: AppSpacing.lg),
                         const ConfigurationSectionLabel('ADMINISTRACIÓN'),
@@ -79,8 +82,9 @@ class ConfiguracionesScreen extends StatelessWidget {
                           iconColor: AppColors.muted,
                           title: 'Acerca de',
                           subtitle: 'Sorbetería Herrera App v2.2.0',
-                          onTap: () =>
-                              Navigator.of(context).pushNamed(AppRoutes.acercaDe),
+                          onTap: () => Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.acercaDe),
                         ),
                         const SizedBox(height: AppSpacing.xl),
                         LogoutButton(onPressed: () => _logout(context)),

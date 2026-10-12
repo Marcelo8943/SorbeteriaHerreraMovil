@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_precios.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_precios.dart';
 import '../../theme/app_theme.dart';
 import 'precio_form_screen.dart';
 import 'widgets/precios_widgets.dart';
@@ -26,13 +26,13 @@ class _PreciosScreenState extends State<PreciosScreen> {
   List<PrecioGeneral> get _preciosVisibles => _lineaSeleccionada == 'Todas'
       ? _preciosGenerales
       : _preciosGenerales
-          .where((precio) => precio.linea == _lineaSeleccionada)
-          .toList();
+            .where((precio) => precio.linea == _lineaSeleccionada)
+            .toList();
 
   int get _productosConPrecio => _preciosGenerales.fold(
-        0,
-        (total, precio) => total + precio.cantidadProductos,
-      );
+    0,
+    (total, precio) => total + precio.cantidadProductos,
+  );
 
   Future<void> _abrirFormularioPrecio(
     BuildContext context,
@@ -135,10 +135,7 @@ class _PreciosScreenState extends State<PreciosScreen> {
                 child: Text(
                   'Toca una presentación para ver los campos de precio de ejemplo.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.muted,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: AppColors.muted, fontSize: 12),
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
@@ -151,7 +148,11 @@ class _PreciosScreenState extends State<PreciosScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
-              for (var index = 0; index < mockPreciosEspeciales.length; index++) ...[
+              for (
+                var index = 0;
+                index < mockPreciosEspeciales.length;
+                index++
+              ) ...[
                 PrecioEspecialCard(precio: mockPreciosEspeciales[index]),
                 if (index + 1 < mockPreciosEspeciales.length)
                   const SizedBox(height: AppSpacing.sm),
@@ -162,5 +163,4 @@ class _PreciosScreenState extends State<PreciosScreen> {
       ),
     );
   }
-
 }

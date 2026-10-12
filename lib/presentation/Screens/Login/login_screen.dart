@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes/app_routes.dart';
-import '../../models/mocks/mock_usuarios.dart';
-import '../../session.dart';
+import '../../../models/mocks/mock_usuarios.dart';
+import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/login_widgets.dart';
 
@@ -70,7 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void _showPasswordRecoveryMessage() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('La recuperación de contraseña estará disponible pronto.'),
+        content: Text(
+          'La recuperación de contraseña estará disponible pronto.',
+        ),
       ),
     );
   }

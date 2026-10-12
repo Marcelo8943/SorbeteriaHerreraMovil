@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../models/app_models.dart';
-import '../../../../theme/app_theme.dart';
+import '../../../../../models/app_models.dart';
+import '../../../theme/app_theme.dart';
 import 'producto_imagen.dart';
 
 class ProductoStatusBadge extends StatelessWidget {
@@ -24,7 +24,11 @@ class ProductoStatusBadge extends StatelessWidget {
       ),
       child: Text(
         estado,
-        style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          color: color,
+          fontSize: 9,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
@@ -34,11 +38,7 @@ class ProductoCard extends StatelessWidget {
   final Producto producto;
   final VoidCallback onTap;
 
-  const ProductoCard({
-    super.key,
-    required this.producto,
-    required this.onTap,
-  });
+  const ProductoCard({super.key, required this.producto, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +176,9 @@ class ProductoPaginationRow extends StatelessWidget {
             ),
           ),
           Text(
-            totalPages > 0 ? 'Página $currentPage de $totalPages' : 'Sin resultados',
+            totalPages > 0
+                ? 'Página $currentPage de $totalPages'
+                : 'Sin resultados',
             style: const TextStyle(
               fontSize: 11.5,
               fontWeight: FontWeight.w600,
@@ -214,5 +216,3 @@ class ProductoPaginationRow extends StatelessWidget {
     );
   }
 }
-
-

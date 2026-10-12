@@ -177,10 +177,7 @@ class ConfigurationOptionTile extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: AppColors.muted,
-                    fontSize: 10,
-                  ),
+                  style: const TextStyle(color: AppColors.muted, fontSize: 10),
                 ),
               ],
             ),
@@ -220,7 +217,9 @@ class LogoutButton extends StatelessWidget {
         style: TextButton.styleFrom(
           backgroundColor: const Color(0xFFFDE8E8),
           foregroundColor: AppColors.error,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(13),
+          ),
           textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
         ),
       ),

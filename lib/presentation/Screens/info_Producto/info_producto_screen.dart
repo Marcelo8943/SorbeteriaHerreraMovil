@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_catalogo.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_catalogo.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/h_stat_card.dart';
+import '../../../widgets/h_stat_card.dart';
 import 'info_producto_detalle_screen.dart';
 import 'info_producto_form_screen.dart';
 import 'widgets/info_producto_widgets.dart';
@@ -111,16 +111,20 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
     setState(() {
       if (esLinea) {
         final siguienteId =
-            _lineas.fold<int>(0, (maxId, item) => item.id > maxId ? item.id : maxId) +
+            _lineas.fold<int>(
+              0,
+              (maxId, item) => item.id > maxId ? item.id : maxId,
+            ) +
             1;
         _lineas.add(Linea(id: siguienteId, nombre: nombre));
       } else {
-        final siguienteId = _presentaciones
-                .fold<int>(0, (maxId, item) => item.id > maxId ? item.id : maxId) +
+        final siguienteId =
+            _presentaciones.fold<int>(
+              0,
+              (maxId, item) => item.id > maxId ? item.id : maxId,
+            ) +
             1;
-        _presentaciones.add(
-          Presentacion(id: siguienteId, nombre: nombre),
-        );
+        _presentaciones.add(Presentacion(id: siguienteId, nombre: nombre));
       }
     });
   }

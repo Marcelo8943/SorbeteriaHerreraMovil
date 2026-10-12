@@ -30,6 +30,7 @@ class SistemaAppBar extends StatelessWidget {
     );
   }
 }
+
 class GlobalMonitoringCard extends StatelessWidget {
   const GlobalMonitoringCard({super.key});
 
@@ -45,21 +46,15 @@ class GlobalMonitoringCard extends StatelessWidget {
                 'Base para alertas cuando un producto no tiene umbral propio.',
           ),
           SizedBox(height: AppSpacing.lg),
-          PreferenceLabel(
-            label: 'Umbral global de stock bajo (und)',
-          ),
+          PreferenceLabel(label: 'Umbral global de stock bajo (und)'),
           SizedBox(height: AppSpacing.sm),
           PreferenceValueField(value: '10'),
           SizedBox(height: AppSpacing.md),
-          PreferenceLabel(
-            label: 'Días para alertar vencimiento de lotes',
-          ),
+          PreferenceLabel(label: 'Días para alertar vencimiento de lotes'),
           SizedBox(height: AppSpacing.sm),
           PreferenceValueField(value: '15'),
           SizedBox(height: AppSpacing.md),
-          PreferenceLabel(
-            label: 'Unidades de visualización del panel',
-          ),
+          PreferenceLabel(label: 'Unidades de visualización del panel'),
           SizedBox(height: AppSpacing.sm),
           PreferenceValueField(value: 'Unidades (und)', showsArrow: true),
           SizedBox(height: AppSpacing.lg),
@@ -69,6 +64,7 @@ class GlobalMonitoringCard extends StatelessWidget {
     );
   }
 }
+
 class PreferenceCard extends StatelessWidget {
   const PreferenceCard({super.key, required this.child});
 
@@ -88,6 +84,7 @@ class PreferenceCard extends StatelessWidget {
     );
   }
 }
+
 class PreferenceTitle extends StatelessWidget {
   const PreferenceTitle({
     super.key,
@@ -159,7 +156,10 @@ class PreferenceReference extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: 3,
+      ),
       decoration: BoxDecoration(
         color: AppColors.lavender,
         borderRadius: BorderRadius.circular(AppSpacing.sm),
@@ -213,7 +213,10 @@ class PreferenceValueField extends StatelessWidget {
             ),
           ),
           if (showsArrow)
-            const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.muted),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: AppColors.muted,
+            ),
         ],
       ),
     );

@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:herrera_system/models/mocks/mock_productos.dart';
 
 import '../../theme/app_theme.dart';
-import '../../widgets/app_top_bar.dart';
-import '../../widgets/h_stat_card.dart';
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_transacciones.dart';
-import '../../models/dashboard_metrics.dart';
-import '../../session.dart';
+import '../../../widgets/app_top_bar.dart';
+import '../../../widgets/h_stat_card.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_transacciones.dart';
+import '../../../models/dashboard_metrics.dart';
+import '../../../session.dart';
 
 import 'widgets/greeting_banner.dart';
 
 import 'widgets/recent_transactions_list.dart';
-import '../../widgets/charts/sales_by_period_chart.dart';
-import '../../widgets/charts/top_products_chart.dart';
-import '../../widgets/charts/average_ticket_chart.dart';
+import '../../../widgets/charts/sales_by_period_chart.dart';
+import '../../../widgets/charts/top_products_chart.dart';
+import '../../../widgets/charts/average_ticket_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});

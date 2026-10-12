@@ -3,14 +3,14 @@ import 'widgets/clientes_widgets.dart';
 import '../../theme/app_theme.dart';
 import 'cliente_detalle_screen.dart';
 import 'cliente_form_screen.dart';
-import '../../widgets/search_filter_row.dart';
-import '../../widgets/h_stat_card.dart';
-import '../../widgets/app_top_bar.dart';
+import '../../../widgets/search_filter_row.dart';
+import '../../../widgets/h_stat_card.dart';
+import '../../../widgets/app_top_bar.dart';
 
 // Importación de modelos y mock por entidad
-import '../../models/app_models.dart';
-import '../../models/mocks/mock_clientes.dart';
-import '../../session.dart';
+import '../../../models/app_models.dart';
+import '../../../models/mocks/mock_clientes.dart';
+import '../../../session.dart';
 
 class ClientesScreen extends StatefulWidget {
   const ClientesScreen({super.key});
@@ -293,8 +293,9 @@ class _ClientesScreenState extends State<ClientesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final clientesActivos =
-        _allClientes.where((cliente) => cliente.estado == 'Activo').length;
+    final clientesActivos = _allClientes
+        .where((cliente) => cliente.estado == 'Activo')
+        .length;
     final query = _searchQuery.trim().toLowerCase();
     final clientes = _allClientes.where((cliente) {
       final coincideNombre =

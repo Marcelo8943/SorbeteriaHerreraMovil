@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/app_models.dart';
+import '../../../../models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
 class BusinessAppBar extends StatelessWidget {
@@ -87,10 +87,7 @@ class BusinessInformationCard extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: BusinessDataItem(
-                  label: 'CORREO',
-                  value: negocio.correo,
-                ),
+                child: BusinessDataItem(label: 'CORREO', value: negocio.correo),
               ),
             ],
           ),
@@ -103,7 +100,11 @@ class BusinessInformationCard extends StatelessWidget {
 }
 
 class BusinessTextField extends StatelessWidget {
-  const BusinessTextField({super.key, required this.label, required this.value});
+  const BusinessTextField({
+    super.key,
+    required this.label,
+    required this.value,
+  });
 
   final String label;
   final String value;
