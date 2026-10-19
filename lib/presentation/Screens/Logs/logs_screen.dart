@@ -4,7 +4,7 @@ import '../../../data/mocks/mock_logs.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
 import '../../widgets/search_filter_row.dart';
-import '../Productos/widgets/productos_widgets.dart';
+import '../productos/widgets/productos_widgets.dart';
 import 'widgets/log_card.dart';
 
 class LogsScreen extends StatefulWidget {

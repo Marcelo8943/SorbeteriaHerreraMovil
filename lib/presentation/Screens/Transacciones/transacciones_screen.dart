@@ -4,7 +4,7 @@ import '../../../data/mocks/mock_transacciones.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
 import '../../widgets/search_filter_row.dart';
-import '../Productos/widgets/productos_widgets.dart';
+import '../productos/widgets/productos_widgets.dart';
 import 'widgets/transaccion_card.dart';
 
 class TransaccionesScreen extends StatefulWidget {
