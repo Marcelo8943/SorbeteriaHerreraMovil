@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'presentation/routes/app_routes.dart';
 import 'presentation/theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const HerreraApp());
+  await dotenv.load();
 }
 
 class HerreraApp extends StatelessWidget {
