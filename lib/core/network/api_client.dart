@@ -73,5 +73,5 @@ class ApiClient {
     }
   }
 
-  void dispose() => _cliente.close();
+  void dispose() => _client.close();
 }
