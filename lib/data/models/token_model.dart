@@ -28,4 +28,16 @@ class TokenModel {
       expiresAt: DateTime.parse(json['expiresAt']),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'token': token,
+      'userName': userName,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'roles': roles,
+      'expiresAt': expiresAt.toIso8601String(),
+    };
+  }
 }
