@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../data/mocks/mock_transacciones.dart';
+import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
-import '../transacciones/widgets/transaccion_card.dart';
+import '../transacciones/widgets/transaccion_tipo_selector.dart';
+import 'widgets/reabastecimientos_widgets.dart';
 
 class ReabastecimientosScreen extends StatelessWidget {
   const ReabastecimientosScreen({super.key});
@@ -41,6 +43,25 @@ class ReabastecimientosScreen extends StatelessWidget {
           bottom: AppSpacing.xl,
         ),
         children: [
+          TransaccionTipoSelector(
+            tipoSeleccionado: 'Reabastecimiento',
+            onSeleccionar: (tipo) {
+              final ruta = switch (tipo) {
+                'Venta' => AppRoutes.ventas,
+                'Pedido' => AppRoutes.pedidos,
+                'Reabastecimiento' => AppRoutes.reabastecimientos,
+                _ => throw ArgumentError.value(
+                  tipo,
+                  'tipo',
+                  'Tipo no soportado',
+                ),
+              };
+              if (ruta != AppRoutes.reabastecimientos) {
+                Navigator.of(context).pushReplacementNamed(ruta);
+              }
+            },
+          ),
+          const SizedBox(height: AppSpacing.md),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
@@ -55,21 +76,7 @@ class ReabastecimientosScreen extends StatelessWidget {
               ),
             ),
           ),
-          if (reabastecimientos.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(
-                child: Text(
-                  'No hay reabastecimientos registrados.',
-                  style: TextStyle(color: AppColors.muted, fontSize: 13),
-                ),
-              ),
-            )
-          else
-            ...reabastecimientos.map(
-              (reabastecimiento) =>
-                  TransaccionCard(transaccion: reabastecimiento),
-            ),
+          ReabastecimientosLista(reabastecimientos: reabastecimientos),
         ],
       ),
     );
