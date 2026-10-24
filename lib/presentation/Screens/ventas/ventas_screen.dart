@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../data/mocks/mock_transacciones.dart';
+import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
-import '../transacciones/widgets/transaccion_card.dart';
+import '../transacciones/widgets/transaccion_tipo_selector.dart';
+import 'widgets/ventas_widgets.dart';
 
 class VentasScreen extends StatelessWidget {
   const VentasScreen({super.key});
@@ -39,6 +41,25 @@ class VentasScreen extends StatelessWidget {
           bottom: AppSpacing.xl,
         ),
         children: [
+          TransaccionTipoSelector(
+            tipoSeleccionado: 'Venta',
+            onSeleccionar: (tipo) {
+              final ruta = switch (tipo) {
+                'Venta' => AppRoutes.ventas,
+                'Pedido' => AppRoutes.pedidos,
+                'Reabastecimiento' => AppRoutes.reabastecimientos,
+                _ => throw ArgumentError.value(
+                  tipo,
+                  'tipo',
+                  'Tipo no soportado',
+                ),
+              };
+              if (ruta != AppRoutes.ventas) {
+                Navigator.of(context).pushReplacementNamed(ruta);
+              }
+            },
+          ),
+          const SizedBox(height: AppSpacing.md),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
@@ -53,18 +74,7 @@ class VentasScreen extends StatelessWidget {
               ),
             ),
           ),
-          if (ventas.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(
-                child: Text(
-                  'No hay ventas registradas.',
-                  style: TextStyle(color: AppColors.muted, fontSize: 13),
-                ),
-              ),
-            )
-          else
-            ...ventas.map((venta) => TransaccionCard(transaccion: venta)),
+          VentasLista(ventas: ventas),
         ],
       ),
     );
