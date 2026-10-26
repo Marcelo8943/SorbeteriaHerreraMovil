@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:herrera_system/core/di/injection.dart';
 
 import 'presentation/routes/app_routes.dart';
 import 'presentation/theme/app_theme.dart';
 
 Future<void> main() async {
-  runApp(const HerreraApp());
   await dotenv.load();
+  setupDependencies();
+  runApp(const HerreraApp());
 }
 
 class HerreraApp extends StatelessWidget {
