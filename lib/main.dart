@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:herrera_system/core/di/injection.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'presentation/routes/app_routes.dart';
 import 'presentation/theme/app_theme.dart';
@@ -8,7 +10,12 @@ import 'presentation/theme/app_theme.dart';
 Future<void> main() async {
   await dotenv.load();
   setupDependencies();
-  runApp(const HerreraApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => getIt<AuthProvider>(),
+      child: const HerreraApp(),
+    ),
+  );
 }
 
 class HerreraApp extends StatelessWidget {
