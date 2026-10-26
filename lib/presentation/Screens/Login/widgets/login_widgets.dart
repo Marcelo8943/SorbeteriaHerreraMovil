@@ -54,18 +54,12 @@ class LoginHero extends StatelessWidget {
             const Positioned(
               left: -82,
               top: -48,
-              child: _DecorativeCircle(
-                size: 190,
-                color: Color(0x2BFFFFFF),
-              ),
+              child: _DecorativeCircle(size: 190, color: Color(0x2BFFFFFF)),
             ),
             const Positioned(
               right: -67,
               bottom: -74,
-              child: _DecorativeCircle(
-                size: 188,
-                color: Color(0x26004F3D),
-              ),
+              child: _DecorativeCircle(size: 188, color: Color(0x26004F3D)),
             ),
             _HeroContent(onLogoTap: onLogoTap),
           ],
@@ -169,10 +163,7 @@ class _FacebookLogo extends StatelessWidget {
               decoration: BoxDecoration(
                 color: LoginColors.logoGreen,
                 borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: const Color(0xFF004B39),
-                  width: 2,
-                ),
+                border: Border.all(color: const Color(0xFF004B39), width: 2),
               ),
               child: const FittedBox(
                 fit: BoxFit.scaleDown,
@@ -221,6 +212,7 @@ class LoginTextField extends StatelessWidget {
     required this.label,
     required this.controller,
     required this.icon,
+    this.validator,
     this.obscureText = false,
     this.trailing,
   });
@@ -228,6 +220,7 @@ class LoginTextField extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final IconData icon;
+  final String? Function(String?)? validator;
   final bool obscureText;
   final Widget? trailing;
 
@@ -245,9 +238,10 @@ class LoginTextField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        TextField(
+        TextFormField(
           controller: controller,
           obscureText: obscureText,
+          validator: validator,
           style: const TextStyle(
             color: LoginColors.text,
             fontSize: 14,
@@ -261,17 +255,17 @@ class LoginTextField extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(vertical: 13),
             border: _inputBorder(),
             enabledBorder: _inputBorder(),
-            focusedBorder: _inputBorder(
-              color: LoginColors.primary,
-              width: 1.5,
-            ),
+            focusedBorder: _inputBorder(color: LoginColors.primary, width: 1.5),
           ),
         ),
       ],
     );
   }
 
-  OutlineInputBorder _inputBorder({Color color = Colors.transparent, double width = 0}) {
+  OutlineInputBorder _inputBorder({
+    Color color = Colors.transparent,
+    double width = 0,
+  }) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(color: color, width: width),
@@ -280,9 +274,14 @@ class LoginTextField extends StatelessWidget {
 }
 
 class LoginButton extends StatelessWidget {
-  const LoginButton({super.key, required this.onPressed});
+  const LoginButton({
+    super.key,
+    required this.onPressed,
+    this.isSubmitting = false,
+  });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
@@ -300,17 +299,25 @@ class LoginButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(13),
           ),
         ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Ingresar al sistema',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(width: 10),
-            Icon(Icons.arrow_forward_rounded, size: 21),
-          ],
-        ),
+        child: isSubmitting
+            ? const SizedBox.square(
+                dimension: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Ingresar al sistema',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(width: 10),
+                  Icon(Icons.arrow_forward_rounded, size: 21),
+                ],
+              ),
       ),
     );
   }

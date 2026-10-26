@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../routes/app_routes.dart';
-import '../../../data/mocks/mock_usuarios.dart';
-import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/login_widgets.dart';
 
@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
     'https://www.facebook.com/SorbetesHerrera/',
   );
 
+  final _globalKey = GlobalKey<FormState>();
   final _userController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _hidePassword = true;
@@ -45,24 +46,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _login() {
-    final user = _userController.text.trim();
-    final password = _passwordController.text;
+  Future<void> _login() async {
+    final formState = _globalKey.currentState;
+    if (formState == null || !formState.validate()) return;
 
-    final matchedUsers = mockUsuarios.where(
-      (usuario) =>
-          usuario.usuario.toLowerCase() == user.toLowerCase() &&
-          password == '123',
+    final username = _userController.text.trim();
+    final password = _passwordController.text.trim();
+
+    await context.read<AuthProvider>().login(
+      username: username,
+      password: password,
     );
 
-    if (matchedUsers.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Usuario o contraseña incorrectos')),
-      );
-      return;
-    }
-
-    Session.iniciarSesion(matchedUsers.first);
+    if (!mounted) return;
 
     Navigator.of(context).pushReplacementNamed(AppRoutes.shell);
   }
@@ -95,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(14, 18, 14, 0),
                     child: _LoginForm(
+                      formKey: _globalKey,
                       userController: _userController,
                       passwordController: _passwordController,
                       hidePassword: _hidePassword,
@@ -117,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 class _LoginForm extends StatelessWidget {
   const _LoginForm({
+    required this.formKey,
     required this.userController,
     required this.passwordController,
     required this.hidePassword,
@@ -125,6 +123,7 @@ class _LoginForm extends StatelessWidget {
     required this.onForgotPassword,
   });
 
+  final GlobalKey<FormState> formKey;
   final TextEditingController userController;
   final TextEditingController passwordController;
   final bool hidePassword;
@@ -134,67 +133,83 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Iniciar Sesión', style: LoginTextStyles.heading),
-        const SizedBox(height: 2),
-        const Text(
-          'Ingresa tus credenciales para continuar.',
-          style: LoginTextStyles.description,
-        ),
-        const SizedBox(height: 17),
-        LoginTextField(
-          label: 'Usuario',
-          controller: userController,
-          icon: Icons.person_outline_rounded,
-        ),
-        const SizedBox(height: 13),
-        LoginTextField(
-          label: 'Contraseña',
-          controller: passwordController,
-          icon: Icons.shield_outlined,
-          obscureText: hidePassword,
-          trailing: IconButton(
-            tooltip: hidePassword ? 'Mostrar contraseña' : 'Ocultar contraseña',
-            onPressed: onPasswordVisibilityChanged,
-            icon: Icon(
-              hidePassword
-                  ? Icons.visibility_outlined
-                  : Icons.visibility_off_outlined,
-              color: LoginColors.fieldIcon,
-              size: 20,
-            ),
+    final auth = context.watch<AuthProvider>();
+    return Form(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Iniciar Sesión', style: LoginTextStyles.heading),
+          const SizedBox(height: 2),
+          const Text(
+            'Ingresa tus credenciales para continuar.',
+            style: LoginTextStyles.description,
           ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: onForgotPassword,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w700,
+          const SizedBox(height: 17),
+          LoginTextField(
+            label: 'Usuario',
+            controller: userController,
+            icon: Icons.person_outline_rounded,
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Ingresa tu usuario'
+                : null,
+          ),
+          const SizedBox(height: 13),
+          LoginTextField(
+            label: 'Contraseña',
+            controller: passwordController,
+            icon: Icons.shield_outlined,
+            obscureText: hidePassword,
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Ingresa tu contraseña'
+                : null,
+            trailing: IconButton(
+              tooltip: hidePassword
+                  ? 'Mostrar contraseña'
+                  : 'Ocultar contraseña',
+              onPressed: onPasswordVisibilityChanged,
+              icon: Icon(
+                hidePassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: LoginColors.fieldIcon,
+                size: 20,
               ),
             ),
-            child: const Text('¿Olvidó su contraseña?'),
           ),
-        ),
-        const SizedBox(height: 8),
-        LoginButton(onPressed: onLogin),
-        const SizedBox(height: 18),
-        const Center(
-          child: Text(
-            '© 2026 Sorbetería Herrera.\nTodos los derechos reservados.',
-            textAlign: TextAlign.center,
-            style: LoginTextStyles.footer,
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: onForgotPassword,
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                textStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              child: const Text('¿Olvidó su contraseña?'),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 8),
+          LoginButton(
+            onPressed: auth.isSubmitting ? null : onLogin,
+            isSubmitting: auth.isSubmitting,
+          ),
+          const SizedBox(height: 18),
+
+          const Center(
+            child: Text(
+              '© 2026 Sorbetería Herrera.\nTodos los derechos reservados.',
+              textAlign: TextAlign.center,
+              style: LoginTextStyles.footer,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

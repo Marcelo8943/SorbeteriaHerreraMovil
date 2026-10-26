@@ -16,6 +16,9 @@ import '../Screens/inventario/inventario_screen.dart';
 import '../Screens/movimientos/movimientos_screen.dart';
 import '../Screens/transacciones/transacciones_screen.dart';
 import '../Screens/transacciones/transaccion_detalle_screen.dart';
+import '../screens/ventas/ventas_screen.dart';
+import '../screens/pedidos/pedidos_screen.dart';
+import '../screens/reabastecimientos/reabastecimientos_screen.dart';
 import '../Screens/info_producto/info_producto_screen.dart';
 import '../Screens/logs/logs_screen.dart';
 import '../Screens/reportes/reportes_screen.dart';
@@ -48,6 +51,9 @@ class AppRoutes {
 
   // Yahir — Dashboard, Transacciones, Inventario, Usuarios y Logs
   static const String transacciones = '/transacciones';
+  static const String ventas = '/ventas';
+  static const String pedidos = '/pedidos';
+  static const String reabastecimientos = '/reabastecimientos';
   static const String transaccionDetalle = '/transaccion-detalle';
   static const String movimientos = '/movimientos';
   static const String movimientoDetalle = '/movimiento-detalle';
@@ -140,6 +146,24 @@ class AppRoutes {
       case transacciones:
         return MaterialPageRoute(
           builder: (_) => const TransaccionesScreen(),
+          settings: settings,
+        );
+
+      case ventas:
+        return MaterialPageRoute(
+          builder: (_) => const VentasScreen(),
+          settings: settings,
+        );
+
+      case pedidos:
+        return MaterialPageRoute(
+          builder: (_) => const PedidosScreen(),
+          settings: settings,
+        );
+
+      case reabastecimientos:
+        return MaterialPageRoute(
+          builder: (_) => const ReabastecimientosScreen(),
           settings: settings,
         );
 
