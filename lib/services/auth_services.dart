@@ -18,7 +18,7 @@ class AuthServices {
       throw const FormatException('Username and password cannot be empty');
     }
 
-    if (CommonRegex.emailRegex.hasMatch(trimemUsername)) {
+    if (!CommonRegex.emailRegex.hasMatch(trimemUsername)) {
       throw const FormatException('Invalid email format');
     }
     if (!CommonRegex.passwordRegex.hasMatch(trimmedPassword)) {
