@@ -2,13 +2,15 @@ import 'package:herrera_system/core/constants/regular_expresion.dart';
 import 'package:herrera_system/data/models/token_model.dart';
 import 'package:herrera_system/data/models/user_model.dart';
 import 'package:herrera_system/data/repository/auth_repository.dart';
+import 'package:herrera_system/data/repository/token_repository.dart';
 
 class AuthServices {
   final AuthRepository _authRepository;
+  final TokenRepository _tokenRepository;
 
-  AuthServices(this._authRepository);
+  AuthServices(this._authRepository, this._tokenRepository);
 
-  Future<TokenModel> login(String username, String password) async {
+  Future<void> login(String username, String password) async {
     final trimemUsername = username.trim();
     final trimmedPassword = password.trim();
 
@@ -23,7 +25,7 @@ class AuthServices {
       throw const FormatException('Invalid password format');
     }
     final TokenModel token = await _authRepository.login(username, password);
-    return token;
+    await _tokenRepository.saveToken(token);
   }
 
   Future<UserModel> getMe(String token) async {
