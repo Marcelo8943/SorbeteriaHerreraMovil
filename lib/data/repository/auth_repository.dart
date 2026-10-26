@@ -20,7 +20,7 @@ class AuthRepository {
       throw ParsingException();
     }
 
-    return TokenModel.FromJson(response);
+    return TokenModel.fromJson(response);
   }
 
   Future<UserModel> getMe(String token) async {
