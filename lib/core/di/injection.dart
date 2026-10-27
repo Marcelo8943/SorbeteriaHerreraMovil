@@ -1,9 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:herrera_system/core/network/api_client.dart';
 import 'package:herrera_system/data/repository/auth_repository.dart';
+import 'package:herrera_system/data/repository/business_profile_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
+import 'package:herrera_system/services/business_profile_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -18,14 +21,23 @@ void setupDependencies() {
     () => AuthRepository(getIt<ApiClient>()),
   );
   getIt.registerLazySingleton<TokenRepository>(() => TokenRepository());
+  getIt.registerLazySingleton<BusinessProfileRepository>(
+    () => BusinessProfileRepository(getIt<ApiClient>()),
+  );
 
   //Register services
   getIt.registerLazySingleton<AuthServices>(
     () => AuthServices(getIt<AuthRepository>(), getIt<TokenRepository>()),
   );
+  getIt.registerLazySingleton<BusinessProfileService>(
+    () => BusinessProfileService(getIt<BusinessProfileRepository>()),
+  );
 
   //Register providers
   getIt.registerLazySingleton<AuthProvider>(
     () => AuthProvider(getIt<AuthServices>()),
+  );
+  getIt.registerLazySingleton<BusinessProfileProvider>(
+    () => BusinessProfileProvider(getIt<BusinessProfileService>()),
   );
 }
