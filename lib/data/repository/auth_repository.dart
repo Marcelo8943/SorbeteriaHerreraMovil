@@ -11,16 +11,20 @@ class AuthRepository {
   AuthRepository(this._apiClient);
 
   Future<TokenModel> login(String username, String password) async {
-    final response = await _apiClient.post(
+    final json = await _apiClient.post(
       '/auth/login',
       body: {'username': username, 'password': password},
     );
 
     if (json is! Map<String, dynamic>) {
-      throw ParsingException();
+      throw const ParsingException();
     }
 
-    return TokenModel.fromJson(response);
+    final data = json['data'];
+    if (data is! Map<String, dynamic>) {
+      throw ParsingException();
+    }
+    return TokenModel.fromJson(data);
   }
 
   Future<UserModel> getMe(String token) async {
