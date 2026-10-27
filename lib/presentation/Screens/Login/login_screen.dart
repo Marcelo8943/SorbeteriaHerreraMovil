@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
-import 'package:herrera_system/services/auth_services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -60,8 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (!mounted) return;
-    
-    
+
     if (context.read<AuthProvider>().isAuthenticated) {
       Navigator.of(context).pushReplacementNamed(AppRoutes.shell);
     } else {
