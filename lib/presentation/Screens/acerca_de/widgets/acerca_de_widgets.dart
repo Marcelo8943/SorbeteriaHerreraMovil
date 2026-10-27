@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/data/models/business_profile_model.dart';
 
 import '../../../theme/app_theme.dart';
 
@@ -29,7 +30,9 @@ class AboutAppBar extends StatelessWidget {
 }
 
 class AboutInformationCard extends StatelessWidget {
-  const AboutInformationCard({super.key});
+  const AboutInformationCard({super.key, required this.profile});
+
+  final BusinessProfileModel profile;
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +59,8 @@ class AboutInformationCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          const Text(
-            'Sorbetería Herrera App',
+          Text(
+            profile.name,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.ink,
@@ -65,31 +68,49 @@ class AboutInformationCard extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          const Text(
-            'Versión 2.2.0',
-            style: TextStyle(color: AppColors.muted, fontSize: 12),
-          ),
           const SizedBox(height: AppSpacing.md),
-          const Text(
-            'Prototipo móvil de monitoreo y análisis gerencial. '
-            'Hecho en familia, gestionado de forma inteligente.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: AppColors.muted,
-              fontSize: 12,
-              height: 1.45,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
           const Divider(color: AppColors.line),
           const SizedBox(height: AppSpacing.md),
-          const Text(
-            '© 2026 Sorbetería Herrera',
-            style: TextStyle(color: AppColors.muted, fontSize: 10.5),
-          ),
+          _AboutDetail(label: 'Teléfono', value: profile.phone),
+          const SizedBox(height: AppSpacing.md),
+          _AboutDetail(label: 'Dirección', value: profile.address),
+          const SizedBox(height: AppSpacing.md),
+          _AboutDetail(label: 'Correo', value: profile.email),
         ],
       ),
+    );
+  }
+}
+
+class _AboutDetail extends StatelessWidget {
+  const _AboutDetail({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: const TextStyle(
+            color: AppColors.muted,
+            fontSize: 10,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          value,
+          style: const TextStyle(
+            color: AppColors.ink,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
     );
   }
 }
