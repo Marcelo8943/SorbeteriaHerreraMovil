@@ -13,6 +13,7 @@ class ApiConstants {
   static const String orders = '/orders';
   static const String login = '/auth/login';
   static const String me = '/auth/me';
+  static const String businessProfile = '/BusinessProfile';
 
   static const Duration timeDuration = Duration(seconds: 30);
 }
