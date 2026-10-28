@@ -94,6 +94,9 @@ class ProductoProvider extends ChangeNotifier {
     }
   }
 
+  Future<ProductoDetalleModel> obtenerDetalle(int id) =>
+      _service.obtenerProducto(id);
+
   void buscar(String value) {
     search = value;
     _searchTimer?.cancel();

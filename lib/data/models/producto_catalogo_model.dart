@@ -102,3 +102,42 @@ class OpcionCatalogoProducto {
     nombre: json[nombreKey]?.toString() ?? '',
   );
 }
+
+class ProductoDetalleModel {
+  final int id;
+  final int linePresentationId;
+  final int flavorId;
+  final String nombre;
+  final bool activo;
+  final int createdBy;
+  final DateTime? createdAt;
+  final String? imagenUrl;
+  final int stockMinimo;
+
+  const ProductoDetalleModel({
+    required this.id,
+    required this.linePresentationId,
+    required this.flavorId,
+    required this.nombre,
+    required this.activo,
+    required this.createdBy,
+    required this.createdAt,
+    required this.imagenUrl,
+    required this.stockMinimo,
+  });
+
+  factory ProductoDetalleModel.fromJson(Map<String, dynamic> json) =>
+      ProductoDetalleModel(
+        id: ProductoCatalogoModel._intValue(json['id']),
+        linePresentationId: ProductoCatalogoModel._intValue(
+          json['linePresentationId'],
+        ),
+        flavorId: ProductoCatalogoModel._intValue(json['flavorId']),
+        nombre: json['productName']?.toString() ?? '',
+        activo: json['isActive'] == true,
+        createdBy: ProductoCatalogoModel._intValue(json['createdBy']),
+        createdAt: DateTime.tryParse(json['createdAt']?.toString() ?? ''),
+        imagenUrl: json['imageUrl']?.toString(),
+        stockMinimo: ProductoCatalogoModel._intValue(json['minimumStock']),
+      );
+}

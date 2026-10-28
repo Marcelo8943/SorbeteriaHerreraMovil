@@ -50,6 +50,7 @@ class _ProductosScreenState extends State<ProductosScreen> {
       MaterialPageRoute<void>(
         builder: (_) => ProductoDetalleScreen(
           producto: _aProducto(producto),
+          cargarDetalle: _provider.obtenerDetalle,
           permitirEdicion: false,
         ),
       ),

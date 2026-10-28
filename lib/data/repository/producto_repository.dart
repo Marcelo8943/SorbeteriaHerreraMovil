@@ -34,6 +34,11 @@ class ProductoRepository {
         _map(_data(await _apiClient.get('/Products/stats'))),
       );
 
+  Future<ProductoDetalleModel> obtenerProducto(int id) async =>
+      ProductoDetalleModel.fromJson(
+        _map(_data(await _apiClient.get('/Products/$id'))),
+      );
+
   Future<List<OpcionCatalogoProducto>> obtenerLineas() =>
       _obtenerOpciones('/Lines', 'lineName');
 
