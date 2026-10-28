@@ -2,11 +2,14 @@ import 'package:get_it/get_it.dart';
 import 'package:herrera_system/core/network/api_client.dart';
 import 'package:herrera_system/data/repository/auth_repository.dart';
 import 'package:herrera_system/data/repository/business_profile_repository.dart';
+import 'package:herrera_system/data/repository/inventory_movements_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
+import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
 import 'package:herrera_system/services/business_profile_service.dart';
+import 'package:herrera_system/services/inventory_movements_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,6 +27,9 @@ void setupDependencies() {
   getIt.registerLazySingleton<BusinessProfileRepository>(
     () => BusinessProfileRepository(getIt<ApiClient>()),
   );
+  getIt.registerLazySingleton<InventoryMovementsRepository>(
+    () => InventoryMovementsRepository(getIt<ApiClient>()),
+  );
 
   //Register services
   getIt.registerLazySingleton<AuthServices>(
@@ -32,6 +38,9 @@ void setupDependencies() {
   getIt.registerLazySingleton<BusinessProfileService>(
     () => BusinessProfileService(getIt<BusinessProfileRepository>()),
   );
+  getIt.registerLazySingleton<InventoryMovementsService>(
+    () => InventoryMovementsService(getIt<InventoryMovementsRepository>()),
+  );
 
   //Register providers
   getIt.registerLazySingleton<AuthProvider>(
@@ -39,5 +48,8 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<BusinessProfileProvider>(
     () => BusinessProfileProvider(getIt<BusinessProfileService>()),
+  );
+  getIt.registerLazySingleton<InventoryMovementsProvider>(
+    () => InventoryMovementsProvider(getIt<InventoryMovementsService>()),
   );
 }
