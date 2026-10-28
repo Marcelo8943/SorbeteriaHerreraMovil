@@ -163,7 +163,7 @@ class ClienteEstadoSwitch extends StatelessWidget {
 
 class FormSubmitButton extends StatelessWidget {
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const FormSubmitButton({
     super.key,

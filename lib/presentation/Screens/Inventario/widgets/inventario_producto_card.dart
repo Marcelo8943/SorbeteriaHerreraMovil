@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/app_models.dart';
+import 'package:herrera_system/data/models/inventory_product_model.dart';
 import '../../../theme/app_theme.dart';
 
 class InventarioProductoCard extends StatelessWidget {
-  final InventarioProducto producto;
+  final InventoryProductModel producto;
 
   const InventarioProductoCard({super.key, required this.producto});
 
@@ -25,14 +25,12 @@ class InventarioProductoCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // ── Texto principal ──────────────────────────────────────────────
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Nombre del producto
                 Text(
-                  producto.nombreProducto,
+                  producto.productName,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -40,11 +38,10 @@ class InventarioProductoCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // Desglose por ubicación
                 Text(
-                  'Bodega ${producto.stockBodega} · '
-                  'Reserva ${producto.stockReservado} · '
-                  'Mostrador ${producto.stockMostrador}',
+                  'Bodega ${producto.warehouseStock} · '
+                  'Reserva ${producto.reservedStock} · '
+                  'Mostrador ${producto.displayStock}',
                   style: const TextStyle(fontSize: 12, color: AppColors.muted),
                 ),
               ],
@@ -56,14 +53,14 @@ class InventarioProductoCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              _InventarioBadge(stockBajo: producto.stockBajo),
+              _InventarioBadge(stockBajo: producto.lowStock),
               const SizedBox(height: 6),
 
               RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: producto.stockTotal.toString(),
+                      text: producto.totalStock.toString(),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,

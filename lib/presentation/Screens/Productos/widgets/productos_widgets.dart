@@ -93,7 +93,9 @@ class ProductoCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'C\$ ${producto.precioDetalle.toStringAsFixed(2)}',
+                    producto.precioDetalle > 0
+                        ? 'C\$ ${producto.precioDetalle.toStringAsFixed(2)}'
+                        : 'Precio no disponible',
                     style: TextStyle(
                       color: AppToneColors.intense[AppTone.teal],
                       fontSize: 14,
