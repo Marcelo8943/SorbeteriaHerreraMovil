@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/network/api_client.dart';
 import '../../../data/models/app_models.dart';
-import '../../../data/mocks/mock_catalogo.dart';
-import '../../../data/mocks/mock_productos.dart';
-import '../../../session.dart';
+import '../../../data/models/producto_catalogo_model.dart';
+import '../../../data/repository/producto_repository.dart';
+import '../../providers/producto_provider.dart';
+import '../../../services/producto_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_top_bar.dart';
 import '../../widgets/h_stat_card.dart';
-import 'producto_form_screen.dart';
 import 'producto_detalle_screen.dart';
 import 'widgets/productos_widgets.dart';
 
@@ -19,56 +20,67 @@ class ProductosScreen extends StatefulWidget {
 }
 
 class _ProductosScreenState extends State<ProductosScreen> {
-  late final List<Producto> _productos;
-  int _paginaActual = 1;
-  static const _productosPorPagina = 10;
-  String _busqueda = '';
-  String _lineaFiltro = 'Todas';
-  String _saborFiltro = 'Todos';
-  String _presentacionFiltro = 'Todas';
-  String _estadoFiltro = 'Todos';
+  static const _productosPorFila = 2;
+
+  late final ApiClient _apiClient;
+  late final ProductoProvider _provider;
+  final TextEditingController _busquedaController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _productos = List<Producto>.of(mockProductos);
+    _apiClient = ApiClient();
+    _provider = ProductoProvider(
+      ProductoService(ProductoRepository(_apiClient)),
+    );
+    _provider.cargar();
+    _provider.cargarFiltros();
   }
 
-  Future<void> _abrirDetalle(Producto producto) async {
-    final resultado = await Navigator.of(context).push<Producto>(
-      MaterialPageRoute<Producto>(
-        builder: (_) => ProductoDetalleScreen(producto: producto),
+  @override
+  void dispose() {
+    _busquedaController.dispose();
+    _provider.dispose();
+    _apiClient.dispose();
+    super.dispose();
+  }
+
+  Future<void> _abrirDetalle(ProductoCatalogoModel producto) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => ProductoDetalleScreen(
+          producto: _aProducto(producto),
+          cargarDetalle: _provider.obtenerDetalle,
+          permitirEdicion: false,
+        ),
       ),
     );
-    if (resultado != null && mounted) _guardarProducto(resultado);
   }
 
-  Future<void> _abrirFormulario({Producto? producto}) async {
-    final resultado = await Navigator.of(context).push<Producto>(
-      MaterialPageRoute<Producto>(
-        builder: (_) => ProductoFormScreen(producto: producto),
-      ),
-    );
-    if (resultado != null && mounted) _guardarProducto(resultado);
-  }
-
-  void _guardarProducto(Producto producto) {
-    setState(() {
-      final index = _productos.indexWhere((item) => item.id == producto.id);
-      if (index == -1) {
-        _productos.insert(0, producto);
-      } else {
-        _productos[index] = producto;
-      }
-      _paginaActual = 1;
-    });
-  }
+  Producto _aProducto(ProductoCatalogoModel producto) => Producto(
+    id: producto.id,
+    nombre: producto.nombre,
+    linea: producto.linea,
+    sabor: producto.sabor,
+    presentacion: producto.presentacion,
+    precioDetalle: producto.precioDetalle ?? 0,
+    precioMayoreo: producto.precioMayoreo ?? 0,
+    estado: producto.activo ? 'Activo' : 'Inactivo',
+    imgUrl: producto.imagenUrl ?? '',
+    stockMinimo: 0,
+    stockActual: 0,
+  );
 
   void _mostrarFiltros() {
-    var linea = _lineaFiltro;
-    var sabor = _saborFiltro;
-    var presentacion = _presentacionFiltro;
-    var estado = _estadoFiltro;
+    var lineaId = _provider.lineId ?? 0;
+    var saborId = _provider.flavorId ?? 0;
+    var presentacionId = _provider.presentationId ?? 0;
+    var estado = _provider.active == null
+        ? 0
+        : _provider.active == true
+        ? 1
+        : 2;
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -107,34 +119,46 @@ class _ProductosScreenState extends State<ProductosScreen> {
                     ),
                   ],
                 ),
-                _campoFiltro('Línea', linea, [
-                  'Todas',
-                  ...mockLineas.map((item) => item.nombre),
-                ], (value) => setModalState(() => linea = value!)),
-                _campoFiltro('Sabor', sabor, [
-                  'Todos',
-                  ...mockSabores.map((item) => item.nombre),
-                ], (value) => setModalState(() => sabor = value!)),
+                if (_provider.errorFiltros != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      'No se pudieron cargar todos los filtros: ${_provider.errorFiltros}',
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                  ),
+                _campoFiltro(
+                  'Línea',
+                  lineaId,
+                  _opciones(_provider.lineas, 'Todas'),
+                  (value) => setModalState(() => lineaId = value!),
+                ),
+                _campoFiltro(
+                  'Sabor',
+                  saborId,
+                  _opciones(_provider.sabores, 'Todos'),
+                  (value) => setModalState(() => saborId = value!),
+                ),
                 _campoFiltro(
                   'Presentación',
-                  presentacion,
-                  ['Todas', ...mockPresentaciones.map((item) => item.nombre)],
-                  (value) => setModalState(() => presentacion = value!),
+                  presentacionId,
+                  _opciones(_provider.presentaciones, 'Todas'),
+                  (value) => setModalState(() => presentacionId = value!),
                 ),
                 _campoFiltro('Estado', estado, const [
-                  'Todos',
-                  'Activo',
-                  'Inactivo',
+                  DropdownMenuItem(value: 0, child: Text('Todos')),
+                  DropdownMenuItem(value: 1, child: Text('Activo')),
+                  DropdownMenuItem(value: 2, child: Text('Inactivo')),
                 ], (value) => setModalState(() => estado = value!)),
                 Row(
                   children: [
                     Expanded(
                       child: TextButton(
                         onPressed: () => setModalState(() {
-                          linea = 'Todas';
-                          sabor = 'Todos';
-                          presentacion = 'Todas';
-                          estado = 'Todos';
+                          lineaId = 0;
+                          saborId = 0;
+                          presentacionId = 0;
+                          estado = 0;
                         }),
                         child: const Text('Limpiar'),
                       ),
@@ -143,13 +167,14 @@ class _ProductosScreenState extends State<ProductosScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          setState(() {
-                            _lineaFiltro = linea;
-                            _saborFiltro = sabor;
-                            _presentacionFiltro = presentacion;
-                            _estadoFiltro = estado;
-                            _paginaActual = 1;
-                          });
+                          _provider.aplicarFiltros(
+                            newLineId: lineaId == 0 ? null : lineaId,
+                            newFlavorId: saborId == 0 ? null : saborId,
+                            newPresentationId: presentacionId == 0
+                                ? null
+                                : presentacionId,
+                            newActive: estado == 0 ? null : estado == 1,
+                          );
                           Navigator.pop(context);
                         },
                         child: const Text('Aplicar'),
@@ -165,103 +190,80 @@ class _ProductosScreenState extends State<ProductosScreen> {
     );
   }
 
+  List<DropdownMenuItem<int>> _opciones(
+    List<OpcionCatalogoProducto> options,
+    String allLabel,
+  ) => [
+    DropdownMenuItem(value: 0, child: Text(allLabel)),
+    ...options.map(
+      (option) =>
+          DropdownMenuItem(value: option.id, child: Text(option.nombre)),
+    ),
+  ];
+
   Widget _campoFiltro(
     String label,
-    String value,
-    List<String> options,
-    ValueChanged<String?> onChanged,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: DropdownButtonFormField<String>(
-        initialValue: value,
-        decoration: InputDecoration(labelText: label),
-        items: options
-            .map(
-              (option) => DropdownMenuItem(value: option, child: Text(option)),
-            )
-            .toList(),
-        onChanged: onChanged,
-      ),
-    );
-  }
+    int value,
+    List<DropdownMenuItem<int>> options,
+    ValueChanged<int?> onChanged,
+  ) => Padding(
+    padding: const EdgeInsets.only(bottom: 14),
+    child: DropdownButtonFormField<int>(
+      initialValue: value,
+      decoration: InputDecoration(labelText: label),
+      items: options,
+      onChanged: onChanged,
+    ),
+  );
 
-  Widget _barraBusqueda() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: AppColors.lavender,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.search, color: AppColors.muted),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) => setState(() {
-                      _busqueda = value;
-                      _paginaActual = 1;
-                    }),
-                    decoration: InputDecoration(
-                      hintText: 'Buscar por nombre...',
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.muted,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Container(
-          height: 48,
-          width: 48,
+  Widget _barraBusqueda() => Row(
+    children: [
+      Expanded(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: AppColors.card,
+            color: AppColors.lavender,
             borderRadius: BorderRadius.circular(14),
           ),
-          child: IconButton(
-            icon: const Icon(Icons.tune, color: AppColors.ink, size: 28),
-            onPressed: _mostrarFiltros,
+          child: Row(
+            children: [
+              const Icon(Icons.search, color: AppColors.muted),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextField(
+                  controller: _busquedaController,
+                  onChanged: _provider.buscar,
+                  decoration: InputDecoration(
+                    hintText: 'Buscar por nombre...',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(fontSize: 13, color: AppColors.muted),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ],
-    );
-  }
+      ),
+      const SizedBox(width: 8),
+      Container(
+        height: 48,
+        width: 48,
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: IconButton(
+          icon: const Icon(Icons.tune, color: AppColors.ink, size: 28),
+          onPressed: _mostrarFiltros,
+        ),
+      ),
+    ],
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    final activos = _productos
-        .where((producto) => producto.estado == 'Activo')
-        .length;
-    final query = _busqueda.trim().toLowerCase();
-    final filtrados = _productos.where((producto) {
-      return (query.isEmpty || producto.nombre.toLowerCase().contains(query)) &&
-          (_lineaFiltro == 'Todas' || producto.linea == _lineaFiltro) &&
-          (_saborFiltro == 'Todos' || producto.sabor == _saborFiltro) &&
-          (_presentacionFiltro == 'Todas' ||
-              producto.presentacion == _presentacionFiltro) &&
-          (_estadoFiltro == 'Todos' || producto.estado == _estadoFiltro);
-    }).toList();
-    final totalPaginas = (filtrados.length / _productosPorPagina).ceil();
-    final effectivePage = totalPaginas > 0 && _paginaActual > totalPaginas
-        ? totalPaginas
-        : _paginaActual;
-    final startIndex = (effectivePage - 1) * _productosPorPagina;
-    final endIndex = (startIndex + _productosPorPagina < filtrados.length)
-        ? startIndex + _productosPorPagina
-        : filtrados.length;
-    final productosDePagina = filtrados.isEmpty
-        ? <Producto>[]
-        : filtrados.sublist(startIndex, endIndex);
+  Widget _contenido() {
+    final provider = _provider;
+    final estadisticas = provider.estadisticas;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -269,159 +271,151 @@ class _ProductosScreenState extends State<ProductosScreen> {
           children: [
             AppTopBar(
               subtitle: 'Catálogo de productos',
-              trailing: Session.esAdmin
-                  ? ElevatedButton(
-                      onPressed: () => _abrirFormulario(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(12),
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: AppColors.textOnPrimary,
-                      ),
-                    )
-                  : const SizedBox(width: 48, height: 48),
+              trailing: const SizedBox(width: 48, height: 48),
             ),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Productos',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                      const SizedBox(height: 2),
-                      const Text(
-                        'Administra el catálogo completo de productos.',
-                        style: TextStyle(
-                          color: AppColors.muted,
-                          fontSize: 12.5,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            HStatCard(
-                              title: 'Registrados',
-                              value: '${_productos.length}',
-                              bgColor: AppToneColors.soft[AppTone.teal]!,
-                              iconColor: AppToneColors.intense[AppTone.teal]!,
-                              icon: Icons.inventory_2_outlined,
-                            ),
-                            const SizedBox(width: 10),
-                            HStatCard(
-                              title: 'Activos',
-                              value: '$activos',
-                              bgColor: AppToneColors.soft[AppTone.purple]!,
-                              iconColor: AppToneColors.intense[AppTone.purple]!,
-                              icon: Icons.check_circle_outline,
-                            ),
-                            const SizedBox(width: 10),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _barraBusqueda(),
-                      const SizedBox(height: 16),
-                      Row(
+              child: RefreshIndicator(
+                onRefresh: () => provider.cargar(),
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                  children: [
+                    Text(
+                      'Productos',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      'Consulta el catálogo de productos.',
+                      style: TextStyle(color: AppColors.muted, fontSize: 12.5),
+                    ),
+                    const SizedBox(height: 16),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
                         children: [
-                          const Text(
-                            'Resultados',
-                            style: TextStyle(
-                              fontSize: 13,
+                          HStatCard(
+                            title: 'Registrados',
+                            value: estadisticas?.total.toString() ?? '—',
+                            bgColor: AppToneColors.soft[AppTone.teal]!,
+                            iconColor: AppToneColors.intense[AppTone.teal]!,
+                            icon: Icons.inventory_2_outlined,
+                          ),
+                          const SizedBox(width: 10),
+                          HStatCard(
+                            title: 'Activos',
+                            value: estadisticas?.activos.toString() ?? '—',
+                            bgColor: AppToneColors.soft[AppTone.purple]!,
+                            iconColor: AppToneColors.intense[AppTone.purple]!,
+                            icon: Icons.check_circle_outline,
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _barraBusqueda(),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        const Text(
+                          'Resultados',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(99),
+                          ),
+                          child: Text(
+                            '${provider.totalRecords}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 9,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(99),
-                            ),
-                            child: Text(
-                              '${filtrados.length}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  if (filtrados.isEmpty)
-                    const SizedBox(
-                      height: 160,
-                      child: Center(child: Text('No se encontraron productos')),
-                    )
-                  else
-                    Column(
-                      children: [
-                        for (
-                          var index = 0;
-                          index < productosDePagina.length;
-                          index += 2
-                        )
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: ProductoCard(
-                                    producto: productosDePagina[index],
-                                    onTap: () =>
-                                        _abrirDetalle(productosDePagina[index]),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: index + 1 < productosDePagina.length
-                                      ? ProductoCard(
-                                          producto:
-                                              productosDePagina[index + 1],
-                                          onTap: () => _abrirDetalle(
-                                            productosDePagina[index + 1],
-                                          ),
-                                        )
-                                      : const SizedBox(),
-                                ),
-                              ],
-                            ),
-                          ),
+                        ),
                       ],
                     ),
-                  if (filtrados.isNotEmpty)
-                    ProductoPaginationRow(
-                      currentPage: effectivePage,
-                      totalPages: totalPaginas,
-                      onPrevious: () {
-                        if (effectivePage > 1) {
-                          setState(() => _paginaActual = effectivePage - 1);
-                        }
-                      },
-                      onNext: () {
-                        if (effectivePage < totalPaginas) {
-                          setState(() => _paginaActual = effectivePage + 1);
-                        }
-                      },
-                    ),
-                ],
+                    const SizedBox(height: 12),
+                    if (provider.cargando && provider.productos.isEmpty)
+                      const SizedBox(
+                        height: 180,
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    else if (provider.error != null &&
+                        provider.productos.isEmpty)
+                      _estadoError(provider.error!)
+                    else if (provider.productos.isEmpty)
+                      const SizedBox(
+                        height: 160,
+                        child: Center(
+                          child: Text('No se encontraron productos'),
+                        ),
+                      )
+                    else ...[
+                      if (provider.cargando)
+                        const LinearProgressIndicator(minHeight: 2),
+                      for (
+                        var index = 0;
+                        index < provider.productos.length;
+                        index += _productosPorFila
+                      )
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: ProductoCard(
+                                  producto: _aProducto(
+                                    provider.productos[index],
+                                  ),
+                                  onTap: () =>
+                                      _abrirDetalle(provider.productos[index]),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: index + 1 < provider.productos.length
+                                    ? ProductoCard(
+                                        producto: _aProducto(
+                                          provider.productos[index + 1],
+                                        ),
+                                        onTap: () => _abrirDetalle(
+                                          provider.productos[index + 1],
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ProductoPaginationRow(
+                        currentPage: provider.currentPage,
+                        totalPages: provider.totalPages,
+                        onPrevious: provider.currentPage > 1
+                            ? () => provider.cargar(
+                                page: provider.currentPage - 1,
+                              )
+                            : null,
+                        onNext: provider.currentPage < provider.totalPages
+                            ? () => provider.cargar(
+                                page: provider.currentPage + 1,
+                              )
+                            : null,
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -429,4 +423,28 @@ class _ProductosScreenState extends State<ProductosScreen> {
       ),
     );
   }
+
+  Widget _estadoError(String error) => SizedBox(
+    height: 180,
+    child: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(error, textAlign: TextAlign.center),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            onPressed: () => _provider.cargar(),
+            icon: const Icon(Icons.refresh),
+            label: const Text('Reintentar'),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _provider,
+    builder: (context, _) => _contenido(),
+  );
 }
