@@ -87,3 +87,18 @@ class ProductoEstadisticasModel {
         inactivos: ProductoCatalogoModel._intValue(json['inactiveProducts']),
       );
 }
+
+class OpcionCatalogoProducto {
+  final int id;
+  final String nombre;
+
+  const OpcionCatalogoProducto({required this.id, required this.nombre});
+
+  factory OpcionCatalogoProducto.fromJson(
+    Map<String, dynamic> json, {
+    required String nombreKey,
+  }) => OpcionCatalogoProducto(
+    id: ProductoCatalogoModel._intValue(json['id']),
+    nombre: json[nombreKey]?.toString() ?? '',
+  );
+}

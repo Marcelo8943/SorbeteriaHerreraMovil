@@ -26,4 +26,13 @@ class ProductoService {
 
   Future<ProductoEstadisticasModel> obtenerEstadisticas() =>
       _repository.obtenerEstadisticas();
+
+  Future<List<OpcionCatalogoProducto>> obtenerLineas() =>
+      _repository.obtenerLineas();
+
+  Future<List<OpcionCatalogoProducto>> obtenerSabores() =>
+      _repository.obtenerSabores();
+
+  Future<List<OpcionCatalogoProducto>> obtenerPresentaciones() =>
+      _repository.obtenerPresentaciones();
 }

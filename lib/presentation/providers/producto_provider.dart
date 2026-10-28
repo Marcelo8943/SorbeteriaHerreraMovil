@@ -13,8 +13,13 @@ class ProductoProvider extends ChangeNotifier {
 
   List<ProductoCatalogoModel> productos = const [];
   ProductoEstadisticasModel? estadisticas;
+  List<OpcionCatalogoProducto> lineas = const [];
+  List<OpcionCatalogoProducto> sabores = const [];
+  List<OpcionCatalogoProducto> presentaciones = const [];
   bool cargando = true;
+  bool cargandoFiltros = false;
   String? error;
+  String? errorFiltros;
   int currentPage = 1;
   int totalPages = 0;
   int totalRecords = 0;
@@ -64,6 +69,28 @@ class ProductoProvider extends ChangeNotifier {
         cargando = false;
         notifyListeners();
       }
+    }
+  }
+
+  Future<void> cargarFiltros() async {
+    cargandoFiltros = true;
+    errorFiltros = null;
+    notifyListeners();
+
+    try {
+      final resultados = await Future.wait([
+        _service.obtenerLineas(),
+        _service.obtenerSabores(),
+        _service.obtenerPresentaciones(),
+      ]);
+      lineas = resultados[0];
+      sabores = resultados[1];
+      presentaciones = resultados[2];
+    } catch (exception) {
+      errorFiltros = _mensajeError(exception);
+    } finally {
+      cargandoFiltros = false;
+      notifyListeners();
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/api_constants.dart';
 import '../../../theme/app_theme.dart';
 
 class ProductoImagen extends StatelessWidget {
@@ -22,21 +23,34 @@ class ProductoImagen extends StatelessWidget {
         (uri.scheme == 'http' || uri.scheme == 'https') &&
         uri.host.isNotEmpty;
     if (esUrl) {
-      return Icon(
-        Icons.icecream_outlined,
-        size: iconSize,
-        color: AppColors.primary,
+      return Image.network(
+        referencia,
+        fit: fit,
+        errorBuilder: (_, _, _) => _imagenVacia(),
       );
     }
+
+    if (referencia.startsWith('/')) {
+      final baseUri = Uri.tryParse(ApiConstants.instance.baseUrl);
+      if (baseUri != null && baseUri.hasAuthority) {
+        final origin = baseUri.replace(path: '', query: null, fragment: null);
+        return Image.network(
+          origin.resolve(referencia).toString(),
+          fit: fit,
+          errorBuilder: (_, _, _) => _imagenVacia(),
+        );
+      }
+    }
+
+    if (referencia.isEmpty) return _imagenVacia();
 
     return Image.asset(
       referencia,
       fit: fit,
-      errorBuilder: (_, _, _) => Icon(
-        Icons.icecream_outlined,
-        size: iconSize,
-        color: AppColors.primary,
-      ),
+      errorBuilder: (_, _, _) => _imagenVacia(),
     );
   }
+
+  Widget _imagenVacia() =>
+      Icon(Icons.icecream_outlined, size: iconSize, color: AppColors.primary);
 }

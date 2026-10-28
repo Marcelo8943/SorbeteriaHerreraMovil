@@ -7,8 +7,13 @@ import 'widgets/producto_detalle_widgets.dart';
 
 class ProductoDetalleScreen extends StatelessWidget {
   final Producto producto;
+  final bool permitirEdicion;
 
-  const ProductoDetalleScreen({super.key, required this.producto});
+  const ProductoDetalleScreen({
+    super.key,
+    required this.producto,
+    this.permitirEdicion = true,
+  });
 
   Future<void> _abrirFicha(BuildContext context) async {
     final resultado = await Navigator.of(context).push<Producto>(
@@ -43,7 +48,7 @@ class ProductoDetalleScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TarjetaInformacion(producto: producto),
-                    if (Session.esAdmin) ...[
+                    if (Session.esAdmin && permitirEdicion) ...[
                       const SizedBox(height: 24),
                       SizedBox(
                         width: double.infinity,

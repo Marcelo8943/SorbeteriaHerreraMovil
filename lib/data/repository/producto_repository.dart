@@ -34,6 +34,37 @@ class ProductoRepository {
         _map(_data(await _apiClient.get('/Products/stats'))),
       );
 
+  Future<List<OpcionCatalogoProducto>> obtenerLineas() =>
+      _obtenerOpciones('/Lines', 'lineName');
+
+  Future<List<OpcionCatalogoProducto>> obtenerSabores() =>
+      _obtenerOpciones('/Flavors', 'flavorName');
+
+  Future<List<OpcionCatalogoProducto>> obtenerPresentaciones() =>
+      _obtenerOpciones('/Presentations', 'presentationName');
+
+  Future<List<OpcionCatalogoProducto>> _obtenerOpciones(
+    String path,
+    String nombreKey,
+  ) async {
+    final data = _map(
+      _data(
+        await _apiClient.get(
+          path,
+          query: const {'page': '1', 'pageSize': '50'},
+        ),
+      ),
+    );
+    final items = data['data'];
+    if (items is! List) throw const ParsingException();
+    return items
+        .map(_map)
+        .map(
+          (item) => OpcionCatalogoProducto.fromJson(item, nombreKey: nombreKey),
+        )
+        .toList();
+  }
+
   dynamic _data(dynamic response) {
     final envelope = _map(response);
     if (envelope['success'] == false) {
