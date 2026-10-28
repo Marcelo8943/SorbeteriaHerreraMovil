@@ -7,29 +7,38 @@ import 'package:http/http.dart' as http;
 
 class ApiClient {
   final http.Client _client = http.Client();
-  Future<dynamic> get(String path, {Map<String, String>? query}) async =>
-      _send('GET', path, query, null);
+
+  Future<dynamic> get(
+    String path, {
+    Map<String, String>? query,
+    Map<String, String>? headers,
+  }) async => _send('GET', path, query, null, headers);
+
   Future<dynamic> post(String path, {Object? body}) async =>
-      _send('POST', path, null, body);
+      _send('POST', path, null, body, null);
   Future<dynamic> put(String path, {Object? body}) async =>
-      _send('PUT', path, null, body);
+      _send('PUT', path, null, body, null);
   Future<dynamic> delete(String path) async =>
-      _send('DELETE', path, null, null);
+      _send('DELETE', path, null, null, null);
   Future<dynamic> patch(String path, {Object? body}) async =>
-      _send('PATCH', path, null, null);
+      _send('PATCH', path, null, null, null);
 
   Future<dynamic> _send(
     String method,
     String path,
     Map<String, String>? query,
     Object? body,
+    Map<String, String>? additionalHeaders,
   ) async {
     final baseUrl = ApiConstants.instance.baseUrl;
 
     //base URL = http://localhost:5177/API
     //paht: /users
     final uri = Uri.parse('$baseUrl$path').replace(queryParameters: query);
-    final headers = {'Content-Type': 'application/json'};
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      ...?additionalHeaders,
+    };
     if (body != null) {
       headers['Content-Type'] = 'application/json';
     }
