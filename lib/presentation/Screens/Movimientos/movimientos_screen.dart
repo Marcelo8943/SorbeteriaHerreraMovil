@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
+import 'package:herrera_system/presentation/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 import '../../theme/app_theme.dart';
@@ -173,7 +174,6 @@ class _MovimientosScreenState extends State<MovimientosScreen> {
                   MovimientosStatsRow(
                     movimientosHoy: stats?.movementsToday ?? 0,
                     transferenciasHoy: stats?.transfersToday ?? 0,
-                    ajustesHoy: stats?.adjustmentsToday ?? 0,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Padding(
@@ -248,8 +248,13 @@ class _MovimientosScreenState extends State<MovimientosScreen> {
                       Column(
                         children: movements.movements
                             .map(
-                              (movement) =>
-                                  MovimientoCard(movimiento: movement),
+                              (movement) => MovimientoCard(
+                                movimiento: movement,
+                                onTap: () => Navigator.of(context).pushNamed(
+                                  AppRoutes.movimientoDetalle,
+                                  arguments: movement.id,
+                                ),
+                              ),
                             )
                             .toList(),
                       ),
@@ -376,10 +381,7 @@ class _DateRangeDropdown extends StatelessWidget {
                 value: range,
                 child: Text(
                   _labelFor(range),
-                  style: const TextStyle(
-                    color: AppColors.ink,
-                    fontSize: 13.5,
-                  ),
+                  style: const TextStyle(color: AppColors.ink, fontSize: 13.5),
                 ),
               ),
             )
