@@ -35,4 +35,18 @@ class AuthProvider extends ChangeNotifier {
     _isSubmitting = false;
     notifyListeners();
   }
+
+  Future<void> checkSession() async {
+    try {
+      final bool isAuthenticated = await _authService.isLoggedIn();
+      _authStatus = isAuthenticated
+          ? AuthStatus.authenticated
+          : AuthStatus.unauthenticated;
+    } catch (e) {
+      _errorMessage = "An unexpected error ocurred. Please try again.";
+      _authStatus = AuthStatus.unauthenticated;
+    } finally {
+      notifyListeners();
+    }
+  }
 }
