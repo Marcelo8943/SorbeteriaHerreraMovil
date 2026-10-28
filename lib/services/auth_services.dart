@@ -38,5 +38,7 @@ class AuthServices {
     return _authRepository.getMe(token.token);
   }
 
-  Future<void> logout() => _tokenRepository.removeToken();
+
+  Future<bool> isLoggedIn() => _tokenRepository.hasValidToken();
+    Future<void> logout() => _tokenRepository.removeToken();
 }

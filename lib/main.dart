@@ -12,11 +12,13 @@ import 'presentation/theme/app_theme.dart';
 
 Future<void> main() async {
   await dotenv.load();
+  getIt<AuthProvider>().checkSession();
   setupDependencies();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
+        ChangeNotifierProvider(create: (_) => getIt<BusinessProfileProvider>()),
         ChangeNotifierProvider(
           create: (_) => getIt<BusinessProfileProvider>(),
         ),
