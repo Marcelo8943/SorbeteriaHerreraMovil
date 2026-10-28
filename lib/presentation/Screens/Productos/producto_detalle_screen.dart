@@ -172,7 +172,7 @@ class _TarjetaDatosTecnicos extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'DATOS DEL REGISTRO',
+            'INFORMACIÓN ADICIONAL',
             style: TextStyle(
               color: AppColors.muted,
               fontSize: 10.5,
@@ -181,21 +181,9 @@ class _TarjetaDatosTecnicos extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _DatoTecnico(
-                  label: 'ID PRODUCTO',
-                  valor: '${detalle.id}',
-                ),
-              ),
-              Expanded(
-                child: _DatoTecnico(
-                  label: 'STOCK MÍNIMO',
-                  valor: '${detalle.stockMinimo}',
-                ),
-              ),
-            ],
+          _DatoTecnico(
+            label: 'STOCK MÍNIMO',
+            valor: '${detalle.stockMinimo}',
           ),
           const SizedBox(height: 16),
           _DatoTecnico(label: 'FECHA DE REGISTRO', valor: fecha),
