@@ -24,7 +24,7 @@ class ProductoImagen extends StatelessWidget {
         uri.host.isNotEmpty;
     if (esUrl) {
       return Image.network(
-        referencia,
+        _resolverUrlImagen(uri),
         fit: fit,
         errorBuilder: (_, _, _) => _imagenVacia(),
       );
@@ -49,6 +49,23 @@ class ProductoImagen extends StatelessWidget {
       fit: fit,
       errorBuilder: (_, _, _) => _imagenVacia(),
     );
+  }
+
+  String _resolverUrlImagen(Uri uri) {
+    final host = uri.host.toLowerCase();
+    final esHostLocal =
+        host == 'localhost' ||
+        host == '127.0.0.1' ||
+        host == '0.0.0.0' ||
+        host == '::1';
+    if (!esHostLocal) return uri.toString();
+
+    final baseUri = Uri.tryParse(ApiConstants.instance.baseUrl);
+    if (baseUri == null || !baseUri.hasAuthority) return uri.toString();
+
+    return baseUri
+        .replace(path: uri.path, query: uri.hasQuery ? uri.query : null)
+        .toString();
   }
 
   Widget _imagenVacia() =>
