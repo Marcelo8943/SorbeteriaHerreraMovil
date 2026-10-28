@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/cliente_model.dart';
 
 /// Item Individual de Cliente adaptado al modelo de datos Cliente
 class ClienteCardItem extends StatelessWidget {
-  final Cliente cliente;
+  final ClienteModel cliente;
   final int index;
   final VoidCallback? onTap;
 
@@ -21,15 +21,7 @@ class ClienteCardItem extends StatelessWidget {
   }
 
   String get _inicialesDisplay {
-    if (cliente.iniciales != null && cliente.iniciales!.isNotEmpty) {
-      return cliente.iniciales!;
-    }
-    final nombre = cliente.nombre.trim();
-    final apellido = cliente.apellido.trim();
-    if (nombre.isEmpty) return '';
-    return apellido.isNotEmpty
-        ? '${nombre[0]}${apellido[0]}'.toUpperCase()
-        : nombre[0].toUpperCase();
+    return cliente.iniciales;
   }
 
   @override
@@ -90,7 +82,7 @@ class ClienteCardItem extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              '${cliente.municipio} (${cliente.departamento})',
+                              '${cliente.municipalityName} (${cliente.departmentName})',
                               style: const TextStyle(
                                 fontSize: 11.5,
                                 color: AppColors.muted,
@@ -111,7 +103,7 @@ class ClienteCardItem extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              cliente.puntoVenta,
+                        cliente.pointOfSale,
                               style: const TextStyle(
                                 fontSize: 11.5,
                                 color: AppColors.muted,

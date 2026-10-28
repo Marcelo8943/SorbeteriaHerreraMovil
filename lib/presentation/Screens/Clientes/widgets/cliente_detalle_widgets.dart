@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/cliente_model.dart';
 import '../../../theme/app_theme.dart';
 
 class ClienteDetalleHero extends StatelessWidget {
-  final Cliente cliente;
+  final ClienteModel cliente;
   final Color avatarColor;
 
   const ClienteDetalleHero({
@@ -12,18 +12,6 @@ class ClienteDetalleHero extends StatelessWidget {
     required this.cliente,
     required this.avatarColor,
   });
-
-  String get _iniciales {
-    if (cliente.iniciales != null && cliente.iniciales!.isNotEmpty) {
-      return cliente.iniciales!;
-    }
-    final nombre = cliente.nombre.trim();
-    final apellido = cliente.apellido.trim();
-    if (nombre.isEmpty) return 'CL';
-    return apellido.isNotEmpty
-        ? '${nombre[0]}${apellido[0]}'.toUpperCase()
-        : nombre[0].toUpperCase();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +33,7 @@ class ClienteDetalleHero extends StatelessWidget {
               borderRadius: BorderRadius.circular(22),
             ),
             child: Text(
-              _iniciales,
+              cliente.iniciales,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 26,
@@ -65,7 +53,7 @@ class ClienteDetalleHero extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            cliente.puntoVenta,
+            cliente.pointOfSale,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white.withOpacity(0.9),
@@ -95,7 +83,7 @@ class ClienteDetalleHero extends StatelessWidget {
 }
 
 class ClienteDetalleCardData extends StatelessWidget {
-  final Cliente cliente;
+  final ClienteModel cliente;
 
   const ClienteDetalleCardData({super.key, required this.cliente});
 
@@ -115,8 +103,10 @@ class ClienteDetalleCardData extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: _LabelValue('TELÉFONO', cliente.telefono)),
-              Expanded(child: _LabelValue('MUNICIPIO', cliente.municipio)),
+              Expanded(child: _LabelValue('TELÉFONO', cliente.phone)),
+              Expanded(
+                child: _LabelValue('MUNICIPIO', cliente.municipalityName),
+              ),
             ],
           ),
           const SizedBox(height: 18),
@@ -124,11 +114,9 @@ class ClienteDetalleCardData extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: _LabelValue('DEPARTAMENTO', cliente.departamento),
+                child: _LabelValue('DEPARTAMENTO', cliente.departmentName),
               ),
-              Expanded(
-                child: _LabelValue('CLIENTE DESDE', cliente.clienteDesde),
-              ),
+              const Expanded(child: SizedBox.shrink()),
             ],
           ),
           const SizedBox(height: 20),
@@ -165,7 +153,7 @@ class ClienteDetalleCardData extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      cliente.puntoVenta,
+                      cliente.pointOfSale,
                       style: const TextStyle(
                         color: AppColors.ink,
                         fontSize: 14,
@@ -180,7 +168,7 @@ class ClienteDetalleCardData extends StatelessWidget {
           const SizedBox(height: 16),
           _LabelValue(
             'DIRECCIÓN DEL PUNTO DE VENTA',
-            cliente.direccionPuntoVenta,
+            cliente.posAddress,
           ),
         ],
       ),
