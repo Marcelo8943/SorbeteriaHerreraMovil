@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:herrera_system/core/errors/app_exception.dart';
 import 'package:herrera_system/core/network/api_client.dart';
 import 'package:herrera_system/data/models/token_model.dart';
@@ -28,12 +26,20 @@ class AuthRepository {
   }
 
   Future<UserModel> getMe(String token) async {
-    final json = await _apiClient.get('/auth/me');
+    final json = await _apiClient.get(
+      '/auth/me',
+      headers: {'Authorization': 'Bearer $token'},
+    );
 
-    if (json == null) throw const UnauthorizedException();
     if (json is! Map<String, dynamic>) {
-      throw ParsingException();
+      throw const ParsingException();
     }
-    return UserModel.FromJson(json);
+
+    final data = json['data'];
+    if (data is! Map<String, dynamic>) {
+      throw const ParsingException();
+    }
+
+    return UserModel.fromJson(data);
   }
 }
