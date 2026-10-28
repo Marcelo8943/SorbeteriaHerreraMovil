@@ -37,6 +37,7 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryRepository>(
     () => InventoryRepository(getIt<ApiClient>()),
+  );
   getIt.registerLazySingleton<InventoryMovementsRepository>(
     () => InventoryMovementsRepository(getIt<ApiClient>()),
   );
@@ -50,6 +51,7 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryService>(
     () => InventoryService(getIt<InventoryRepository>()),
+  );
   getIt.registerLazySingleton<InventoryMovementsService>(
     () => InventoryMovementsService(getIt<InventoryMovementsRepository>()),
   );
@@ -63,6 +65,7 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryProvider>(
     () => InventoryProvider(getIt<InventoryService>()),
+  );
   getIt.registerLazySingleton<InventoryMovementsProvider>(
     () => InventoryMovementsProvider(getIt<InventoryMovementsService>()),
   );
