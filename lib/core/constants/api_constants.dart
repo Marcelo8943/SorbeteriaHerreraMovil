@@ -14,6 +14,8 @@ class ApiConstants {
   static const String login = '/auth/login';
   static const String me = '/auth/me';
   static const String businessProfile = '/BusinessProfile';
+  static const String inventoryMovements = '/InventoryMovements';
+  static const String inventoryMovementStats = '/InventoryMovements/stats';
 
   static const Duration timeDuration = Duration(seconds: 30);
 }
