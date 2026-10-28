@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/data/models/business_profile_model.dart';
 
-import '../../../../data/models/app_models.dart';
 import '../../../theme/app_theme.dart';
 
 class BusinessAppBar extends StatelessWidget {
@@ -33,116 +33,54 @@ class BusinessAppBar extends StatelessWidget {
 }
 
 class BusinessInformationCard extends StatelessWidget {
-  const BusinessInformationCard({super.key, required this.negocio});
+  const BusinessInformationCard({super.key, required this.profile});
 
-  final Negocio negocio;
+  final BusinessProfileModel profile;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
         boxShadow: AppSpacing.cardShadow,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BusinessTextField(label: 'Nombre del negocio', value: negocio.nombre),
-          const SizedBox(height: AppSpacing.md),
-          BusinessTextField(label: 'Eslogan', value: negocio.eslogan),
-          const SizedBox(height: AppSpacing.lg),
-          Row(
-            children: [
-              Expanded(
-                child: BusinessDataItem(
-                  label: 'DIRECCIÓN',
-                  value: negocio.direccion,
-                ),
-              ),
-              Expanded(
-                child: BusinessDataItem(
-                  label: 'TELÉFONO',
-                  value: negocio.telefono,
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: AppSpacing.lg, color: AppColors.line),
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: AppToneColors.soft[AppTone.blue],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  Icons.info_outline_rounded,
-                  color: Color(0xFF3B76F0),
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: BusinessDataItem(label: 'CORREO', value: negocio.correo),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          const BusinessSaveButton(),
-        ],
-      ),
-    );
-  }
-}
-
-class BusinessTextField extends StatelessWidget {
-  const BusinessTextField({
-    super.key,
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.ink,
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: 14,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.lavender,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.ink,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: AppToneColors.soft[AppTone.teal],
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: const Icon(
+              Icons.storefront_outlined,
+              color: AppColors.primary,
+              size: 28,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            profile.name,
+            style: const TextStyle(
+              color: AppColors.ink,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          const Divider(color: AppColors.line),
+          const SizedBox(height: AppSpacing.md),
+          BusinessDataItem(label: 'TELÉFONO', value: profile.phone),
+          const SizedBox(height: AppSpacing.md),
+          BusinessDataItem(label: 'DIRECCIÓN', value: profile.address),
+          const SizedBox(height: AppSpacing.md),
+          BusinessDataItem(label: 'CORREO', value: profile.email),
+        ],
+      ),
     );
   }
 }
@@ -177,44 +115,6 @@ class BusinessDataItem extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ],
-    );
-  }
-}
-
-class BusinessSaveButton extends StatelessWidget {
-  const BusinessSaveButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 44,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3300B884),
-            blurRadius: 18,
-            offset: Offset(0, 8),
-          ),
-        ],
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.check_rounded, color: AppColors.textOnPrimary, size: 18),
-          SizedBox(width: AppSpacing.sm),
-          Text(
-            'Guardar cambios',
-            style: TextStyle(
-              color: AppColors.textOnPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

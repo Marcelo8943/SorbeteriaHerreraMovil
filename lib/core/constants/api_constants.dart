@@ -19,6 +19,8 @@ class ApiConstants {
   static const String lines = '/Lines';
   static const String flavors = '/Flavors';
   static const String presentations = '/Presentations';
+  static const String inventoryMovements = '/InventoryMovements';
+  static const String inventoryMovementStats = '/InventoryMovements/stats';
 
   static const Duration timeDuration = Duration(seconds: 30);
 }
