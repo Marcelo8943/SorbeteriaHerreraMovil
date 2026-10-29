@@ -28,7 +28,6 @@ class _PreciosContent extends StatefulWidget {
 
 class _PreciosContentState extends State<_PreciosContent> {
   Future<void> _editarPrecio(
-    BuildContext context,
     PrecioProvider provider,
     PrecioGeneralModel precio,
   ) async {
@@ -159,7 +158,7 @@ class _PreciosContentState extends State<_PreciosContent> {
                       precio: precio,
                       nombreLinea: precio.lineName,
                       onTap: authProvider.isAuthenticated && !provider.guardando
-                          ? () => _editarPrecio(context, provider, precio)
+                          ? () => _editarPrecio(provider, precio)
                           : null,
                     ),
                     const SizedBox(height: AppSpacing.sm),
