@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../routes/app_routes.dart';
 import '../../../session.dart';
@@ -8,15 +10,23 @@ import 'widgets/conf_widgets.dart';
 class ConfiguracionesScreen extends StatelessWidget {
   const ConfiguracionesScreen({super.key});
 
-  void _logout(BuildContext context) {
+  Future<void> _logout(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final auth = context.read<AuthProvider>();
+    await auth.logout();
     Session.cerrarSesion();
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+    navigator.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<AuthProvider>().currentUser;
+    final userName = user?.fullName ?? 'Usuario';
+    final userRole = user?.roleName ?? 'Usuario';
+    final userInitials = user?.initials.isNotEmpty == true
+        ? user!.initials
+        : 'U';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -41,10 +51,11 @@ class ConfiguracionesScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ConfigurationProfileCard(
-                          name: Session.nombre,
-                          description:
-                              '${Session.rolNombre} · ${Session.usuarioActual?.correo ?? ''}',
-                          initials: Session.iniciales,
+                          name: userName,
+                          description: user == null
+                              ? userRole
+                              : '$userRole · ${user.email}',
+                          initials: userInitials,
                           onTap: () => Navigator.of(
                             context,
                           ).pushNamed(AppRoutes.miPerfil),
@@ -77,7 +88,7 @@ class ConfiguracionesScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         const SizedBox(height: AppSpacing.xl),
-                        LogoutButton(onPressed: () => _logout(context)),
+                        LogoutButton(onPressed: () async => _logout(context)),
                         const SizedBox(height: 44),
                         const Text(
                           '© 2026 Sorbetería Herrera · v2.2.0',

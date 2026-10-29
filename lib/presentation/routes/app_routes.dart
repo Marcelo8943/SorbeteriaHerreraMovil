@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../Screens/configuraciones/conf_screen.dart';
 import '../Screens/datos_negocio/datos_negocio_screen.dart';
@@ -13,6 +15,7 @@ import '../Screens/precios/precios_screen.dart';
 import '../Screens/usuarios/usuarios_screen.dart';
 import '../Screens/inventario/inventario_screen.dart';
 import '../Screens/movimientos/movimientos_screen.dart';
+import '../Screens/movimientos/movimiento_detalle_screen.dart';
 import '../Screens/transacciones/transacciones_screen.dart';
 import '../Screens/transacciones/transaccion_detalle_screen.dart';
 import '../screens/ventas/ventas_screen.dart';
@@ -135,6 +138,20 @@ class AppRoutes {
           settings: settings,
         );
 
+      case movimientoDetalle:
+        final movementId = settings.arguments;
+        if (movementId is! int) {
+          return MaterialPageRoute(
+            builder: (_) =>
+                const _UnderConstruction(title: 'Movimiento no disponible'),
+            settings: settings,
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => MovimientoDetalleScreen(movementId: movementId),
+          settings: settings,
+        );
+
       case transacciones:
         return MaterialPageRoute(
           builder: (_) => const TransaccionesScreen(),
@@ -207,6 +224,16 @@ class _AuthenticatedShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.watch<AuthProvider>().currentUser;
+    final userName = user?.fullName ?? 'Usuario';
+    final userRole = user?.roleName ?? 'Usuario';
+    final userInitials = user?.initials.isNotEmpty == true
+        ? user!.initials
+        : 'U';
+    final isAdmin =
+        user?.roles.any((role) => role.toLowerCase() == 'administrador') ??
+        false;
+
     return AppShell(
       tabItems: const [
         AppTabBarItem(icon: Icons.home_outlined, label: 'Inicio'),
@@ -219,10 +246,10 @@ class _AuthenticatedShell extends StatelessWidget {
         ProductosScreen(),
       ],
       drawerBuilder: (context) => AppDrawer(
-        userName: Session.nombre,
-        userRole: Session.rolNombre,
-        userInitials: Session.iniciales,
-        isAdmin: Session.esAdmin,
+        userName: userName,
+        userRole: userRole,
+        userInitials: userInitials,
+        isAdmin: isAdmin,
         onProfileTap: () {
           Navigator.of(context).pop();
           Navigator.of(context).pushNamed(AppRoutes.miPerfil);
@@ -318,15 +345,16 @@ class _AuthenticatedShell extends StatelessWidget {
       icon: Icons.logout,
       label: 'Cerrar sesión',
       destructive: true,
-      onTap: () => _logout(context),
+      onTap: () async => _logout(context),
     ),
   ];
 
-  void _logout(BuildContext context) {
+  Future<void> _logout(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final auth = context.read<AuthProvider>();
+    await auth.logout();
     Session.cerrarSesion();
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+    navigator.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 }
 

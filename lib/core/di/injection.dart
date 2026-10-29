@@ -13,6 +13,9 @@ import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
 import 'package:herrera_system/services/business_profile_service.dart';
+
+import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
+
 import 'package:herrera_system/services/inventory_movements_service.dart';
 import 'package:herrera_system/services/inventory_service.dart';
 import 'package:herrera_system/services/precio_service.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:herrera_system/core/errors/app_exception.dart';
+import 'package:herrera_system/data/models/user_model.dart';
 import 'package:herrera_system/services/auth_services.dart';
 
 enum AuthStatus { authenticated, unauthenticated, unknown }
@@ -15,6 +16,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _authStatus == AuthStatus.authenticated;
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
+  UserModel? _currentUser;
+  UserModel? get currentUser => _currentUser;
 
   Future<void> login({
     required String username,
@@ -34,5 +37,25 @@ class AuthProvider extends ChangeNotifier {
 
     _isSubmitting = false;
     notifyListeners();
+  }
+
+  Future<void> logout() async {
+    await _authService.logout();
+    _currentUser = null;
+    _authStatus = AuthStatus.unauthenticated;
+    _errorMessage = null;
+    notifyListeners();
+  Future<void> checkSession() async {
+    try {
+      final bool isAuthenticated = await _authService.isLoggedIn();
+      _authStatus = isAuthenticated
+          ? AuthStatus.authenticated
+          : AuthStatus.unauthenticated;
+    } catch (e) {
+      _errorMessage = "An unexpected error ocurred. Please try again.";
+      _authStatus = AuthStatus.unauthenticated;
+    } finally {
+      notifyListeners();
+    }
   }
 }
