@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:herrera_system/data/mocks/mock_productos.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../theme/app_theme.dart';
 import '../../widgets/app_top_bar.dart';
@@ -7,7 +9,6 @@ import '../../widgets/h_stat_card.dart';
 import '../../../data/models/app_models.dart';
 import '../../../data/mocks/mock_transacciones.dart';
 import '../../../services/dashboard_metrics.dart';
-import '../../../session.dart';
 
 import 'widgets/greeting_banner.dart';
 
@@ -21,9 +22,12 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userName = Session.nombreCorto;
-    final userRole = Session.rolNombre;
-    final userInitials = Session.iniciales;
+    final user = context.watch<AuthProvider>().currentUser;
+    final userName = user?.firstName ?? 'Usuario';
+    final userRole = user?.roleName ?? 'Usuario';
+    final userInitials = user?.initials.isNotEmpty == true
+        ? user!.initials
+        : 'U';
     const fechaFormateada = 'domingo, 16 de agosto de 2026';
 
     final List<Transaccion> transacciones = mockTransacciones;

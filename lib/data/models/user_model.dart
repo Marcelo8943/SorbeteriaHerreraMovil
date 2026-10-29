@@ -19,7 +19,7 @@ class UserModel {
     required this.roles,
   });
 
-  static UserModel FromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as int,
       userName: json['userName'] as String,
@@ -31,6 +31,15 @@ class UserModel {
       roles: List<String>.from(json['roles'] as List),
     );
   }
+
+  String get fullName => '$firstName $lastName'.trim();
+  String get roleName => roles.isEmpty ? 'Usuario' : roles.first;
+  String get initials => fullName
+      .split(' ')
+      .where((part) => part.isNotEmpty)
+      .take(2)
+      .map((part) => part[0])
+      .join();
 
   Map<String, dynamic> toJson() {
     return {

@@ -1,4 +1,5 @@
 import 'package:herrera_system/core/constants/regular_expresion.dart';
+import 'package:herrera_system/core/errors/app_exception.dart';
 import 'package:herrera_system/data/models/token_model.dart';
 import 'package:herrera_system/data/models/user_model.dart';
 import 'package:herrera_system/data/repository/auth_repository.dart';
@@ -28,9 +29,16 @@ class AuthServices {
     await _tokenRepository.saveToken(token);
   }
 
-  Future<UserModel> getMe(String token) async {
-    return await _authRepository.getMe(token);
+  Future<UserModel> getMe() async {
+    final token = await _tokenRepository.getToken();
+    if (token == null) {
+      throw const UnauthorizedException();
+    }
+
+    return _authRepository.getMe(token.token);
   }
 
+
   Future<bool> isLoggedIn() => _tokenRepository.hasValidToken();
+    Future<void> logout() => _tokenRepository.removeToken();
 }

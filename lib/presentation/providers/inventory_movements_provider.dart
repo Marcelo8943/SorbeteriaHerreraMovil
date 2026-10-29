@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:herrera_system/core/errors/app_exception.dart';
+import 'package:herrera_system/data/models/inventory_movement_detail_item_model.dart';
+import 'package:herrera_system/data/models/inventory_movement_header_model.dart';
 import 'package:herrera_system/data/models/inventory_movement_model.dart';
 import 'package:herrera_system/data/models/inventory_movement_page_model.dart';
 import 'package:herrera_system/data/models/inventory_movement_stats_model.dart';
@@ -22,6 +24,10 @@ class InventoryMovementsProvider extends ChangeNotifier {
   int _totalRecords = 0;
   String _search = '';
   MovementDateRange _dateRange = MovementDateRange.all;
+  InventoryMovementHeaderModel? _movementDetail;
+  List<InventoryMovementDetailItemModel> _movementDetailItems = [];
+  String? _detailErrorMessage;
+  bool _isDetailLoading = false;
 
   List<InventoryMovementModel> get movements => _movements;
   InventoryMovementStatsModel? get stats => _stats;
@@ -31,6 +37,11 @@ class InventoryMovementsProvider extends ChangeNotifier {
   int get totalPages => _totalPages;
   int get totalRecords => _totalRecords;
   MovementDateRange get dateRange => _dateRange;
+  InventoryMovementHeaderModel? get movementDetail => _movementDetail;
+  List<InventoryMovementDetailItemModel> get movementDetailItems =>
+      _movementDetailItems;
+  String? get detailErrorMessage => _detailErrorMessage;
+  bool get isDetailLoading => _isDetailLoading;
 
   Future<void> loadInitial() => _loadData();
 
@@ -49,6 +60,33 @@ class InventoryMovementsProvider extends ChangeNotifier {
 
     _currentPage = page;
     await _loadData();
+  }
+
+  Future<void> loadMovementDetail(int id) async {
+    if (_isDetailLoading) return;
+
+    _isDetailLoading = true;
+    _detailErrorMessage = null;
+    _movementDetail = null;
+    _movementDetailItems = [];
+    notifyListeners();
+
+    try {
+      final results = await Future.wait([
+        _service.getMovementById(id),
+        _service.getMovementDetails(id),
+      ]);
+      _movementDetail = results[0] as InventoryMovementHeaderModel;
+      _movementDetailItems =
+          results[1] as List<InventoryMovementDetailItemModel>;
+    } on AppException catch (error) {
+      _detailErrorMessage = error.message;
+    } catch (_) {
+      _detailErrorMessage = 'No se pudo obtener el detalle del movimiento.';
+    } finally {
+      _isDetailLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> _loadData() async {
