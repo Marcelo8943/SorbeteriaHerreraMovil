@@ -11,17 +11,18 @@ import 'presentation/routes/app_routes.dart';
 import 'presentation/theme/app_theme.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load();
-  getIt<AuthProvider>().checkSession();
   setupDependencies();
+
+  getIt<AuthProvider>().checkSession();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
         ChangeNotifierProvider(create: (_) => getIt<BusinessProfileProvider>()),
-        ChangeNotifierProvider(
-          create: (_) => getIt<BusinessProfileProvider>(),
-        ),
+        ChangeNotifierProvider(create: (_) => getIt<BusinessProfileProvider>()),
         ChangeNotifierProvider(create: (_) => getIt<InventoryProvider>()),
         ChangeNotifierProvider(
           create: (_) => getIt<InventoryMovementsProvider>(),
