@@ -1,10 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/precio_general_model.dart';
 import '../../../theme/app_theme.dart';
 
 /// Tarjeta de resumen que muestra un indicador del módulo, como precios
-/// configurados o precios especiales.
+/// configurados en el catálogo.
 class PrecioResumenCard extends StatelessWidget {
   final String titulo;
   final String valor;
@@ -57,25 +57,18 @@ class PrecioResumenCard extends StatelessWidget {
   }
 }
 
-/// Selector horizontal decorativo de líneas para la maqueta de precios.
+/// Selector horizontal de las líneas devueltas por la API.
 class PreciosLineaSelector extends StatelessWidget {
   final String seleccionada;
+  final List<String> opciones;
   final ValueChanged<String> onSeleccionar;
 
   const PreciosLineaSelector({
     super.key,
     required this.seleccionada,
+    required this.opciones,
     required this.onSeleccionar,
   });
-
-  static const _opciones = <(String, String)>[
-    ('Todas', 'Todas'),
-    ('Tradicionales', 'Tradicional'),
-    ('Lights', 'Lights'),
-    ('Nieves', 'Nieves'),
-    ('Paletas', 'Paleta'),
-    ('Fantacia', 'Fantacia'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -83,18 +76,18 @@ class PreciosLineaSelector extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          for (final opcion in _opciones)
+          for (final opcion in opciones)
             Padding(
               padding: const EdgeInsets.only(right: AppSpacing.sm),
               child: ChoiceChip(
-                label: Text(opcion.$1),
-                selected: seleccionada == opcion.$2,
-                onSelected: (_) => onSeleccionar(opcion.$2),
+                label: Text(opcion),
+                selected: seleccionada == opcion,
+                onSelected: (_) => onSeleccionar(opcion),
                 selectedColor: AppColors.primary,
                 backgroundColor: AppColors.card,
                 side: BorderSide.none,
                 labelStyle: TextStyle(
-                  color: seleccionada == opcion.$2
+                  color: seleccionada == opcion
                       ? AppColors.textOnPrimary
                       : AppColors.muted,
                   fontSize: 12,
@@ -111,7 +104,7 @@ class PreciosLineaSelector extends StatelessWidget {
 /// Tarjeta con la presentación, cantidad de productos y precios de detalle
 /// y mayoreo de una línea.
 class PrecioGeneralCard extends StatelessWidget {
-  final PrecioGeneral precio;
+  final PrecioGeneralModel precio;
   final String nombreLinea;
   final VoidCallback? onTap;
 
@@ -122,8 +115,12 @@ class PrecioGeneralCard extends StatelessWidget {
     this.onTap,
   });
 
+  String _formatearPrecio(double? valor) =>
+      valor == null ? 'Sin definir' : 'C\$${valor.toStringAsFixed(2)}';
+
   String get _unidad {
-    final presentacion = precio.presentacion.toLowerCase();
+    final presentacion = precio.presentationName.toLowerCase();
+    if (presentacion.contains('cubeta')) return 'Cub.';
     if (presentacion.contains('4 onzas')) return '4';
     if (presentacion.contains('8 onzas')) return '8';
     if (presentacion.contains('1/4 gal')) return '¼';
@@ -131,7 +128,13 @@ class PrecioGeneralCard extends StatelessWidget {
     if (presentacion.contains('1 gal')) return '1';
     if (presentacion.contains('litro')) return 'L';
     if (presentacion.contains('libra')) return 'Lb';
-    return precio.presentacion;
+    final primeraPalabra = precio.presentationName
+        .trim()
+        .split(RegExp(r'\s+'))
+        .first;
+    return primeraPalabra.length > 4
+        ? '${primeraPalabra.substring(0, 4)}.'
+        : primeraPalabra;
   }
 
   @override
@@ -172,17 +175,22 @@ class PrecioGeneralCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      precio.presentacion,
-                      style: const TextStyle(
-                        color: AppColors.ink,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
+                    Tooltip(
+                      message: precio.presentationName,
+                      child: Text(
+                        precio.presentationName,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.ink,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '$nombreLinea · ${precio.cantidadProductos} productos',
+                      '$nombreLinea · ${precio.productsCount} productos',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -199,7 +207,7 @@ class PrecioGeneralCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'C\$${precio.precioDetalle.toStringAsFixed(2)}',
+                    _formatearPrecio(precio.retailPrice),
                     style: TextStyle(
                       color: AppToneColors.intense[AppTone.teal],
                       fontSize: 14,
@@ -208,7 +216,7 @@ class PrecioGeneralCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    'C\$${precio.precioMayoreo.toStringAsFixed(2)} may.',
+                    '${_formatearPrecio(precio.wholesalePrice)} may.',
                     style: TextStyle(
                       color: AppToneColors.intense[AppTone.purple],
                       fontSize: 11,
@@ -218,81 +226,14 @@ class PrecioGeneralCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 4),
-              Icon(
-                Icons.chevron_right,
-                color: AppColors.muted.withValues(alpha: 0.65),
-              ),
+              if (onTap != null)
+                Icon(
+                  Icons.chevron_right,
+                  color: AppColors.muted.withValues(alpha: 0.65),
+                ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Tarjeta visual para mostrar una promoción o precio especial de producto.
-class PrecioEspecialCard extends StatelessWidget {
-  final PrecioEspecial precio;
-
-  const PrecioEspecialCard({super.key, required this.precio});
-
-  AppTone get _tono =>
-      precio.colorTag == 'yellow' ? AppTone.yellow : AppTone.purple;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = AppToneColors.intense[_tono]!;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppToneColors.soft[_tono],
-        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            precio.productoNombre,
-            style: const TextStyle(
-              color: AppColors.ink,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            'C\$${precio.precioEspecial.toStringAsFixed(0)}',
-            style: const TextStyle(
-              color: AppColors.ink,
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Icon(
-                precio.colorTag == 'yellow'
-                    ? Icons.star_border
-                    : Icons.trending_down,
-                color: color,
-                size: 16,
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Expanded(
-                child: Text(
-                  '${precio.motivo ?? 'Precio especial'} · Inicio: ${precio.fechaInicio}',
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
