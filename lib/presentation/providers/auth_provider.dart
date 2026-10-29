@@ -45,6 +45,8 @@ class AuthProvider extends ChangeNotifier {
     _authStatus = AuthStatus.unauthenticated;
     _errorMessage = null;
     notifyListeners();
+  }
+
   Future<void> checkSession() async {
     try {
       final bool isAuthenticated = await _authService.isLoggedIn();
