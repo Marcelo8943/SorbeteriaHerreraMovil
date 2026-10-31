@@ -52,15 +52,6 @@ class HeaderSeccion extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            '${producto.linea} · ${producto.sabor}',
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -101,18 +92,6 @@ class TarjetaInformacion extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Fila de Tags/Chips
-          Row(
-            children: [
-              TagChip(texto: producto.linea, tone: AppTone.yellow),
-              const SizedBox(width: 8),
-              TagChip(texto: producto.presentacion, tone: AppTone.blue),
-              const SizedBox(width: 8),
-              TagChip(texto: producto.sabor, tone: AppTone.red),
-            ],
-          ),
-          const SizedBox(height: 28),
-
           // Fila de Precios
           Row(
             children: [
@@ -232,33 +211,6 @@ class DatoCelda extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Badge/Chip de etiqueta
-class TagChip extends StatelessWidget {
-  final String texto;
-  final AppTone tone;
-
-  const TagChip({super.key, required this.texto, required this.tone});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppToneColors.soft[tone],
-        borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
-      ),
-      child: Text(
-        texto,
-        style: TextStyle(
-          color: AppToneColors.intense[tone],
-          fontSize: 11,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
     );
   }
 }
