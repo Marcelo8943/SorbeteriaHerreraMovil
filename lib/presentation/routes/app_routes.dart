@@ -231,7 +231,11 @@ class _AuthenticatedShell extends StatelessWidget {
         ? user!.initials
         : 'U';
     final isAdmin =
-        user?.roles.any((role) => role.toLowerCase() == 'administrador') ??
+        user?.roles.any((role) {
+          final normalizedRole = role.trim().toLowerCase();
+          return normalizedRole == 'admin' ||
+              normalizedRole == 'administrador';
+        }) ??
         false;
 
     return AppShell(

@@ -6,11 +6,13 @@ import 'package:herrera_system/data/repository/inventory_movements_repository.da
 import 'package:herrera_system/data/repository/inventory_repository.dart';
 import 'package:herrera_system/data/repository/precio_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
+import 'package:herrera_system/data/repository/user_repository.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
+import 'package:herrera_system/presentation/providers/user_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
 import 'package:herrera_system/services/business_profile_service.dart';
 
@@ -19,12 +21,14 @@ import 'package:herrera_system/presentation/providers/inventory_movements_provid
 import 'package:herrera_system/services/inventory_movements_service.dart';
 import 'package:herrera_system/services/inventory_service.dart';
 import 'package:herrera_system/services/precio_service.dart';
+import 'package:herrera_system/services/user_service.dart';
 
 final getIt = GetIt.instance;
 
 void setupDependencies() {
   getIt.registerLazySingleton<ApiClient>(
-    () => ApiClient(),
+    () =>
+        ApiClient(authTokenProvider: () => getIt<TokenRepository>().getToken()),
     dispose: (client) => client.dispose(),
   );
 
@@ -45,6 +49,11 @@ void setupDependencies() {
     () => PrecioRepository(getIt<ApiClient>(), getIt<TokenRepository>()),
   );
 
+  getIt.registerLazySingleton<UserRepository>(
+    () => UserRepository(getIt<ApiClient>()),
+  );
+
+  //Register services
   getIt.registerLazySingleton<AuthServices>(
     () => AuthServices(getIt<AuthRepository>(), getIt<TokenRepository>()),
   );
@@ -61,6 +70,11 @@ void setupDependencies() {
     () => PrecioService(getIt<PrecioRepository>()),
   );
 
+  getIt.registerLazySingleton<UserService>(
+    () => UserService(getIt<UserRepository>()),
+  );
+
+  //Register providers
   getIt.registerLazySingleton<AuthProvider>(
     () => AuthProvider(getIt<AuthServices>()),
   );
@@ -76,4 +90,6 @@ void setupDependencies() {
   getIt.registerFactory<PrecioProvider>(
     () => PrecioProvider(getIt<PrecioService>()),
   );
+
+  getIt.registerFactory<UserProvider>(() => UserProvider(getIt<UserService>()));
 }

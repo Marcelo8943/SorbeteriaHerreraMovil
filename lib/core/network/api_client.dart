@@ -3,9 +3,15 @@ import 'dart:convert';
 
 import 'package:herrera_system/core/constants/api_constants.dart';
 import 'package:herrera_system/core/errors/app_exception.dart';
+import 'package:herrera_system/data/models/token_model.dart';
 import 'package:http/http.dart' as http;
 
+typedef AuthTokenProvider = Future<TokenModel?> Function();
+
 class ApiClient {
+  final AuthTokenProvider? _authTokenProvider;
+  ApiClient({this._authTokenProvider});
+
   final http.Client _client = http.Client();
 
   Future<dynamic> get(
@@ -35,12 +41,17 @@ class ApiClient {
     //base URL = http://localhost:5177/API
     //paht: /users
     final uri = Uri.parse('$baseUrl$path').replace(queryParameters: query);
-    final headers = <String, String>{
-      'Content-Type': 'application/json',
-      ...?additionalHeaders,
-    };
+    final Map<String, String> headers = {...?additionalHeaders};
     if (body != null) {
       headers['Content-Type'] = 'application/json';
+    }
+
+    TokenModel? token = await _authTokenProvider?.call();
+    if (token != null && !token.isAccessTokenExpired) {
+      headers.putIfAbsent(
+        'Authorization',
+        () => 'Bearer ${token.accessToken}',
+      );
     }
 
     final request = http.Request(method, uri)..headers.addAll(headers);
