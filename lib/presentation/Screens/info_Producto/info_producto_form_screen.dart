@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/info_producto_form_widgets.dart';
 
-/// Formulario de maqueta para crear una línea o presentación.
+/// Formulario para crear una línea o presentación del catálogo.
 class InfoProductoFormScreen extends StatefulWidget {
   final bool esLinea;
-  final ValueChanged<String> onCrear;
+  final Future<void> Function(String nombre) onCrear;
 
   const InfoProductoFormScreen({
     super.key,
@@ -21,6 +21,8 @@ class InfoProductoFormScreen extends StatefulWidget {
 class _InfoProductoFormScreenState extends State<InfoProductoFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
+  bool _guardando = false;
+  String? _error;
 
   @override
   void dispose() {
@@ -30,9 +32,21 @@ class _InfoProductoFormScreenState extends State<InfoProductoFormScreen> {
 
   void _cerrarFormulario() => Navigator.of(context).maybePop();
 
-  void _crear() {
+  Future<void> _crear() async {
     if (!_formKey.currentState!.validate()) return;
-    widget.onCrear(_nombreController.text.trim());
+    setState(() {
+      _guardando = true;
+      _error = null;
+    });
+    try {
+      await widget.onCrear(_nombreController.text.trim());
+    } catch (exception) {
+      if (mounted) {
+        setState(() => _error = _mensajeError(exception));
+      }
+    } finally {
+      if (mounted) setState(() => _guardando = false);
+    }
   }
 
   @override
@@ -87,8 +101,18 @@ class _InfoProductoFormScreenState extends State<InfoProductoFormScreen> {
                     controller: _nombreController,
                     validator: _validarNombre,
                   ),
+                  if (_error != null) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      _error!,
+                      style: const TextStyle(color: AppColors.error),
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.md),
-                  InfoProductoFormActionButton(onPressed: _crear),
+                  InfoProductoFormActionButton(
+                    onPressed: _guardando ? null : _crear,
+                    cargando: _guardando,
+                  ),
                 ],
               ),
             ),
@@ -104,4 +128,7 @@ class _InfoProductoFormScreenState extends State<InfoProductoFormScreen> {
     if (nombre.length < 2) return 'El nombre debe tener al menos 2 caracteres';
     return null;
   }
+
+  String _mensajeError(Object exception) =>
+      exception.toString().replaceFirst(RegExp(r'^[^:]+: '), '');
 }

@@ -61,7 +61,7 @@ class InfoProductoDetalleEncabezado extends StatelessWidget {
   }
 }
 
-/// Campo de nombre con el valor correspondiente al dato mock seleccionado.
+/// Campo de nombre con el valor del elemento seleccionado.
 class InfoProductoDetalleNombre extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
@@ -107,7 +107,7 @@ class InfoProductoDetalleNombre extends StatelessWidget {
   }
 }
 
-/// Control de estado interactivo para la vista previa local del detalle.
+/// Control para cambiar el estado activo del elemento.
 class InfoProductoDetalleEstado extends StatelessWidget {
   final bool activo;
   final ValueChanged<bool> onChanged;
@@ -162,11 +162,16 @@ class InfoProductoDetalleEstado extends StatelessWidget {
   }
 }
 
-/// Botón de maqueta que cierra la hoja sin modificar el dato mock.
+/// Botón para guardar los cambios del elemento.
 class InfoProductoDetalleBotonGuardar extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool cargando;
 
-  const InfoProductoDetalleBotonGuardar({super.key, required this.onPressed});
+  const InfoProductoDetalleBotonGuardar({
+    super.key,
+    required this.onPressed,
+    this.cargando = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -174,8 +179,13 @@ class InfoProductoDetalleBotonGuardar extends StatelessWidget {
       height: 54,
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: const Icon(Icons.check),
-        label: const Text('Guardar'),
+        icon: cargando
+            ? const SizedBox.square(
+                dimension: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.check),
+        label: Text(cargando ? 'Guardando...' : 'Guardar'),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.textOnPrimary,
