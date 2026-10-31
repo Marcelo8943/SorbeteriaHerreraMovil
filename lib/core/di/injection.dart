@@ -23,7 +23,8 @@ final getIt = GetIt.instance;
 
 void setupDependencies() {
   getIt.registerLazySingleton<ApiClient>(
-    () => ApiClient(),
+    () =>
+        ApiClient(authTokenProvider: () => getIt<TokenRepository>().getToken()),
     dispose: (client) => client.dispose(),
   );
 
