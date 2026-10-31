@@ -62,7 +62,7 @@ class InfoProductoFormEncabezado extends StatelessWidget {
   }
 }
 
-/// Campo para escribir el nombre del dato de ejemplo.
+/// Campo para escribir el nombre de la línea o presentación.
 class InfoProductoFormNombre extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
@@ -109,11 +109,16 @@ class InfoProductoFormNombre extends StatelessWidget {
   }
 }
 
-/// Acción visual que cierra el formulario sin agregar datos al mock.
+/// Acción para enviar el nuevo elemento al catálogo.
 class InfoProductoFormActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool cargando;
 
-  const InfoProductoFormActionButton({super.key, required this.onPressed});
+  const InfoProductoFormActionButton({
+    super.key,
+    required this.onPressed,
+    this.cargando = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +126,13 @@ class InfoProductoFormActionButton extends StatelessWidget {
       height: 54,
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: const Icon(Icons.check),
-        label: const Text('Crear'),
+        icon: cargando
+            ? const SizedBox.square(
+                dimension: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Icon(Icons.check),
+        label: Text(cargando ? 'Guardando...' : 'Crear'),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.textOnPrimary,

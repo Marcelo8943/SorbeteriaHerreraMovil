@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/app_models.dart';
-import '../../../data/mocks/mock_catalogo.dart';
+import '../../../core/network/api_client.dart';
+import '../../../data/models/info_producto_item.dart';
+import '../../../data/repository/info_producto_repository.dart';
+import '../../../services/info_producto_service.dart';
+import '../../providers/info_producto_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/h_stat_card.dart';
 import 'info_producto_detalle_screen.dart';
@@ -17,28 +20,27 @@ class InfoProductoScreen extends StatefulWidget {
 
 class _InfoProductoScreenState extends State<InfoProductoScreen> {
   bool _mostrarLineas = true;
-  late final List<Linea> _lineas;
-  late final List<Presentacion> _presentaciones;
+  late final ApiClient _apiClient;
+  late final InfoProductoProvider _provider;
 
   @override
   void initState() {
     super.initState();
-    _lineas = List<Linea>.of(mockLineas);
-    _presentaciones = List<Presentacion>.of(mockPresentaciones);
+    _apiClient = ApiClient();
+    _provider = InfoProductoProvider(
+      InfoProductoService(InfoProductoRepository(_apiClient)),
+    );
+    _provider.cargar();
   }
 
-  int get _total => _lineas.length + _presentaciones.length;
+  @override
+  void dispose() {
+    _provider.dispose();
+    _apiClient.dispose();
+    super.dispose();
+  }
 
-  int get _activos =>
-      _lineas.where((item) => item.estado == 'Activo').length +
-      _presentaciones.where((item) => item.estado == 'Activo').length;
-
-  void _mostrarDetalle({
-    required int id,
-    required String nombre,
-    required String estado,
-    required bool esLinea,
-  }) {
+  void _mostrarDetalle(InfoProductoItem item, bool esLinea) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -46,46 +48,21 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
       backgroundColor: Colors.transparent,
       builder: (modalContext) => SafeArea(
         child: InfoProductoDetalleScreen(
-          nombre: nombre,
-          estado: estado,
+          nombre: item.nombre,
+          estado: item.estado,
           esLinea: esLinea,
-          onGuardar: (nombre, estado) {
-            _guardarElemento(
-              id: id,
-              nombre: nombre,
-              estado: estado,
+          onGuardar: (nombre, estado) async {
+            await _provider.actualizar(
               esLinea: esLinea,
+              id: item.id,
+              nombre: nombre,
+              activo: estado == 'Activo',
             );
-            Navigator.of(modalContext).pop();
+            if (modalContext.mounted) Navigator.of(modalContext).pop();
           },
         ),
       ),
     );
-  }
-
-  void _guardarElemento({
-    required int id,
-    required String nombre,
-    required String estado,
-    required bool esLinea,
-  }) {
-    setState(() {
-      if (esLinea) {
-        final index = _lineas.indexWhere((item) => item.id == id);
-        if (index != -1) {
-          _lineas[index] = Linea(id: id, nombre: nombre, estado: estado);
-        }
-      } else {
-        final index = _presentaciones.indexWhere((item) => item.id == id);
-        if (index != -1) {
-          _presentaciones[index] = Presentacion(
-            id: id,
-            nombre: nombre,
-            estado: estado,
-          );
-        }
-      }
-    });
   }
 
   void _mostrarFormulario() {
@@ -98,35 +75,13 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
       builder: (modalContext) => SafeArea(
         child: InfoProductoFormScreen(
           esLinea: esLinea,
-          onCrear: (nombre) {
-            _crearElemento(nombre, esLinea);
-            Navigator.of(modalContext).pop();
+          onCrear: (nombre) async {
+            await _provider.crear(esLinea: esLinea, nombre: nombre);
+            if (modalContext.mounted) Navigator.of(modalContext).pop();
           },
         ),
       ),
     );
-  }
-
-  void _crearElemento(String nombre, bool esLinea) {
-    setState(() {
-      if (esLinea) {
-        final siguienteId =
-            _lineas.fold<int>(
-              0,
-              (maxId, item) => item.id > maxId ? item.id : maxId,
-            ) +
-            1;
-        _lineas.add(Linea(id: siguienteId, nombre: nombre));
-      } else {
-        final siguienteId =
-            _presentaciones.fold<int>(
-              0,
-              (maxId, item) => item.id > maxId ? item.id : maxId,
-            ) +
-            1;
-        _presentaciones.add(Presentacion(id: siguienteId, nombre: nombre));
-      }
-    });
   }
 
   @override
@@ -144,7 +99,7 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
           Padding(
             padding: const EdgeInsets.only(right: AppSpacing.sm),
             child: ElevatedButton(
-              onPressed: _mostrarFormulario,
+              onPressed: _provider.guardando ? null : _mostrarFormulario,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 shape: const CircleBorder(),
@@ -156,89 +111,135 @@ class _InfoProductoScreenState extends State<InfoProductoScreen> {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            AppSpacing.lg,
-            AppSpacing.md,
-            AppSpacing.xl,
-          ),
-          children: [
-            const Text(
-              'Líneas y presentaciones del sistema.',
-              style: TextStyle(color: AppColors.muted, fontSize: 14),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  HStatCard(
-                    title: 'Total',
-                    value: '$_total',
-                    bgColor: AppToneColors.soft[AppTone.teal]!,
-                    iconColor: AppToneColors.intense[AppTone.teal]!,
-                    icon: Icons.sell_outlined,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  HStatCard(
-                    title: 'Activos',
-                    value: '$_activos',
-                    bgColor: AppToneColors.soft[AppTone.purple]!,
-                    iconColor: AppToneColors.intense[AppTone.purple]!,
-                    icon: Icons.check,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                ],
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            InfoProductoSeccionSelector(
-              lineasSeleccionadas: _mostrarLineas,
-              onChanged: (mostrarLineas) =>
-                  setState(() => _mostrarLineas = mostrarLineas),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            if (_mostrarLineas)
-              for (final item in _lineas)
-                InfoProductoItemCard(
-                  nombre: item.nombre,
-                  estado: item.estado,
-                  esLinea: true,
-                  onTap: () => _mostrarDetalle(
-                    id: item.id,
-                    nombre: item.nombre,
-                    estado: item.estado,
-                    esLinea: true,
-                  ),
-                )
-            else
-              for (final item in _presentaciones)
-                InfoProductoItemCard(
-                  nombre: item.nombre,
-                  estado: item.estado,
-                  esLinea: false,
-                  onTap: () => _mostrarDetalle(
-                    id: item.id,
-                    nombre: item.nombre,
-                    estado: item.estado,
-                    esLinea: false,
-                  ),
-                ),
-            const SizedBox(height: AppSpacing.sm),
-            const Center(
-              child: Text(
-                'Página 1 de 1',
-                style: TextStyle(
-                  color: AppColors.muted,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
+        child: AnimatedBuilder(
+          animation: _provider,
+          builder: (context, _) => _buildContenido(),
         ),
       ),
     );
   }
+
+  Widget _buildContenido() {
+    final lineas = _provider.lineas;
+    final presentaciones = _provider.presentaciones;
+    final items = _mostrarLineas ? lineas : presentaciones;
+    final total = lineas.length + presentaciones.length;
+    final activos =
+        lineas.where((item) => item.activo).length +
+        presentaciones.where((item) => item.activo).length;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.lg,
+        AppSpacing.md,
+        AppSpacing.xl,
+      ),
+      children: [
+        const Text(
+          'Líneas y presentaciones del sistema.',
+          style: TextStyle(color: AppColors.muted, fontSize: 14),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              HStatCard(
+                title: 'Total',
+                value: '$total',
+                bgColor: AppToneColors.soft[AppTone.teal]!,
+                iconColor: AppToneColors.intense[AppTone.teal]!,
+                icon: Icons.sell_outlined,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              HStatCard(
+                title: 'Activos',
+                value: '$activos',
+                bgColor: AppToneColors.soft[AppTone.purple]!,
+                iconColor: AppToneColors.intense[AppTone.purple]!,
+                icon: Icons.check,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        InfoProductoSeccionSelector(
+          lineasSeleccionadas: _mostrarLineas,
+          onChanged: (mostrarLineas) =>
+              setState(() => _mostrarLineas = mostrarLineas),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        if (_provider.cargando)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (_provider.error != null)
+          _ErrorInfoProducto(
+            mensaje: _provider.error!,
+            onReintentar: _provider.cargar,
+          )
+        else if (items.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+            child: Center(
+              child: Text(
+                _mostrarLineas
+                    ? 'No hay líneas registradas.'
+                    : 'No hay presentaciones registradas.',
+                style: const TextStyle(color: AppColors.muted),
+              ),
+            ),
+          )
+        else
+          for (final item in items)
+            InfoProductoItemCard(
+              nombre: item.nombre,
+              estado: item.estado,
+              esLinea: _mostrarLineas,
+              onTap: _provider.guardando
+                  ? null
+                  : () => _mostrarDetalle(item, _mostrarLineas),
+            ),
+        const SizedBox(height: AppSpacing.sm),
+        const Center(
+          child: Text(
+            'Página 1 de 1',
+            style: TextStyle(
+              color: AppColors.muted,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ErrorInfoProducto extends StatelessWidget {
+  final String mensaje;
+  final VoidCallback onReintentar;
+
+  const _ErrorInfoProducto({required this.mensaje, required this.onReintentar});
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+    child: Column(
+      children: [
+        const Icon(Icons.cloud_off_outlined, color: AppColors.muted, size: 36),
+        const SizedBox(height: AppSpacing.sm),
+        Text(mensaje, textAlign: TextAlign.center),
+        const SizedBox(height: AppSpacing.sm),
+        TextButton.icon(
+          onPressed: onReintentar,
+          icon: const Icon(Icons.refresh),
+          label: const Text('Reintentar'),
+        ),
+      ],
+    ),
+  );
 }

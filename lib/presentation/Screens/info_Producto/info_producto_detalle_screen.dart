@@ -8,7 +8,7 @@ class InfoProductoDetalleScreen extends StatefulWidget {
   final String nombre;
   final String estado;
   final bool esLinea;
-  final void Function(String nombre, String estado) onGuardar;
+  final Future<void> Function(String nombre, String estado) onGuardar;
 
   const InfoProductoDetalleScreen({
     super.key,
@@ -27,6 +27,8 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nombreController;
   late bool _activo;
+  bool _guardando = false;
+  String? _error;
 
   @override
   void initState() {
@@ -41,12 +43,22 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
     super.dispose();
   }
 
-  void _guardar() {
+  Future<void> _guardar() async {
     if (!_formKey.currentState!.validate()) return;
-    widget.onGuardar(
-      _nombreController.text.trim(),
-      _activo ? 'Activo' : 'Inactivo',
-    );
+    setState(() {
+      _guardando = true;
+      _error = null;
+    });
+    try {
+      await widget.onGuardar(
+        _nombreController.text.trim(),
+        _activo ? 'Activo' : 'Inactivo',
+      );
+    } catch (exception) {
+      if (mounted) setState(() => _error = _mensajeError(exception));
+    } finally {
+      if (mounted) setState(() => _guardando = false);
+    }
   }
 
   @override
@@ -99,8 +111,15 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
                   activo: _activo,
                   onChanged: (activo) => setState(() => _activo = activo),
                 ),
+                if (_error != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(_error!, style: const TextStyle(color: AppColors.error)),
+                ],
                 const SizedBox(height: AppSpacing.md),
-                InfoProductoDetalleBotonGuardar(onPressed: _guardar),
+                InfoProductoDetalleBotonGuardar(
+                  onPressed: _guardando ? null : _guardar,
+                  cargando: _guardando,
+                ),
               ],
             ),
           ),
@@ -115,4 +134,7 @@ class _InfoProductoDetalleScreenState extends State<InfoProductoDetalleScreen> {
     if (nombre.length < 2) return 'El nombre debe tener al menos 2 caracteres';
     return null;
   }
+
+  String _mensajeError(Object exception) =>
+      exception.toString().replaceFirst(RegExp(r'^[^:]+: '), '');
 }
