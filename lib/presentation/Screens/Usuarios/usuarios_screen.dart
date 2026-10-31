@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../theme/app_theme.dart';
-import '../../../data/models/app_models.dart';
-import '../../../data/mocks/mock_usuarios.dart';
+import '../../../data/models/user_model.dart';
+import '../../providers/user_provider.dart';
 import '../../widgets/h_stat_card.dart';
+import '../../widgets/loading_view.dart';
+import '../../widgets/error_view.dart';
 import '../../widgets/search_filter_row.dart';
 import 'usuario_detalle_screen.dart';
 import 'usuario_form_screen.dart';
@@ -19,8 +22,18 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
   int _currentPage = 1;
   final int _itemsPerPage = 10;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<UserProvider>().getAll();
+      }
+    });
+  }
+
   // Navegación al formulario de nuevo usuario
-  void _openUserForm({Usuario? usuario}) {
+  void _openUserForm({UserModel? usuario}) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => UsuarioFormScreen(usuario: usuario)),
@@ -195,6 +208,9 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
+    final usuarios = userProvider.users;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -314,7 +330,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            '${mockUsuarios.length}',
+                            '${usuarios.length}',
                             style: const TextStyle(
                               color: AppColors.textOnPrimary,
                               fontSize: 11,
@@ -327,35 +343,47 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                     const SizedBox(height: 12),
 
                     // Lista de Tarjetas de Usuarios
-                    Column(
-                      children: List.generate(mockUsuarios.length, (index) {
-                        final usuario = mockUsuarios[index];
-                        return UsuarioCardItem(
-                          usuario: usuario,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => UsuarioDetalleScreen(
-                                  usuario: usuario,
-                                  avatarColor: usuario.rol == 'Administrador'
-                                      ? AppColors.primary
-                                      : AppToneColors.intense[AppTone.purple]!,
+                    if (userProvider.viewStatus == ViewStatus.loading)
+                      const LoadingView()
+                    else if (userProvider.viewStatus == ViewStatus.error)
+                      ErrorView(
+                        errorMessage:
+                            userProvider.errorMessage ??
+                            'No se pudieron cargar los usuarios.',
+                        onRetry: () => userProvider.getAll(),
+                      )
+                    else
+                      Column(
+                        children: usuarios.map((usuario) {
+                          return UsuarioCardItem(
+                            usuario: usuario,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => UsuarioDetalleScreen(
+                                    usuario: usuario,
+                                    avatarColor:
+                                        usuario.roleName == 'Administrador'
+                                        ? AppColors.primary
+                                        : AppToneColors.intense[
+                                            AppTone.purple
+                                          ]!,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      }),
-                    ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
 
                     const SizedBox(height: 14),
 
                     UsuarioPaginationRow(
                       currentPage: _currentPage,
                       totalPages:
-                          (mockUsuarios.length / _itemsPerPage).ceil() > 0
-                          ? (mockUsuarios.length / _itemsPerPage).ceil()
+                          (usuarios.length / _itemsPerPage).ceil() > 0
+                          ? (usuarios.length / _itemsPerPage).ceil()
                           : 1,
                       onPrevious: () {
                         if (_currentPage > 1) {
@@ -363,7 +391,7 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
                         }
                       },
                       onNext: () {
-                        final totalPages = (mockUsuarios.length / _itemsPerPage)
+                        final totalPages = (usuarios.length / _itemsPerPage)
                             .ceil();
                         if (_currentPage < totalPages) {
                           setState(() => _currentPage++);
@@ -380,3 +408,4 @@ class _UsuariosScreenState extends State<UsuariosScreen> {
     );
   }
 }
+
