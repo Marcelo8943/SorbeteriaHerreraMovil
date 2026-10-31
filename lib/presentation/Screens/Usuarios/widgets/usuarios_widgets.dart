@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/user_model.dart';
 
 class UsuarioCardItem extends StatelessWidget {
-  final Usuario usuario;
+  final UserModel usuario;
   final VoidCallback? onTap;
 
   const UsuarioCardItem({super.key, required this.usuario, this.onTap});
 
   String get _iniciales {
-    final partes = usuario.nombre.trim().split(' ');
+    final partes = usuario.fullName.trim().split(' ');
     if (partes.length >= 2) {
       return '${partes[0][0]}${partes[1][0]}'.toUpperCase();
     }
@@ -20,7 +20,7 @@ class UsuarioCardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool esAdmin = usuario.rol == 'Administrador';
+    final bool esAdmin = usuario.roleName == 'Administrador';
     final Color badgeBg = esAdmin
         ? AppToneColors.soft[AppTone.teal]!
         : AppToneColors.soft[AppTone.purple]!;
@@ -80,7 +80,7 @@ class UsuarioCardItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        usuario.nombre,
+                        usuario.fullName,
                         style: const TextStyle(
                           fontSize: 14.5,
                           fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class UsuarioCardItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        '@ ${usuario.usuario}',
+                        '@ ${usuario.userName}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.muted,
@@ -111,7 +111,7 @@ class UsuarioCardItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    usuario.rol.toUpperCase(),
+                    usuario.roleName.toUpperCase(),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
