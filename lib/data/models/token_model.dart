@@ -19,6 +19,8 @@ class TokenModel {
 
   bool get isAccessTokenExpired => DateTime.now().isAfter(expiresAt);
 
+  String get accessToken => token;
+
   static TokenModel fromJson(Map<String, dynamic> json) {
     return TokenModel(
       token: json['token'],
