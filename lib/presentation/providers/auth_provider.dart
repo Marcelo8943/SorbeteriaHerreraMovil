@@ -28,10 +28,15 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       await _authService.login(username, password);
+      _currentUser = await _authService.getMe();
       _authStatus = AuthStatus.authenticated;
     } on AppException catch (e) {
+      _currentUser = null;
+      _authStatus = AuthStatus.unauthenticated;
       _errorMessage = e.message;
     } catch (e) {
+      _currentUser = null;
+      _authStatus = AuthStatus.unauthenticated;
       _errorMessage = 'An unexpected error occurred';
     }
 
@@ -50,10 +55,15 @@ class AuthProvider extends ChangeNotifier {
   Future<void> checkSession() async {
     try {
       final bool isAuthenticated = await _authService.isLoggedIn();
-      _authStatus = isAuthenticated
-          ? AuthStatus.authenticated
-          : AuthStatus.unauthenticated;
+      if (isAuthenticated) {
+        _currentUser = await _authService.getMe();
+        _authStatus = AuthStatus.authenticated;
+      } else {
+        _currentUser = null;
+        _authStatus = AuthStatus.unauthenticated;
+      }
     } catch (e) {
+      _currentUser = null;
       _errorMessage = "An unexpected error ocurred. Please try again.";
       _authStatus = AuthStatus.unauthenticated;
     } finally {
