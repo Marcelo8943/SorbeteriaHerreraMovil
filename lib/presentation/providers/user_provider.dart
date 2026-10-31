@@ -8,7 +8,7 @@ class UserProvider extends ChangeNotifier {
   final UserService _service;
   UserProvider(this._service);
 
-  final List<UserModel> _users = [];
+  List<UserModel> _users = [];
   List<UserModel> get users => _users;
 
   ViewStatus _viewStatus = ViewStatus.initial;
@@ -16,4 +16,19 @@ class UserProvider extends ChangeNotifier {
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
+
+  Future<void> getAll() async {
+    _viewStatus = ViewStatus.loading;
+    notifyListeners();
+
+    try {
+      _users = await _service.getAll();
+      _viewStatus = ViewStatus.succes;
+    } catch (e) {
+      _errorMessage = e.toString();
+      _viewStatus = ViewStatus.error;
+    } finally {
+      notifyListeners();
+    }
+  }
 }
