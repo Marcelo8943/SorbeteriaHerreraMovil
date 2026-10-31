@@ -11,17 +11,29 @@ class UserRepository {
   /// Obtiene todos los usuarios
   Future<List<UserModel>> getAll() async {
     try {
-      // Llamada a la API
-      final data = await _apiClient.get('/users');
+      final response = await _apiClient.get(ApiConstants.users);
 
-      if (data != null && data is List) {
-        // Mapeo de cada elemento a UserModel
-        return data.map((item) => UserModel.fromJson(item)).toList();
-      } else {
-        return [];
+      if (response is! Map<String, dynamic>) {
+        throw const ParsingException();
       }
+
+      final pageData = response['data'];
+      if (pageData is! Map<String, dynamic>) {
+        throw const ParsingException();
+      }
+
+      final usersData = pageData['data'];
+      if (usersData is! List) {
+        throw const ParsingException();
+      }
+
+      return usersData.map((item) {
+        if (item is! Map<String, dynamic>) {
+          throw const ParsingException();
+        }
+        return UserModel.fromJson(item);
+      }).toList();
     } catch (e) {
-      // Manejo de errores
       throw Exception('Error al obtener usuarios: $e');
     }
   }
