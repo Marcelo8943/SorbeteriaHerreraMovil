@@ -354,11 +354,9 @@ class _AuthenticatedShell extends StatelessWidget {
   ];
 
   Future<void> _logout(BuildContext context) async {
-    final navigator = Navigator.of(context);
     final auth = context.read<AuthProvider>();
     await auth.logout();
     Session.cerrarSesion();
-    navigator.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 }
 
