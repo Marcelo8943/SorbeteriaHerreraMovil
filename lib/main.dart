@@ -5,6 +5,7 @@ import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
+import 'package:herrera_system/presentation/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'presentation/routes/app_routes.dart';
@@ -27,6 +28,7 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (_) => getIt<InventoryMovementsProvider>(),
         ),
+        ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
       ],
       child: const HerreraApp(),
     ),
