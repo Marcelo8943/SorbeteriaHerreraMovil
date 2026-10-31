@@ -16,7 +16,6 @@ import '../Screens/usuarios/usuarios_screen.dart';
 import '../Screens/inventario/inventario_screen.dart';
 import '../Screens/movimientos/movimientos_screen.dart';
 import '../Screens/movimientos/movimiento_detalle_screen.dart';
-import '../Screens/transacciones/transacciones_screen.dart';
 import '../Screens/transacciones/transaccion_detalle_screen.dart';
 import '../screens/ventas/ventas_screen.dart';
 import '../screens/pedidos/pedidos_screen.dart';
@@ -154,7 +153,7 @@ class AppRoutes {
 
       case transacciones:
         return MaterialPageRoute(
-          builder: (_) => const TransaccionesScreen(),
+          builder: (_) => const VentasScreen(),
           settings: settings,
         );
 
