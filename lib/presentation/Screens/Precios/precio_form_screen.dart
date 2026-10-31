@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/app_models.dart';
+import '../../../data/models/precio_general_model.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/precios_form_widgets.dart';
 
 /// Vista de ejemplo de precios para una presentación.
 class PrecioFormScreen extends StatefulWidget {
-  final PrecioGeneral precio;
+  final PrecioGeneralModel precio;
 
   const PrecioFormScreen({super.key, required this.precio});
 
@@ -23,15 +23,19 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
   void initState() {
     super.initState();
     _detalleController = TextEditingController(
-      text: _textoPrecio(widget.precio.precioDetalle),
+      text: _textoPrecio(widget.precio.retailPrice),
     );
     _mayoreoController = TextEditingController(
-      text: _textoPrecio(widget.precio.precioMayoreo),
+      text: _textoPrecio(widget.precio.wholesalePrice),
     );
   }
 
-  String _textoPrecio(double precio) =>
-      precio == precio.roundToDouble() ? precio.toStringAsFixed(0) : '$precio';
+  String _textoPrecio(double? precio) {
+    if (precio == null) return '';
+    return precio == precio.roundToDouble()
+        ? precio.toStringAsFixed(0)
+        : '$precio';
+  }
 
   @override
   void dispose() {
@@ -43,16 +47,9 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
   void _guardarPrecio() {
     if (!_formKey.currentState!.validate()) return;
 
-    Navigator.of(context).pop(
-      PrecioGeneral(
-        id: widget.precio.id,
-        presentacion: widget.precio.presentacion,
-        linea: widget.precio.linea,
-        precioDetalle: _leerPrecio(_detalleController),
-        precioMayoreo: _leerPrecio(_mayoreoController),
-        cantidadProductos: widget.precio.cantidadProductos,
-      ),
-    );
+    Navigator.of(
+      context,
+    ).pop((_leerPrecio(_detalleController), _leerPrecio(_mayoreoController)));
   }
 
   double _leerPrecio(TextEditingController controller) =>
@@ -130,7 +127,9 @@ class _PrecioFormScreenState extends State<PrecioFormScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Editar precio · ${widget.precio.presentacion}',
+                          'Editar precio · ${widget.precio.presentationName}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: AppColors.ink,
                             fontSize: 18,
