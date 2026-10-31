@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/app_models.dart';
+import '../../../data/models/user_model.dart';
 import '../../theme/app_theme.dart';
 import 'usuario_form_screen.dart';
 import 'widgets/usuario_detalle_widgets.dart';
 
 class UsuarioDetalleScreen extends StatelessWidget {
-  final Usuario usuario;
+  final UserModel usuario;
   final Color avatarColor;
 
   const UsuarioDetalleScreen({

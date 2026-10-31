@@ -4,9 +4,11 @@ import 'package:herrera_system/data/repository/auth_repository.dart';
 import 'package:herrera_system/data/repository/business_profile_repository.dart';
 import 'package:herrera_system/data/repository/inventory_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
+import 'package:herrera_system/data/repository/user_repository.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
+import 'package:herrera_system/presentation/providers/user_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
 import 'package:herrera_system/services/business_profile_service.dart';
 import 'package:herrera_system/services/inventory_service.dart';
@@ -15,12 +17,14 @@ import 'package:herrera_system/data/repository/inventory_movements_repository.da
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
 
 import 'package:herrera_system/services/inventory_movements_service.dart';
+import 'package:herrera_system/services/user_service.dart';
 
 final getIt = GetIt.instance;
 
 void setupDependencies() {
   getIt.registerLazySingleton<ApiClient>(
-    () => ApiClient(),
+    () =>
+        ApiClient(authTokenProvider: () => getIt<TokenRepository>().getToken()),
     dispose: (client) => client.dispose(),
   );
 
@@ -39,6 +43,10 @@ void setupDependencies() {
     () => InventoryMovementsRepository(getIt<ApiClient>()),
   );
 
+  getIt.registerLazySingleton<UserRepository>(
+    () => UserRepository(getIt<ApiClient>()),
+  );
+
   //Register services
   getIt.registerLazySingleton<AuthServices>(
     () => AuthServices(getIt<AuthRepository>(), getIt<TokenRepository>()),
@@ -51,6 +59,10 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryMovementsService>(
     () => InventoryMovementsService(getIt<InventoryMovementsRepository>()),
+  );
+
+  getIt.registerLazySingleton<UserService>(
+    () => UserService(getIt<UserRepository>()),
   );
 
   //Register providers
@@ -66,4 +78,6 @@ void setupDependencies() {
   getIt.registerLazySingleton<InventoryMovementsProvider>(
     () => InventoryMovementsProvider(getIt<InventoryMovementsService>()),
   );
+
+  getIt.registerFactory<UserProvider>(() => UserProvider(getIt<UserService>()));
 }

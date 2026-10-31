@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/user_model.dart';
 import '../../../theme/app_theme.dart';
 
 class UsuarioDetalleHero extends StatelessWidget {
-  final Usuario usuario;
+  final UserModel usuario;
   final Color avatarColor;
 
   const UsuarioDetalleHero({
@@ -13,7 +13,7 @@ class UsuarioDetalleHero extends StatelessWidget {
   });
 
   String get _iniciales {
-    final partes = usuario.nombre.trim().split(' ');
+    final partes = usuario.fullName.trim().split(' ');
     if (partes.length >= 2) {
       return '${partes[0][0]}${partes[1][0]}'.toUpperCase();
     }
@@ -55,7 +55,7 @@ class UsuarioDetalleHero extends StatelessWidget {
 
           // Nombre Completo
           Text(
-            usuario.nombre,
+            usuario.fullName,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: AppColors.textOnPrimary,
@@ -67,7 +67,7 @@ class UsuarioDetalleHero extends StatelessWidget {
 
           // @handle
           Text(
-            '@${usuario.usuario}',
+            '@${usuario.userName}',
             style: TextStyle(
               color: AppColors.textOnPrimary.withValues(alpha: 0.9),
               fontSize: 13,
@@ -83,7 +83,7 @@ class UsuarioDetalleHero extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSpacing.pillRadius),
             ),
             child: Text(
-              usuario.rol.toUpperCase(),
+              usuario.roleName.toUpperCase(),
               style: const TextStyle(
                 color: AppColors.textOnPrimary,
                 fontSize: 11.5,
@@ -99,7 +99,7 @@ class UsuarioDetalleHero extends StatelessWidget {
 }
 
 class UsuarioDetalleCardData extends StatelessWidget {
-  final Usuario usuario;
+  final UserModel usuario;
 
   const UsuarioDetalleCardData({super.key, required this.usuario});
 
@@ -134,7 +134,7 @@ class UsuarioDetalleCardData extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      usuario.cedula,
+                      usuario.idNumber,
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
@@ -159,7 +159,7 @@ class UsuarioDetalleCardData extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      usuario.rol,
+                      usuario.roleName,
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
@@ -207,7 +207,7 @@ class UsuarioDetalleCardData extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      usuario.correo,
+                      usuario.email,
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
@@ -255,7 +255,7 @@ class UsuarioDetalleCardData extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      usuario.estado,
+                      usuario.isActive ? 'Activo' : 'Inactivo',
                       style: const TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.bold,
@@ -266,7 +266,7 @@ class UsuarioDetalleCardData extends StatelessWidget {
                 ),
               ),
               Switch.adaptive(
-                value: usuario.estado == 'Activo',
+                value: usuario.isActive,
                 onChanged: null,
                 activeThumbColor: AppColors.textOnPrimary,
                 activeTrackColor: AppColors.primary,

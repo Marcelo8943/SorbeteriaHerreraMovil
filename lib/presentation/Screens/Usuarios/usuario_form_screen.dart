@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/app_models.dart';
+import '../../../data/models/user_model.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/usuario_form_widgets.dart';
 
 class UsuarioFormScreen extends StatefulWidget {
-  final Usuario? usuario;
+  final UserModel? usuario;
 
   const UsuarioFormScreen({super.key, this.usuario});
 
@@ -24,13 +24,15 @@ class _UsuarioFormScreenState extends State<UsuarioFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nombreCtrl = TextEditingController(text: widget.usuario?.nombre ?? '');
-    _usuarioCtrl = TextEditingController(
-      text: widget.usuario != null ? '@${widget.usuario!.usuario}' : '',
+    _nombreCtrl = TextEditingController(
+      text: widget.usuario?.fullName ?? '',
     );
-    _correoCtrl = TextEditingController(text: widget.usuario?.correo ?? '');
-    _rol = widget.usuario?.rol ?? 'Gerente';
-    _activo = widget.usuario?.estado != 'Inactivo';
+    _usuarioCtrl = TextEditingController(
+      text: widget.usuario != null ? '@${widget.usuario!.userName}' : '',
+    );
+    _correoCtrl = TextEditingController(text: widget.usuario?.email ?? '');
+    _rol = widget.usuario?.roleName ?? 'Gerente';
+    _activo = widget.usuario?.isActive ?? true;
   }
 
   @override

@@ -19,8 +19,8 @@ class AuthServices {
       throw const FormatException('Username and password cannot be empty');
     }
 
-    if (!CommonRegex.emailRegex.hasMatch(trimemUsername)) {
-      throw const FormatException('Invalid email format');
+    if (!CommonRegex.userNameRegex.hasMatch(trimemUsername)) {
+      throw const FormatException('Invalid username format');
     }
     if (!CommonRegex.passwordRegex.hasMatch(trimmedPassword)) {
       throw const FormatException('Invalid password format');
@@ -38,7 +38,6 @@ class AuthServices {
     return _authRepository.getMe(token.token);
   }
 
-
   Future<bool> isLoggedIn() => _tokenRepository.hasValidToken();
-    Future<void> logout() => _tokenRepository.removeToken();
+  Future<void> logout() => _tokenRepository.removeToken();
 }
