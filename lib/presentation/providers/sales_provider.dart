@@ -22,6 +22,9 @@ class SalesProvider extends ChangeNotifier {
 
   SalesPageModel? _page;
   SalesPageModel? get page => _page;
+  final Map<int, String> _availableSaleTypes = {};
+  Map<int, String> get availableSaleTypes =>
+      Map<int, String>.unmodifiable(_availableSaleTypes);
   ViewStatus _listStatus = ViewStatus.initial;
   ViewStatus get listStatus => _listStatus;
   String? _listError;
@@ -76,6 +79,9 @@ class SalesProvider extends ChangeNotifier {
         saleTypeId: saleTypeId,
         search: search,
       );
+      for (final sale in _page!.sales) {
+        _availableSaleTypes.putIfAbsent(sale.saleTypeId, () => sale.saleTypeName);
+      }
       _listStatus = ViewStatus.success;
     } on AppException catch (error) {
       _listError = error.message;
