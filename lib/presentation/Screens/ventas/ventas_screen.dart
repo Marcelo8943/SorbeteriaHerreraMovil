@@ -12,6 +12,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/h_stat_card.dart';
 import '../../widgets/loading_view.dart';
+import '../../widgets/search_filter_row.dart';
 import '../transacciones/widgets/transaccion_tipo_selector.dart';
 import 'widgets/ventas_widgets.dart';
 
@@ -24,8 +25,17 @@ class VentasScreen extends StatefulWidget {
 
 class _VentasScreenState extends State<VentasScreen> {
   static const int _pageSize = 10;
+  static const List<String> _dateRanges = [
+    'Todas las fechas',
+    'Hoy',
+    'Últimos 7 días',
+    'Este mes',
+    'Este año',
+  ];
   int _currentPage = 1;
   String _search = '';
+  String _selectedDateRange = 'Todas las fechas';
+  int? _selectedSaleTypeId;
   Timer? _searchDebounce;
 
   @override
@@ -47,11 +57,32 @@ class _VentasScreenState extends State<VentasScreen> {
 
   Future<void> _loadPage(int page) {
     _currentPage = page;
+    final dateBounds = _getDateBounds(_selectedDateRange);
     return context.read<SalesProvider>().loadSales(
       page: page,
       pageSize: _pageSize,
+      startDate: dateBounds.$1,
+      endDate: dateBounds.$2,
+      saleTypeId: _selectedSaleTypeId,
       search: _search.isEmpty ? null : _search,
     );
+  }
+
+  (DateTime?, DateTime?) _getDateBounds(String range) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    switch (range) {
+      case 'Hoy':
+        return (today, today);
+      case 'Últimos 7 días':
+        return (today.subtract(const Duration(days: 6)), today);
+      case 'Este mes':
+        return (DateTime(now.year, now.month), today);
+      case 'Este año':
+        return (DateTime(now.year), today);
+      default:
+        return (null, null);
+    }
   }
 
   void _onSearchChanged(String value) {
@@ -60,6 +91,122 @@ class _VentasScreenState extends State<VentasScreen> {
     _searchDebounce = Timer(const Duration(milliseconds: 350), () {
       if (mounted) _loadPage(1);
     });
+  }
+
+  void _showFilters(SalesProvider provider) {
+    var dateRange = _selectedDateRange;
+    var saleTypeValue = _selectedSaleTypeId?.toString() ?? '';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppColors.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (modalContext) => StatefulBuilder(
+        builder: (modalContext, setModalState) => Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Filtrar ventas',
+                style: TextStyle(
+                  color: AppColors.ink,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text('Tipo de venta'),
+              const SizedBox(height: 6),
+              DropdownButtonFormField<String>(
+                value: saleTypeValue,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.lavender,
+                  border: OutlineInputBorder(borderSide: BorderSide.none),
+                ),
+                items: [
+                  const DropdownMenuItem<String>(
+                    value: '',
+                    child: Text('Todos los tipos'),
+                  ),
+                  ...provider.availableSaleTypes.entries.map(
+                    (entry) => DropdownMenuItem<String>(
+                      value: entry.key.toString(),
+                      child: Text(entry.value),
+                    ),
+                  ),
+                ],
+                onChanged: (value) => setModalState(() => saleTypeValue = value ?? ''),
+              ),
+              if (provider.availableSaleTypes.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Text(
+                    'Los tipos se mostrarán cuando la API devuelva ventas.',
+                    style: TextStyle(color: AppColors.muted, fontSize: 12),
+                  ),
+                ),
+              const SizedBox(height: 16),
+              const Text('Fecha'),
+              const SizedBox(height: 6),
+              DropdownButtonFormField<String>(
+                value: dateRange,
+                isExpanded: true,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.lavender,
+                  border: OutlineInputBorder(borderSide: BorderSide.none),
+                ),
+                items: _dateRanges
+                    .map((range) => DropdownMenuItem(value: range, child: Text(range)))
+                    .toList(),
+                onChanged: (value) =>
+                    setModalState(() => dateRange = value ?? _dateRanges.first),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedDateRange = _dateRanges.first;
+                          _selectedSaleTypeId = null;
+                        });
+                        Navigator.pop(modalContext);
+                        _loadPage(1);
+                      },
+                      child: const Text('Limpiar'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectedDateRange = dateRange;
+                          _selectedSaleTypeId = int.tryParse(saleTypeValue);
+                        });
+                        Navigator.pop(modalContext);
+                        _loadPage(1);
+                      },
+                      child: const Text('Aplicar filtros'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -116,27 +263,10 @@ class _VentasScreenState extends State<VentasScreen> {
             const SizedBox(height: AppSpacing.md),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: AppColors.lavender,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.search, color: AppColors.muted),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        onChanged: _onSearchChanged,
-                        decoration: const InputDecoration(
-                          hintText: 'Buscar por código o cliente...',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: SearchFilterRow(
+                hintText: 'Buscar por código o cliente...',
+                onSearchChanged: _onSearchChanged,
+                onFilterTap: () => _showFilters(provider),
               ),
             ),
             const Padding(
