@@ -15,7 +15,7 @@ class UserService {
     return await _userRepository.getById(id);
   }
 
-  Future<UserModel> createUser(UserModel data) async {
+  Future<void> createUser(UserModel data) async {
     final json = data.toCreateJson();
 
     final password = json['password'] as String;
@@ -28,38 +28,47 @@ class UserService {
     if (password.trim().isEmpty) {
       throw const FormatException('La contraseña es obligatoria.');
     }
-    if (!CommonRegex.createUserPasswordRegex.hasMatch(password)) {
+    if (!CommonRegex.createUserPasswordRegex.hasMatch(password.trim())) {
       throw const FormatException(
         'Usa una contraseña más segura. Intenta combinar letras, números y símbolos.',
       );
     }
-    if (!CommonRegex.emailRegex.hasMatch(userName)) {
+    if (userName.trim().isEmpty) {
+      throw const FormatException('El nombre de usuario es obligatorio.');
+    }
+    if (!CommonRegex.userNameRegex.hasMatch(userName.trim())) {
       throw const FormatException(
         'El usuario debe tener entre 3 y 50 caracteres.',
       );
     }
 
-    if (!CommonRegex.emailRegex.hasMatch(email)) {
+    if (email.trim().isEmpty) {
+      throw const FormatException('El correo electrónico es obligatorio.');
+    }
+    if (!CommonRegex.emailRegex.hasMatch(email.trim())) {
       throw const FormatException(
         'El formato del correo electrónico no es válido',
       );
     }
-    if (!CommonRegex.emailRegex.hasMatch(idNumber)) {
+    if (idNumber.trim().isEmpty) {
+      throw const FormatException('La cédula es obligatoria.');
+    }
+    if (!CommonRegex.idNumberRegex.hasMatch(idNumber.trim())) {
       throw const FormatException(
         'La cédula nicaragüense debe tener 13 números seguidos de una letra (Ej: 041221006100F).',
       );
     }
-    if (!CommonRegex.emailRegex.hasMatch(firstName)) {
+    if (firstName.trim().isEmpty) {
       throw const FormatException('El nombre es obligatorio.');
     }
-    if (!CommonRegex.emailRegex.hasMatch(lastName)) {
+    if (lastName.trim().isEmpty) {
       throw const FormatException('El apellido es obligatorio.');
     }
-    if (!CommonRegex.emailRegex.hasMatch(roleName)) {
+    if (roleName.trim().isEmpty) {
       throw const FormatException('El rol es obligatorio.');
     }
 
-    return await _userRepository.createUser(data);
+    await _userRepository.createUser(data);
   }
 
   Future<void> updateUser(int id, UserModel data) async {
