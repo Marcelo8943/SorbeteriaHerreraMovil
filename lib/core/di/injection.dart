@@ -2,24 +2,30 @@ import 'package:get_it/get_it.dart';
 import 'package:herrera_system/core/network/api_client.dart';
 import 'package:herrera_system/data/repository/auth_repository.dart';
 import 'package:herrera_system/data/repository/business_profile_repository.dart';
+import 'package:herrera_system/data/repository/dashboard_repository.dart';
 import 'package:herrera_system/data/repository/inventory_movements_repository.dart';
 import 'package:herrera_system/data/repository/inventory_repository.dart';
+import 'package:herrera_system/data/repository/logs_repository.dart';
 import 'package:herrera_system/data/repository/precio_repository.dart';
 import 'package:herrera_system/data/repository/roles_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
 import 'package:herrera_system/data/repository/user_repository.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
+import 'package:herrera_system/presentation/providers/dashboard_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
+import 'package:herrera_system/presentation/providers/logs_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
 import 'package:herrera_system/presentation/providers/roles_provider.dart';
 import 'package:herrera_system/presentation/providers/user_form_provider.dart';
 import 'package:herrera_system/presentation/providers/user_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
 import 'package:herrera_system/services/business_profile_service.dart';
+import 'package:herrera_system/services/dashboard_service.dart';
 import 'package:herrera_system/services/inventory_movements_service.dart';
 import 'package:herrera_system/services/inventory_service.dart';
+import 'package:herrera_system/services/logs_service.dart';
 import 'package:herrera_system/services/precio_service.dart';
 import 'package:herrera_system/services/roles_service.dart';
 import 'package:herrera_system/services/user_service.dart';
@@ -40,8 +46,14 @@ void setupDependencies() {
   getIt.registerLazySingleton<BusinessProfileRepository>(
     () => BusinessProfileRepository(getIt<ApiClient>()),
   );
+  getIt.registerLazySingleton<DashboardRepository>(
+    () => DashboardRepository(getIt<ApiClient>()),
+  );
   getIt.registerLazySingleton<InventoryRepository>(
     () => InventoryRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<LogsRepository>(
+    () => LogsRepository(getIt<ApiClient>()),
   );
   getIt.registerLazySingleton<InventoryMovementsRepository>(
     () => InventoryMovementsRepository(getIt<ApiClient>()),
@@ -64,8 +76,14 @@ void setupDependencies() {
   getIt.registerLazySingleton<BusinessProfileService>(
     () => BusinessProfileService(getIt<BusinessProfileRepository>()),
   );
+  getIt.registerLazySingleton<DashboardService>(
+    () => DashboardService(getIt<DashboardRepository>()),
+  );
   getIt.registerLazySingleton<InventoryService>(
     () => InventoryService(getIt<InventoryRepository>()),
+  );
+  getIt.registerLazySingleton<LogsService>(
+    () => LogsService(getIt<LogsRepository>()),
   );
   getIt.registerLazySingleton<InventoryMovementsService>(
     () => InventoryMovementsService(getIt<InventoryMovementsRepository>()),
@@ -87,6 +105,12 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<BusinessProfileProvider>(
     () => BusinessProfileProvider(getIt<BusinessProfileService>()),
+  );
+  getIt.registerFactory<DashboardProvider>(
+    () => DashboardProvider(getIt<DashboardService>()),
+  );
+  getIt.registerFactory<LogsProvider>(
+    () => LogsProvider(getIt<LogsService>()),
   );
   getIt.registerLazySingleton<InventoryProvider>(
     () => InventoryProvider(getIt<InventoryService>()),
