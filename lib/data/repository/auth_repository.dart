@@ -1,3 +1,4 @@
+import 'package:herrera_system/core/constants/api_constants.dart';
 import 'package:herrera_system/core/errors/app_exception.dart';
 import 'package:herrera_system/core/network/api_client.dart';
 import 'package:herrera_system/data/models/token_model.dart';
@@ -41,5 +42,28 @@ class AuthRepository {
     }
 
     return UserModel.fromJson(data);
+  }
+
+  Future<String> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final json = await _apiClient.post(
+      ApiConstants.changePassword,
+      body: {
+        'currentPassword': currentPassword,
+        'newPassword': newPassword,
+      },
+    );
+
+    if (json is! Map<String, dynamic>) {
+      throw const ParsingException();
+    }
+    if (json['success'] != true) {
+      throw ServerException(
+        json['message']?.toString() ?? 'No se pudo cambiar la contraseña.',
+      );
+    }
+    return json['message']?.toString() ?? 'Contraseña actualizada.';
   }
 }
