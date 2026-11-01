@@ -6,6 +6,8 @@ import 'package:herrera_system/presentation/providers/business_profile_provider.
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
 import 'package:herrera_system/presentation/providers/user_provider.dart';
+import 'package:herrera_system/presentation/providers/roles_provider.dart';
+import 'package:herrera_system/presentation/providers/user_form_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'presentation/routes/app_routes.dart';
@@ -29,6 +31,8 @@ Future<void> main() async {
           create: (_) => getIt<InventoryMovementsProvider>(),
         ),
         ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
+        ChangeNotifierProvider(create: (_) => getIt<UserFormProvider>()),
+        ChangeNotifierProvider(create: (_) => getIt<RolesProvider>()),
       ],
       child: const HerreraApp(),
     ),
@@ -85,7 +89,7 @@ class _HerreraAppState extends State<HerreraApp> {
       title: 'Sorbetería Herrera',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.splash,
       onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
