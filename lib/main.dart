@@ -3,8 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:herrera_system/core/di/injection.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/business_profile_provider.dart';
+import 'package:herrera_system/presentation/providers/dashboard_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
+import 'package:herrera_system/presentation/providers/logs_provider.dart';
 import 'package:herrera_system/presentation/providers/user_provider.dart';
 import 'package:herrera_system/presentation/providers/roles_provider.dart';
 import 'package:herrera_system/presentation/providers/user_form_provider.dart';
@@ -25,8 +27,10 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
         ChangeNotifierProvider(create: (_) => getIt<BusinessProfileProvider>()),
+        ChangeNotifierProvider(create: (_) => getIt<DashboardProvider>()),
         ChangeNotifierProvider(create: (_) => getIt<BusinessProfileProvider>()),
         ChangeNotifierProvider(create: (_) => getIt<InventoryProvider>()),
+        ChangeNotifierProvider(create: (_) => getIt<LogsProvider>()),
         ChangeNotifierProvider(
           create: (_) => getIt<InventoryMovementsProvider>(),
         ),
