@@ -1,129 +1,70 @@
 import 'package:flutter/material.dart';
-import 'package:herrera_system/data/mocks/mock_productos.dart';
+import 'package:herrera_system/core/constants/view_status.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:herrera_system/presentation/providers/dashboard_provider.dart';
+import 'package:herrera_system/presentation/theme/app_theme.dart';
+import 'package:herrera_system/presentation/widgets/app_top_bar.dart';
+import 'package:herrera_system/presentation/widgets/error_view.dart';
+import 'package:herrera_system/presentation/widgets/loading_view.dart';
 import 'package:provider/provider.dart';
 
-import '../../theme/app_theme.dart';
-import '../../widgets/app_top_bar.dart';
-import '../../widgets/h_stat_card.dart';
-import '../../../data/models/app_models.dart';
-import '../../../data/mocks/mock_transacciones.dart';
-import '../../../services/dashboard_metrics.dart';
-
+import 'widgets/dashboard_stats_cards.dart';
 import 'widgets/greeting_banner.dart';
 
-import 'widgets/recent_transactions_list.dart';
-import '../../widgets/charts/sales_by_period_chart.dart';
-import '../../widgets/charts/top_products_chart.dart';
-import '../../widgets/charts/average_ticket_chart.dart';
-
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<DashboardProvider>().loadStats();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().currentUser;
-    final userName = user?.firstName ?? 'Usuario';
-    final userRole = user?.roleName ?? 'Usuario';
-    final userInitials = user?.initials.isNotEmpty == true
-        ? user!.initials
-        : 'U';
-    const fechaFormateada = 'domingo, 16 de agosto de 2026';
+    final provider = context.watch<DashboardProvider>();
+    final stats = provider.stats;
+    final initials = user?.initials.isNotEmpty == true ? user!.initials : 'U';
 
-    final List<Transaccion> transacciones = mockTransacciones;
-    final List<Producto> productos = mockProductos;
-
-    final ventasDiarias = ventasPorPeriodo(
-      transacciones,
-      agruparPor: (t) => t.fecha.split(',').first,
-    );
-
-    final ticketHoy = ticketPromedio(transacciones);
-
-    final ventasHoy = transacciones
-        .where((t) => t.tipo == 'Venta')
-        .fold<double>(0, (sum, t) => sum + t.monto);
-
-    final pedidosPendientes = transacciones
-        .where((t) => t.tipo == 'Pedido' && t.estado == 'Pendiente')
-        .length;
-
-    final stockCritico = productos
-        .where((p) => p.stockActual <= p.stockMinimo)
-        .length;
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppTopBar(subtitle: 'Hecho en familia', userInitials: userInitials),
-          const SizedBox(height: AppSpacing.md),
-
-          GreetingBanner(
-            userName: userName,
-            userRole: userRole,
-            fechaFormateada: fechaFormateada,
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            child: GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              childAspectRatio: 2.4,
-              children: [
-                HStatCard(
-                  title: 'Ventas del día',
-                  value: 'C\$${ventasHoy.toStringAsFixed(0)}',
-                  bgColor: AppToneColors.soft[AppTone.teal]!,
-                  iconColor: AppToneColors.intense[AppTone.teal]!,
-                  icon: Icons.attach_money,
-                ),
-                HStatCard(
-                  title: 'Pedidos pendientes',
-                  value: '$pedidosPendientes',
-                  bgColor: AppToneColors.soft[AppTone.blue]!,
-                  iconColor: AppToneColors.intense[AppTone.blue]!,
-                  icon: Icons.description_outlined,
-                ),
-                HStatCard(
-                  title: 'Stock crítico',
-                  value: '$stockCritico',
-                  bgColor: AppToneColors.soft[AppTone.red]!,
-                  iconColor: AppToneColors.intense[AppTone.red]!,
-                  icon: Icons.warning_amber_rounded,
-                ),
-                HStatCard(
-                  title: 'Ticket promedio',
-                  value: 'C\$${ticketHoy.toStringAsFixed(0)}',
-                  bgColor: AppToneColors.soft[AppTone.yellow]!,
-                  iconColor: AppToneColors.intense[AppTone.yellow]!,
-                  icon: Icons.receipt_long_outlined,
-                ),
-              ],
+    return RefreshIndicator(
+      onRefresh: () => context.read<DashboardProvider>().loadStats(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppTopBar(subtitle: 'Hecho en familia', userInitials: initials),
+            const SizedBox(height: AppSpacing.md),
+            GreetingBanner(
+              userName: user?.firstName ?? 'Usuario',
+              userRole: user?.roleName ?? 'Usuario',
             ),
-          ),
-
-          SalesByPeriodChart(datos: ventasDiarias),
-          TopProductsChart(datos: topProductos(transacciones)),
-          AverageTicketChart(
-            datos: ticketPromedioPorPeriodo(
-              transacciones,
-              agruparPor: (t) => t.fecha.split(',').first,
-            ),
-          ),
-
-          RecentTransactionsList(
-            transacciones: transacciones,
-            onVerTodo: () {
-              Navigator.pushNamed(context, '/transacciones');
-            },
-          ),
-        ],
+            const SizedBox(height: AppSpacing.md),
+            if (provider.status == ViewStatus.initial ||
+                (provider.status == ViewStatus.loading && stats == null))
+              const Padding(
+                padding: EdgeInsets.all(AppSpacing.lg),
+                child: LoadingView(message: 'Cargando estadísticas...'),
+              )
+            else if (provider.status == ViewStatus.error && stats == null)
+              ErrorView(
+                errorMessage:
+                    provider.errorMessage ?? 'No se pudieron cargar las estadísticas.',
+                onRetry: () => provider.loadStats(),
+              )
+            else if (stats != null)
+              DashboardStatsCards(stats: stats, compact: true),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+        ),
       ),
     );
   }
