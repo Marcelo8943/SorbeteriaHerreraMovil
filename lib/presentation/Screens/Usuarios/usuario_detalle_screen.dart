@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../data/models/user_model.dart';
+import '../../providers/user_provider.dart';
 import '../../theme/app_theme.dart';
 import 'usuario_form_screen.dart';
 import 'widgets/usuario_detalle_widgets.dart';
 
-class UsuarioDetalleScreen extends StatelessWidget {
+class UsuarioDetalleScreen extends StatefulWidget {
   final UserModel usuario;
   final Color avatarColor;
 
@@ -14,11 +16,36 @@ class UsuarioDetalleScreen extends StatelessWidget {
     required this.avatarColor,
   });
 
-  void _openEditForm(BuildContext context) {
-    Navigator.push(
+  @override
+  State<UsuarioDetalleScreen> createState() => _UsuarioDetalleScreenState();
+}
+
+class _UsuarioDetalleScreenState extends State<UsuarioDetalleScreen> {
+  late UserModel _usuario;
+
+  @override
+  void initState() {
+    super.initState();
+    _usuario = widget.usuario;
+  }
+
+  Future<void> _openEditForm() async {
+    final saved = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => UsuarioFormScreen(usuario: usuario)),
+      MaterialPageRoute(builder: (_) => UsuarioFormScreen(usuario: _usuario)),
     );
+    if (saved != true || !mounted) return;
+
+    try {
+      final updated = await context.read<UserProvider>().getById(_usuario.id);
+      if (mounted) setState(() => _usuario = updated);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Se guardó el usuario, pero no se pudo recargar: $error')),
+        );
+      }
+    }
   }
 
   @override
@@ -38,12 +65,12 @@ class UsuarioDetalleScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            UsuarioDetalleHero(usuario: usuario, avatarColor: avatarColor),
+            UsuarioDetalleHero(usuario: _usuario, avatarColor: widget.avatarColor),
             Transform.translate(
               offset: const Offset(0, -30),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                child: UsuarioDetalleCardData(usuario: usuario),
+                child: UsuarioDetalleCardData(usuario: _usuario),
               ),
             ),
             Padding(
@@ -57,7 +84,7 @@ class UsuarioDetalleScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () => _openEditForm(context),
+                  onPressed: _openEditForm,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
