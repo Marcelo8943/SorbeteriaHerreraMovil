@@ -23,6 +23,7 @@ import '../screens/pedidos/pedidos_screen.dart';
 import '../screens/reabastecimientos/reabastecimientos_screen.dart';
 import '../Screens/info_producto/info_producto_screen.dart';
 import '../Screens/logs/logs_screen.dart';
+import '../Screens/logs/log_detail_screen.dart';
 import '../Screens/reportes/reportes_screen.dart';
 import '../../session.dart';
 import '../widgets/navigation/app_drawer.dart';
@@ -195,6 +196,21 @@ class AppRoutes {
       case logs:
         return MaterialPageRoute(
           builder: (_) => const LogsScreen(),
+          settings: settings,
+        );
+
+      case logDetalle:
+        final logId = settings.arguments;
+        if (logId is! String || logId.isEmpty) {
+          return MaterialPageRoute(
+            builder: (_) => const _UnderConstruction(
+              title: 'Detalle del evento no disponible',
+            ),
+            settings: settings,
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => LogDetailScreen(logId: logId),
           settings: settings,
         );
       case reportes:
