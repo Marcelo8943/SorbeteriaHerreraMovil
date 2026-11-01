@@ -25,6 +25,7 @@ import '../Screens/logs/logs_screen.dart';
 import '../Screens/logs/log_detail_screen.dart';
 import '../Screens/reportes/reportes_screen.dart';
 import '../screens/ventas/venta_detalle_screen.dart';
+import '../screens/pedidos/pedido_detalle_screen.dart';
 import '../../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
@@ -56,6 +57,7 @@ class AppRoutes {
   static const String ventas = '/ventas';
   static const String ventaDetalle = '/venta-detalle';
   static const String pedidos = '/pedidos';
+  static const String pedidoDetalle = '/pedido-detalle';
   static const String reabastecimientos = '/reabastecimientos';
   static const String transaccionDetalle = '/transaccion-detalle';
   static const String movimientos = '/movimientos';
@@ -77,6 +79,7 @@ class AppRoutes {
     usuarioForm,
     logDetalle,
     ventaDetalle,
+    pedidoDetalle,
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -182,6 +185,21 @@ class AppRoutes {
       case pedidos:
         return MaterialPageRoute(
           builder: (_) => const PedidosScreen(),
+          settings: settings,
+        );
+
+      case pedidoDetalle:
+        final orderId = settings.arguments;
+        if (orderId is! int) {
+          return MaterialPageRoute(
+            builder: (_) => const _UnderConstruction(
+              title: 'Detalle de pedido no disponible',
+            ),
+            settings: settings,
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => PedidoDetalleScreen(orderId: orderId),
           settings: settings,
         );
 
