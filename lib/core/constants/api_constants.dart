@@ -9,8 +9,12 @@ class ApiConstants {
   static ApiConstants get instance => _instance;
 
   static const String users = '/users';
+  static const String logs = '/Logs';
   static const String roles = '/roles';
   static const String products = '/products';
+  static const String productStats = '/Products/stats';
+  static const String customerStats = '/Customers/stats';
+  static const String salesStats = '/Sales/stats';
   static const String orders = '/orders';
   static const String login = '/auth/login';
   static const String me = '/auth/me';
