@@ -5,6 +5,7 @@ import 'package:herrera_system/data/repository/business_profile_repository.dart'
 import 'package:herrera_system/data/repository/dashboard_repository.dart';
 import 'package:herrera_system/data/repository/inventory_movements_repository.dart';
 import 'package:herrera_system/data/repository/inventory_repository.dart';
+import 'package:herrera_system/data/repository/orders_repository.dart';
 import 'package:herrera_system/data/repository/logs_repository.dart';
 import 'package:herrera_system/data/repository/precio_repository.dart';
 import 'package:herrera_system/data/repository/roles_repository.dart';
@@ -16,6 +17,7 @@ import 'package:herrera_system/presentation/providers/business_profile_provider.
 import 'package:herrera_system/presentation/providers/dashboard_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_movements_provider.dart';
 import 'package:herrera_system/presentation/providers/inventory_provider.dart';
+import 'package:herrera_system/presentation/providers/orders_provider.dart';
 import 'package:herrera_system/presentation/providers/logs_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
 import 'package:herrera_system/presentation/providers/roles_provider.dart';
@@ -27,6 +29,7 @@ import 'package:herrera_system/services/business_profile_service.dart';
 import 'package:herrera_system/services/dashboard_service.dart';
 import 'package:herrera_system/services/inventory_movements_service.dart';
 import 'package:herrera_system/services/inventory_service.dart';
+import 'package:herrera_system/services/orders_service.dart';
 import 'package:herrera_system/services/logs_service.dart';
 import 'package:herrera_system/services/precio_service.dart';
 import 'package:herrera_system/services/roles_service.dart';
@@ -54,6 +57,9 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryRepository>(
     () => InventoryRepository(getIt<ApiClient>()),
+  );
+  getIt.registerLazySingleton<OrdersRepository>(
+    () => OrdersRepository(getIt<ApiClient>()),
   );
   getIt.registerLazySingleton<LogsRepository>(
     () => LogsRepository(getIt<ApiClient>()),
@@ -87,6 +93,9 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryService>(
     () => InventoryService(getIt<InventoryRepository>()),
+  );
+  getIt.registerLazySingleton<OrdersService>(
+    () => OrdersService(getIt<OrdersRepository>()),
   );
   getIt.registerLazySingleton<LogsService>(
     () => LogsService(getIt<LogsRepository>()),
@@ -123,6 +132,9 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<InventoryProvider>(
     () => InventoryProvider(getIt<InventoryService>()),
+  );
+  getIt.registerFactory<OrdersProvider>(
+    () => OrdersProvider(getIt<OrdersService>()),
   );
   getIt.registerLazySingleton<InventoryMovementsProvider>(
     () => InventoryMovementsProvider(getIt<InventoryMovementsService>()),
