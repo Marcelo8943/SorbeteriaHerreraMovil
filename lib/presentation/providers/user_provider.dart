@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/core/constants/view_status.dart';
 import 'package:herrera_system/data/models/user_model.dart';
 import 'package:herrera_system/services/user_service.dart';
-
-enum ViewStatus { initial, loading, succes, error }
 
 class UserProvider extends ChangeNotifier {
   final UserService _service;
@@ -23,7 +22,7 @@ class UserProvider extends ChangeNotifier {
 
     try {
       _users = await _service.getAll();
-      _viewStatus = ViewStatus.succes;
+      _viewStatus = ViewStatus.success;
     } catch (e) {
       _errorMessage = e.toString();
       _viewStatus = ViewStatus.error;
@@ -31,4 +30,6 @@ class UserProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<UserModel> getById(int id) => _service.getById(id);
 }

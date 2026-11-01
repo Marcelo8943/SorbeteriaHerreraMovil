@@ -7,6 +7,7 @@ import '../Screens/datos_negocio/datos_negocio_screen.dart';
 import '../Screens/mi_perfil/mi_perfil_screen.dart';
 import '../Screens/seguridad/seguridad_screen.dart';
 import '../Screens/login/login_screen.dart';
+import '../screens/splash/splash_screen.dart';
 import '../Screens/preferencias_sistema/sistema_screen.dart';
 import '../Screens/dashboard/dashboard_screen.dart';
 import '../Screens/clientes/clientes_screen.dart';
@@ -16,7 +17,6 @@ import '../Screens/usuarios/usuarios_screen.dart';
 import '../Screens/inventario/inventario_screen.dart';
 import '../Screens/movimientos/movimientos_screen.dart';
 import '../Screens/movimientos/movimiento_detalle_screen.dart';
-import '../Screens/transacciones/transacciones_screen.dart';
 import '../Screens/transacciones/transaccion_detalle_screen.dart';
 import '../screens/ventas/ventas_screen.dart';
 import '../screens/pedidos/pedidos_screen.dart';
@@ -33,6 +33,7 @@ class AppRoutes {
   AppRoutes._();
 
   static const String login = '/login';
+  static const String splash = '/splash';
   static const String shell = '/'; // Inicio/Clientes/Productos + tabbar
 
   // Marcelo — Autenticación y Configuración
@@ -78,6 +79,9 @@ class AppRoutes {
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case splash:
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
+
       case login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
 
@@ -154,7 +158,7 @@ class AppRoutes {
 
       case transacciones:
         return MaterialPageRoute(
-          builder: (_) => const TransaccionesScreen(),
+          builder: (_) => const VentasScreen(),
           settings: settings,
         );
 
@@ -233,8 +237,7 @@ class _AuthenticatedShell extends StatelessWidget {
     final isAdmin =
         user?.roles.any((role) {
           final normalizedRole = role.trim().toLowerCase();
-          return normalizedRole == 'admin' ||
-              normalizedRole == 'administrador';
+          return normalizedRole == 'admin' || normalizedRole == 'administrador';
         }) ??
         false;
 
@@ -354,11 +357,9 @@ class _AuthenticatedShell extends StatelessWidget {
   ];
 
   Future<void> _logout(BuildContext context) async {
-    final navigator = Navigator.of(context);
     final auth = context.read<AuthProvider>();
     await auth.logout();
     Session.cerrarSesion();
-    navigator.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 }
 

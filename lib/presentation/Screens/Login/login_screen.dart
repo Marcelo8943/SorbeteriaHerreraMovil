@@ -3,7 +3,6 @@ import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../routes/app_routes.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/login_widgets.dart';
 
@@ -53,17 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final username = _userController.text.trim();
     final password = _passwordController.text.trim();
 
-    await context.read<AuthProvider>().login(
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.login(
       username: username,
       password: password,
     );
 
     if (!mounted) return;
 
-    if (context.read<AuthProvider>().isAuthenticated) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.shell);
-    } else {
-      final errorMessage = context.read<AuthProvider>().errorMessage;
+    if (!authProvider.isAuthenticated) {
+      final errorMessage = authProvider.errorMessage;
       if (errorMessage != null) {
         ScaffoldMessenger.of(
           context,

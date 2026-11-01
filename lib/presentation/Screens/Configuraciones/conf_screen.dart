@@ -11,11 +11,9 @@ class ConfiguracionesScreen extends StatelessWidget {
   const ConfiguracionesScreen({super.key});
 
   Future<void> _logout(BuildContext context) async {
-    final navigator = Navigator.of(context);
     final auth = context.read<AuthProvider>();
     await auth.logout();
     Session.cerrarSesion();
-    navigator.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
   }
 
   @override

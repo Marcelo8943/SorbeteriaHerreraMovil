@@ -11,31 +11,49 @@ class UserRepository {
   /// Obtiene todos los usuarios
   Future<List<UserModel>> getAll() async {
     try {
-      final response = await _apiClient.get(ApiConstants.users);
+      const pageSize = 50;
+      final firstPage = await _getPage(1, pageSize);
+      final users = [...firstPage.users];
 
-      if (response is! Map<String, dynamic>) {
-        throw const ParsingException();
+      for (var page = 2; page <= firstPage.totalPages; page++) {
+        final nextPage = await _getPage(page, pageSize);
+        users.addAll(nextPage.users);
       }
 
-      final pageData = response['data'];
-      if (pageData is! Map<String, dynamic>) {
-        throw const ParsingException();
-      }
-
-      final usersData = pageData['data'];
-      if (usersData is! List) {
-        throw const ParsingException();
-      }
-
-      return usersData.map((item) {
-        if (item is! Map<String, dynamic>) {
-          throw const ParsingException();
-        }
-        return UserModel.fromJson(item);
-      }).toList();
+      return users;
     } catch (e) {
       throw Exception('Error al obtener usuarios: $e');
     }
+  }
+
+  Future<_UsersPage> _getPage(int page, int pageSize) async {
+    final response = await _apiClient.get(
+      ApiConstants.users,
+      query: {'Page': '$page', 'PageSize': '$pageSize'},
+    );
+    if (response is! Map<String, dynamic>) {
+      throw const ParsingException();
+    }
+
+    final pageData = response['data'];
+    if (pageData is! Map<String, dynamic>) {
+      throw const ParsingException();
+    }
+    final usersData = pageData['data'];
+    if (usersData is! List) throw const ParsingException();
+
+    final users = usersData.map((item) {
+      if (item is! Map<String, dynamic>) {
+        throw const ParsingException();
+      }
+      return UserModel.fromJson(item);
+    }).toList();
+
+    final totalPages = pageData['totalPages'];
+    return _UsersPage(
+      users: users,
+      totalPages: totalPages is int ? totalPages : page,
+    );
   }
 
   Future<UserModel> getById(int id) async {
@@ -50,17 +68,14 @@ class UserRepository {
       throw const ParsingException();
     }
 
-    return UserModel.fromJson(json);
+    return UserModel.fromJson(data);
   }
 
-  Future<UserModel> createUser(UserModel data) async {
-    final json = await _apiClient.post(
+  Future<void> createUser(UserModel data) async {
+    await _apiClient.post(
       ApiConstants.users,
       body: data.toCreateJson(),
     );
-    if (json is! Map<String, dynamic>) throw ParsingException();
-
-    return UserModel.fromJson(json);
   }
 
   Future<void> updateUser(int id, UserModel data) async {
@@ -82,4 +97,11 @@ class UserRepository {
 
     return UserModel.fromJson(json);
   }
+}
+
+class _UsersPage {
+  final List<UserModel> users;
+  final int totalPages;
+
+  const _UsersPage({required this.users, required this.totalPages});
 }
