@@ -38,4 +38,15 @@ class ProductoService {
 
   Future<List<OpcionCatalogoProducto>> obtenerPresentaciones() =>
       _repository.obtenerPresentaciones();
+
+  Future<List<LinePresentationOption>> obtenerLineasPresentaciones() =>
+      _repository.obtenerLineasPresentaciones();
+
+  Future<void> crearProducto({required Map<String, dynamic> body}) =>
+      _repository.crearProducto(body: body);
+
+  Future<void> actualizarProducto({
+    required int id,
+    required Map<String, dynamic> body,
+  }) => _repository.actualizarProducto(id: id, body: body);
 }

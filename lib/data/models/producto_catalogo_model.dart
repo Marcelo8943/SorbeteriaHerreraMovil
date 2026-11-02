@@ -103,6 +103,37 @@ class OpcionCatalogoProducto {
   );
 }
 
+class LinePresentationOption {
+  final int id;
+  final int lineId;
+  final String lineName;
+  final int presentationId;
+  final String presentationName;
+
+  const LinePresentationOption({
+    required this.id,
+    required this.lineId,
+    required this.lineName,
+    required this.presentationId,
+    required this.presentationName,
+  });
+
+  String get label => '$lineName · $presentationName';
+
+  factory LinePresentationOption.fromJson(Map<String, dynamic> json) {
+    final line = json['line'] as Map<String, dynamic>? ?? const {};
+    final presentation =
+        json['presentation'] as Map<String, dynamic>? ?? const {};
+    return LinePresentationOption(
+      id: ProductoCatalogoModel._intValue(json['id']),
+      lineId: ProductoCatalogoModel._intValue(line['id']),
+      lineName: line['name']?.toString() ?? '',
+      presentationId: ProductoCatalogoModel._intValue(presentation['id']),
+      presentationName: presentation['name']?.toString() ?? '',
+    );
+  }
+}
+
 class ProductoDetalleModel {
   final int id;
   final int linePresentationId;
