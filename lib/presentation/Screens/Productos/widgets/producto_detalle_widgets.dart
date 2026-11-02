@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/producto_vista_model.dart';
 import '../../../theme/app_theme.dart';
 import 'producto_imagen.dart';
 
 /// Encabezado verde con la imagen, nombre y estado
 class HeaderSeccion extends StatelessWidget {
-  final Producto producto;
+  final ProductoVistaModel producto;
 
   const HeaderSeccion({super.key, required this.producto});
 
@@ -76,7 +76,7 @@ class HeaderSeccion extends StatelessWidget {
 
 /// Tarjeta blanca con la cuadrícula de información
 class TarjetaInformacion extends StatelessWidget {
-  final Producto producto;
+  final ProductoVistaModel producto;
 
   const TarjetaInformacion({super.key, required this.producto});
 
