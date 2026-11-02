@@ -48,6 +48,30 @@ class ProductoRepository {
   Future<List<OpcionCatalogoProducto>> obtenerPresentaciones() =>
       _obtenerOpciones('/Presentations', 'presentationName');
 
+  Future<List<LinePresentationOption>> obtenerLineasPresentaciones() async {
+    final envelope = _map(await _apiClient.get('/LinePresentations'));
+    if (envelope['success'] == false) {
+      throw ServerException(
+        envelope['message']?.toString() ??
+            'No se pudieron cargar las opciones.',
+      );
+    }
+    final data = envelope['data'];
+    if (data is! List) throw const ParsingException();
+    return data.map(_map).map(LinePresentationOption.fromJson).toList();
+  }
+
+  Future<void> crearProducto({required Map<String, dynamic> body}) async {
+    _data(await _apiClient.post('/Products', body: body));
+  }
+
+  Future<void> actualizarProducto({
+    required int id,
+    required Map<String, dynamic> body,
+  }) async {
+    _data(await _apiClient.put('/Products/$id', body: body));
+  }
+
   Future<List<OpcionCatalogoProducto>> _obtenerOpciones(
     String path,
     String nombreKey,

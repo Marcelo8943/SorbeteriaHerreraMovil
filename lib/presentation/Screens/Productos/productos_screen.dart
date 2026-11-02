@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../core/network/api_client.dart';
-import '../../../data/models/app_models.dart';
+import '../../../core/di/injection.dart';
+import '../../../data/models/producto_vista_model.dart';
 import '../../../data/models/producto_catalogo_model.dart';
-import '../../../data/repository/producto_repository.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/producto_provider.dart';
-import '../../../services/producto_service.dart';
+import '../../providers/producto_form_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_top_bar.dart';
 import '../../widgets/h_stat_card.dart';
 import 'producto_detalle_screen.dart';
+import 'producto_form_screen.dart';
 import 'widgets/productos_widgets.dart';
 
 class ProductosScreen extends StatefulWidget {
@@ -22,17 +24,13 @@ class ProductosScreen extends StatefulWidget {
 class _ProductosScreenState extends State<ProductosScreen> {
   static const _productosPorFila = 2;
 
-  late final ApiClient _apiClient;
   late final ProductoProvider _provider;
   final TextEditingController _busquedaController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _apiClient = ApiClient();
-    _provider = ProductoProvider(
-      ProductoService(ProductoRepository(_apiClient)),
-    );
+    _provider = getIt<ProductoProvider>();
     _provider.cargar();
     _provider.cargarFiltros();
   }
@@ -41,35 +39,49 @@ class _ProductosScreenState extends State<ProductosScreen> {
   void dispose() {
     _busquedaController.dispose();
     _provider.dispose();
-    _apiClient.dispose();
     super.dispose();
   }
 
   Future<void> _abrirDetalle(ProductoCatalogoModel producto) async {
-    await Navigator.of(context).push<void>(
-      MaterialPageRoute<void>(
+    final actualizado = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
         builder: (_) => ProductoDetalleScreen(
           producto: _aProducto(producto),
           cargarDetalle: _provider.obtenerDetalle,
           permitirEdicion: true,
+          catalogoProvider: _provider,
         ),
       ),
     );
+    if (actualizado == true) await _provider.cargar();
   }
 
-  Producto _aProducto(ProductoCatalogoModel producto) => Producto(
-    id: producto.id,
-    nombre: producto.nombre,
-    linea: producto.linea,
-    sabor: producto.sabor,
-    presentacion: producto.presentacion,
-    precioDetalle: producto.precioDetalle ?? 0,
-    precioMayoreo: producto.precioMayoreo ?? 0,
-    estado: producto.activo ? 'Activo' : 'Inactivo',
-    imgUrl: producto.imagenUrl ?? '',
-    stockMinimo: 0,
-    stockActual: 0,
-  );
+  ProductoVistaModel _aProducto(ProductoCatalogoModel producto) =>
+      ProductoVistaModel(
+        id: producto.id,
+        nombre: producto.nombre,
+        linea: producto.linea,
+        sabor: producto.sabor,
+        presentacion: producto.presentacion,
+        precioDetalle: producto.precioDetalle ?? 0,
+        precioMayoreo: producto.precioMayoreo ?? 0,
+        estado: producto.activo ? 'Activo' : 'Inactivo',
+        imgUrl: producto.imagenUrl ?? '',
+        stockMinimo: 0,
+        stockActual: 0,
+      );
+
+  Future<void> _abrirFormulario() async {
+    final guardado = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => ProductoFormScreen(
+          catalogoProvider: _provider,
+          formProvider: getIt<ProductoFormProvider>(),
+        ),
+      ),
+    );
+    if (guardado == true) await _provider.cargar();
+  }
 
   void _mostrarFiltros() {
     var lineaId = _provider.lineId ?? 0;
@@ -263,6 +275,11 @@ class _ProductosScreenState extends State<ProductosScreen> {
   Widget _contenido() {
     final provider = _provider;
     final estadisticas = provider.estadisticas;
+    final esAdmin =
+        context.watch<AuthProvider>().currentUser?.roles.any(
+          (role) => role.toLowerCase() == 'admin',
+        ) ??
+        false;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -271,7 +288,13 @@ class _ProductosScreenState extends State<ProductosScreen> {
           children: [
             AppTopBar(
               subtitle: 'Catálogo de productos',
-              trailing: const SizedBox(width: 48, height: 48),
+              trailing: esAdmin
+                  ? IconButton.filled(
+                      onPressed: _abrirFormulario,
+                      icon: const Icon(Icons.add),
+                      tooltip: 'Agregar producto',
+                    )
+                  : const SizedBox(width: 48, height: 48),
             ),
             Expanded(
               child: RefreshIndicator(
