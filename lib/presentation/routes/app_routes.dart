@@ -26,6 +26,7 @@ import '../Screens/logs/log_detail_screen.dart';
 import '../Screens/reportes/reportes_screen.dart';
 import '../screens/ventas/venta_detalle_screen.dart';
 import '../screens/pedidos/pedido_detalle_screen.dart';
+import '../screens/reabastecimientos/reabastecimiento_detalle_screen.dart';
 import '../../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
@@ -59,6 +60,7 @@ class AppRoutes {
   static const String pedidos = '/pedidos';
   static const String pedidoDetalle = '/pedido-detalle';
   static const String reabastecimientos = '/reabastecimientos';
+  static const String reabastecimientoDetalle = '/reabastecimiento-detalle';
   static const String transaccionDetalle = '/transaccion-detalle';
   static const String movimientos = '/movimientos';
   static const String movimientoDetalle = '/movimiento-detalle';
@@ -80,6 +82,7 @@ class AppRoutes {
     logDetalle,
     ventaDetalle,
     pedidoDetalle,
+    reabastecimientoDetalle,
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -206,6 +209,21 @@ class AppRoutes {
       case reabastecimientos:
         return MaterialPageRoute(
           builder: (_) => const ReabastecimientosScreen(),
+          settings: settings,
+        );
+
+      case reabastecimientoDetalle:
+        final restockId = settings.arguments;
+        if (restockId is! int) {
+          return MaterialPageRoute(
+            builder: (_) => const _UnderConstruction(
+              title: 'Detalle de reabastecimiento no disponible',
+            ),
+            settings: settings,
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => ReabastecimientoDetalleScreen(restockId: restockId),
           settings: settings,
         );
 
