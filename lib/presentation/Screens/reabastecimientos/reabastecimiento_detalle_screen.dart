@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:herrera_system/core/constants/view_status.dart';
+import 'package:herrera_system/data/models/restock_detail_batch_model.dart';
 import 'package:herrera_system/data/models/restock_detail_model.dart';
 import 'package:herrera_system/presentation/providers/restocks_provider.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +12,7 @@ import '../../widgets/loading_view.dart';
 class ReabastecimientoDetalleScreen extends StatefulWidget {
   final int restockId;
 
-  const ReabastecimientoDetalleScreen({
-    super.key,
-    required this.restockId,
-  });
+  const ReabastecimientoDetalleScreen({super.key, required this.restockId});
 
   @override
   State<ReabastecimientoDetalleScreen> createState() =>
@@ -27,7 +25,8 @@ class _ReabastecimientoDetalleScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<RestocksProvider>().loadDetail(widget.restockId);
+      if (mounted)
+        context.read<RestocksProvider>().loadDetail(widget.restockId);
     });
   }
 
@@ -42,16 +41,18 @@ class _ReabastecimientoDetalleScreenState
         foregroundColor: AppColors.ink,
       ),
       body: switch (provider.detailStatus) {
-        ViewStatus.initial || ViewStatus.loading =>
-          const LoadingView(message: 'Cargando reabastecimiento...'),
+        ViewStatus.initial || ViewStatus.loading => const LoadingView(
+          message: 'Cargando reabastecimiento...',
+        ),
         ViewStatus.error => ErrorView(
-          errorMessage: provider.detailError ??
-              'No se pudo cargar el reabastecimiento.',
+          errorMessage:
+              provider.detailError ?? 'No se pudo cargar el reabastecimiento.',
           onRetry: () => provider.loadDetail(widget.restockId),
         ),
-        ViewStatus.success => provider.detail == null
-            ? const Center(child: Text('No se encontró el reabastecimiento.'))
-            : _RestockDetailContent(detail: provider.detail!),
+        ViewStatus.success =>
+          provider.detail == null
+              ? const Center(child: Text('No se encontró el reabastecimiento.'))
+              : _RestockDetailContent(detail: provider.detail!),
       },
     );
   }
@@ -73,7 +74,10 @@ class _RestockDetailContent extends StatelessWidget {
             _InfoRow(label: 'Fecha', value: _date(detail.restockDate)),
             _InfoRow(label: 'Registrado por', value: detail.userName),
             _InfoRow(label: 'Cantidad de lotes', value: '${detail.batchCount}'),
-            _InfoRow(label: 'Productos distintos', value: '${detail.differentProductsCount}'),
+            _InfoRow(
+              label: 'Productos distintos',
+              value: '${detail.differentProductsCount}',
+            ),
             _InfoRow(label: 'Unidades totales', value: '${detail.totalUnits}'),
             _InfoRow(
               label: 'Inversión total',
@@ -86,7 +90,9 @@ class _RestockDetailContent extends StatelessWidget {
         _SectionCard(
           title: 'Lotes registrados',
           children: detail.batches.isEmpty
-              ? const [Text('Este reabastecimiento no tiene lotes registrados.')]
+              ? const [
+                  Text('Este reabastecimiento no tiene lotes registrados.'),
+                ]
               : detail.batches.map(_BatchItemCard.new).toList(),
         ),
       ],
