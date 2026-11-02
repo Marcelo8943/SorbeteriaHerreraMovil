@@ -9,6 +9,7 @@ import 'package:herrera_system/data/repository/orders_repository.dart';
 import 'package:herrera_system/data/repository/logs_repository.dart';
 import 'package:herrera_system/data/repository/precio_repository.dart';
 import 'package:herrera_system/data/repository/roles_repository.dart';
+import 'package:herrera_system/data/repository/restocks_repository.dart';
 import 'package:herrera_system/data/repository/sales_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
 import 'package:herrera_system/data/repository/user_repository.dart';
@@ -21,6 +22,7 @@ import 'package:herrera_system/presentation/providers/orders_provider.dart';
 import 'package:herrera_system/presentation/providers/logs_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
 import 'package:herrera_system/presentation/providers/roles_provider.dart';
+import 'package:herrera_system/presentation/providers/restocks_provider.dart';
 import 'package:herrera_system/presentation/providers/sales_provider.dart';
 import 'package:herrera_system/presentation/providers/user_form_provider.dart';
 import 'package:herrera_system/presentation/providers/user_provider.dart';
@@ -33,6 +35,7 @@ import 'package:herrera_system/services/orders_service.dart';
 import 'package:herrera_system/services/logs_service.dart';
 import 'package:herrera_system/services/precio_service.dart';
 import 'package:herrera_system/services/roles_service.dart';
+import 'package:herrera_system/services/restocks_service.dart';
 import 'package:herrera_system/services/sales_service.dart';
 import 'package:herrera_system/services/user_service.dart';
 
@@ -77,6 +80,9 @@ void setupDependencies() {
   getIt.registerLazySingleton<RolesRepository>(
     () => RolesRepository(getIt<ApiClient>()),
   );
+  getIt.registerLazySingleton<RestocksRepository>(
+    () => RestocksRepository(getIt<ApiClient>()),
+  );
   getIt.registerLazySingleton<SalesRepository>(
     () => SalesRepository(getIt<ApiClient>()),
   );
@@ -112,6 +118,9 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<RoleService>(
     () => RoleService(getIt<RolesRepository>()),
+  );
+  getIt.registerLazySingleton<RestocksService>(
+    () => RestocksService(getIt<RestocksRepository>()),
   );
   getIt.registerLazySingleton<SalesService>(
     () => SalesService(getIt<SalesRepository>()),
@@ -152,5 +161,8 @@ void setupDependencies() {
   );
   getIt.registerFactory<SalesProvider>(
     () => SalesProvider(getIt<SalesService>()),
+  );
+  getIt.registerFactory<RestocksProvider>(
+    () => RestocksProvider(getIt<RestocksService>()),
   );
 }

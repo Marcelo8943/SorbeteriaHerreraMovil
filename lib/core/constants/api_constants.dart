@@ -17,6 +17,8 @@ class ApiConstants {
   static const String salesStats = '/Sales/stats';
   static const String sales = '/Sales';
   static const String orders = '/orders';
+  static const String restocks = '/Restocks';
+  static const String restockStatistics = '/Restocks/statistics';
   static const String login = '/auth/login';
   static const String me = '/auth/me';
   static const String changePassword = '/auth/change-password';
