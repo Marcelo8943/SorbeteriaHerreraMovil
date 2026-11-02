@@ -16,6 +16,7 @@ class ProductoProvider extends ChangeNotifier {
   List<OpcionCatalogoProducto> lineas = const [];
   List<OpcionCatalogoProducto> sabores = const [];
   List<OpcionCatalogoProducto> presentaciones = const [];
+  List<LinePresentationOption> lineasPresentaciones = const [];
   bool cargando = true;
   bool cargandoFiltros = false;
   String? error;
@@ -78,14 +79,16 @@ class ProductoProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final resultados = await Future.wait([
+      final resultados = await Future.wait<dynamic>([
         _service.obtenerLineas(),
         _service.obtenerSabores(),
         _service.obtenerPresentaciones(),
+        _service.obtenerLineasPresentaciones(),
       ]);
-      lineas = resultados[0];
-      sabores = resultados[1];
-      presentaciones = resultados[2];
+      lineas = resultados[0] as List<OpcionCatalogoProducto>;
+      sabores = resultados[1] as List<OpcionCatalogoProducto>;
+      presentaciones = resultados[2] as List<OpcionCatalogoProducto>;
+      lineasPresentaciones = resultados[3] as List<LinePresentationOption>;
     } catch (exception) {
       errorFiltros = _mensajeError(exception);
     } finally {

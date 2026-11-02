@@ -8,6 +8,7 @@ import 'package:herrera_system/data/repository/inventory_repository.dart';
 import 'package:herrera_system/data/repository/orders_repository.dart';
 import 'package:herrera_system/data/repository/logs_repository.dart';
 import 'package:herrera_system/data/repository/precio_repository.dart';
+import 'package:herrera_system/data/repository/producto_repository.dart';
 import 'package:herrera_system/data/repository/roles_repository.dart';
 import 'package:herrera_system/data/repository/restocks_repository.dart';
 import 'package:herrera_system/data/repository/sales_repository.dart';
@@ -21,6 +22,8 @@ import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/orders_provider.dart';
 import 'package:herrera_system/presentation/providers/logs_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
+import 'package:herrera_system/presentation/providers/producto_provider.dart';
+import 'package:herrera_system/presentation/providers/producto_form_provider.dart';
 import 'package:herrera_system/presentation/providers/roles_provider.dart';
 import 'package:herrera_system/presentation/providers/restocks_provider.dart';
 import 'package:herrera_system/presentation/providers/sales_provider.dart';
@@ -34,6 +37,7 @@ import 'package:herrera_system/services/inventory_service.dart';
 import 'package:herrera_system/services/orders_service.dart';
 import 'package:herrera_system/services/logs_service.dart';
 import 'package:herrera_system/services/precio_service.dart';
+import 'package:herrera_system/services/producto_service.dart';
 import 'package:herrera_system/services/roles_service.dart';
 import 'package:herrera_system/services/restocks_service.dart';
 import 'package:herrera_system/services/sales_service.dart';
@@ -72,6 +76,9 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<PrecioRepository>(
     () => PrecioRepository(getIt<ApiClient>(), getIt<TokenRepository>()),
+  );
+  getIt.registerLazySingleton<ProductoRepository>(
+    () => ProductoRepository(getIt<ApiClient>()),
   );
 
   getIt.registerLazySingleton<UserRepository>(
@@ -112,6 +119,9 @@ void setupDependencies() {
   getIt.registerLazySingleton<PrecioService>(
     () => PrecioService(getIt<PrecioRepository>()),
   );
+  getIt.registerLazySingleton<ProductoService>(
+    () => ProductoService(getIt<ProductoRepository>()),
+  );
 
   getIt.registerLazySingleton<UserService>(
     () => UserService(getIt<UserRepository>()),
@@ -150,6 +160,12 @@ void setupDependencies() {
   );
   getIt.registerFactory<PrecioProvider>(
     () => PrecioProvider(getIt<PrecioService>()),
+  );
+  getIt.registerFactory<ProductoProvider>(
+    () => ProductoProvider(getIt<ProductoService>()),
+  );
+  getIt.registerFactory<ProductoFormProvider>(
+    () => ProductoFormProvider(getIt<ProductoService>()),
   );
 
   getIt.registerFactory<UserProvider>(() => UserProvider(getIt<UserService>()));
