@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:herrera_system/data/models/cliente_model.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
+import 'package:herrera_system/presentation/providers/cliente_form_provider.dart';
 import 'package:herrera_system/services/cliente_service.dart';
+import 'package:provider/provider.dart';
 
-import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'cliente_form_screen.dart';
 import 'widgets/cliente_detalle_widgets.dart';
@@ -11,12 +13,14 @@ class ClienteDetalleScreen extends StatefulWidget {
   final ClienteModel cliente;
   final Color avatarColor;
   final ClienteService service;
+  final ClienteFormProvider formProvider;
 
   const ClienteDetalleScreen({
     super.key,
     required this.cliente,
     required this.avatarColor,
     required this.service,
+    required this.formProvider,
   });
 
   @override
@@ -63,6 +67,7 @@ class _ClienteDetalleScreenState extends State<ClienteDetalleScreen> {
       MaterialPageRoute<bool>(
         builder: (_) => ClienteFormScreen(
           service: widget.service,
+          formProvider: widget.formProvider,
           cliente: _cliente,
         ),
       ),
@@ -111,6 +116,11 @@ class _ClienteDetalleScreenState extends State<ClienteDetalleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final esAdmin =
+        context.watch<AuthProvider>().currentUser?.roles.any(
+          (role) => role.toLowerCase() == 'admin',
+        ) ??
+        false;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -123,7 +133,7 @@ class _ClienteDetalleScreenState extends State<ClienteDetalleScreen> {
         ),
         title: const Text('Detalle del Cliente'),
         actions: [
-          if (Session.esAdmin)
+          if (esAdmin)
             IconButton(
               tooltip: 'Eliminar cliente',
               onPressed: _eliminando ? null : _deleteCliente,
@@ -159,7 +169,7 @@ class _ClienteDetalleScreenState extends State<ClienteDetalleScreen> {
                       child: ClienteDetalleCardData(cliente: _cliente),
                     ),
                   ),
-                  if (Session.esAdmin)
+                  if (esAdmin)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(
                         AppSpacing.md,

@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../data/models/app_models.dart';
 import '../../../data/models/producto_catalogo_model.dart';
-import '../../../session.dart';
+import '../../../data/models/producto_vista_model.dart';
+import '../../../core/di/injection.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/producto_form_provider.dart';
+import '../../providers/producto_provider.dart';
 import '../../theme/app_theme.dart';
 import 'producto_form_screen.dart';
 import 'widgets/producto_detalle_widgets.dart';
 
 class ProductoDetalleScreen extends StatefulWidget {
-  final Producto producto;
+  final ProductoVistaModel producto;
   final Future<ProductoDetalleModel> Function(int id) cargarDetalle;
   final bool permitirEdicion;
+  final ProductoProvider catalogoProvider;
 
   const ProductoDetalleScreen({
     super.key,
     required this.producto,
     required this.cargarDetalle,
+    required this.catalogoProvider,
     this.permitirEdicion = true,
   });
 
@@ -32,90 +38,123 @@ class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
     _detalleFuture = widget.cargarDetalle(widget.producto.id);
   }
 
-  Future<void> _abrirFicha(Producto producto) async {
-    final resultado = await Navigator.of(context).push<Producto>(
-      MaterialPageRoute<Producto>(
-        builder: (_) => ProductoFormScreen(producto: producto),
+  Future<void> _abrirFicha(
+    ProductoVistaModel producto,
+    ProductoDetalleModel detalle,
+  ) async {
+    final guardado = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(
+        builder: (_) => ProductoFormScreen(
+          producto: ProductoVistaModel(
+            id: producto.id,
+            nombre: producto.nombre,
+            linea: producto.linea,
+            sabor: producto.sabor,
+            presentacion: producto.presentacion,
+            precioDetalle: producto.precioDetalle,
+            precioMayoreo: producto.precioMayoreo,
+            estado: producto.estado,
+            imgUrl: producto.imgUrl,
+            stockMinimo: detalle.stockMinimo,
+            stockActual: producto.stockActual,
+            linePresentationId: detalle.linePresentationId,
+            flavorId: detalle.flavorId,
+          ),
+          catalogoProvider: widget.catalogoProvider,
+          formProvider: getIt<ProductoFormProvider>(),
+        ),
       ),
     );
-    if (resultado != null && mounted) {
-      Navigator.pop(context, resultado);
+    if (guardado == true && mounted) {
+      Navigator.pop(context, true);
     }
   }
 
-  Producto _combinarDetalle(ProductoDetalleModel detalle) => Producto(
-    id: detalle.id,
-    nombre: detalle.nombre.isEmpty ? widget.producto.nombre : detalle.nombre,
-    linea: widget.producto.linea,
-    sabor: widget.producto.sabor,
-    presentacion: widget.producto.presentacion,
-    precioDetalle: widget.producto.precioDetalle,
-    precioMayoreo: widget.producto.precioMayoreo,
-    estado: detalle.activo ? 'Activo' : 'Inactivo',
-    imgUrl: detalle.imagenUrl ?? widget.producto.imgUrl,
-    stockMinimo: detalle.stockMinimo,
-    stockActual: widget.producto.stockActual,
-  );
+  ProductoVistaModel _combinarDetalle(ProductoDetalleModel detalle) =>
+      ProductoVistaModel(
+        id: detalle.id,
+        nombre: detalle.nombre.isEmpty
+            ? widget.producto.nombre
+            : detalle.nombre,
+        linea: widget.producto.linea,
+        sabor: widget.producto.sabor,
+        presentacion: widget.producto.presentacion,
+        precioDetalle: widget.producto.precioDetalle,
+        precioMayoreo: widget.producto.precioMayoreo,
+        estado: detalle.activo ? 'Activo' : 'Inactivo',
+        imgUrl: detalle.imagenUrl ?? widget.producto.imgUrl,
+        stockMinimo: detalle.stockMinimo,
+        stockActual: widget.producto.stockActual,
+        linePresentationId: detalle.linePresentationId,
+        flavorId: detalle.flavorId,
+      );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: AppColors.background,
-    appBar: AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new, size: 18),
-        onPressed: () => Navigator.pop(context),
+  Widget build(BuildContext context) {
+    final esAdmin =
+        context.watch<AuthProvider>().currentUser?.roles.any(
+          (role) => role.toLowerCase() == 'admin',
+        ) ??
+        false;
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text('Detalle del Producto'),
       ),
-      title: const Text('Detalle del Producto'),
-    ),
-    body: FutureBuilder<ProductoDetalleModel>(
-      future: _detalleFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return _estadoError(snapshot.error.toString());
-        }
+      body: FutureBuilder<ProductoDetalleModel>(
+        future: _detalleFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return _estadoError(snapshot.error.toString());
+          }
 
-        final detalle = snapshot.data!;
-        final producto = _combinarDetalle(detalle);
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              HeaderSeccion(producto: producto),
-              Transform.translate(
-                offset: const Offset(0, -30),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                  ),
-                  child: Column(
-                    children: [
-                      TarjetaInformacion(producto: producto),
-                      const SizedBox(height: 16),
-                      _TarjetaDatosTecnicos(detalle: detalle),
-                      if (Session.esAdmin && widget.permitirEdicion) ...[
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () => _abrirFicha(producto),
-                            icon: const Icon(Icons.edit_outlined, size: 18),
-                            label: const Text('Editar producto'),
+          final detalle = snapshot.data!;
+          final producto = _combinarDetalle(detalle);
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                HeaderSeccion(producto: producto),
+                Transform.translate(
+                  offset: const Offset(0, -30),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                    ),
+                    child: Column(
+                      children: [
+                        TarjetaInformacion(producto: producto),
+                        const SizedBox(height: 16),
+                        _TarjetaDatosTecnicos(detalle: detalle),
+                        if (esAdmin && widget.permitirEdicion) ...[
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () => _abrirFicha(producto, detalle),
+                              icon: const Icon(Icons.edit_outlined, size: 18),
+                              label: const Text('Editar producto'),
+                            ),
                           ),
-                        ),
+                        ],
+                        const SizedBox(height: 32),
                       ],
-                      const SizedBox(height: 32),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    ),
-  );
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   Widget _estadoError(String mensaje) => Center(
     child: Padding(
@@ -181,10 +220,7 @@ class _TarjetaDatosTecnicos extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _DatoTecnico(
-            label: 'STOCK MÍNIMO',
-            valor: '${detalle.stockMinimo}',
-          ),
+          _DatoTecnico(label: 'STOCK MÍNIMO', valor: '${detalle.stockMinimo}'),
           const SizedBox(height: 16),
           _DatoTecnico(label: 'FECHA DE REGISTRO', valor: fecha),
         ],

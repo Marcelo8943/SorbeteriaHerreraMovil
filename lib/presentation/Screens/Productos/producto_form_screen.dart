@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/app_models.dart';
-import '../../../data/mocks/mock_catalogo.dart';
+import '../../../data/models/producto_vista_model.dart';
+import '../../../presentation/providers/producto_form_provider.dart';
+import '../../../presentation/providers/producto_provider.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/producto_form_widgets.dart';
 import 'widgets/producto_imagen.dart';
 
 class ProductoFormScreen extends StatefulWidget {
-  final Producto? producto;
+  final ProductoVistaModel? producto;
+  final ProductoProvider catalogoProvider;
+  final ProductoFormProvider formProvider;
 
-  const ProductoFormScreen({super.key, this.producto});
+  const ProductoFormScreen({
+    super.key,
+    this.producto,
+    required this.catalogoProvider,
+    required this.formProvider,
+  });
 
   @override
   State<ProductoFormScreen> createState() => _ProductoFormScreenState();
@@ -21,9 +29,8 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   late TextEditingController _imagenUrlController;
   late TextEditingController _stockMinimoController;
 
-  late String _lineaSeleccionada;
-  late String _presentacionSeleccionada;
-  late String _saborSeleccionado;
+  int? _linePresentationId;
+  int? _flavorId;
   late bool _esActivo;
 
   @override
@@ -37,11 +44,20 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       text: p?.stockMinimo.toString() ?? '0',
     );
 
-    _lineaSeleccionada = p?.linea ?? mockLineas.first.nombre;
-    _presentacionSeleccionada =
-        p?.presentacion ?? mockPresentaciones.first.nombre;
-    _saborSeleccionado = p?.sabor ?? mockSabores.first.nombre;
+    _linePresentationId = p?.linePresentationId;
+    _flavorId = p?.flavorId;
     _esActivo = (p?.estado ?? 'Activo') == 'Activo';
+    _cargarCatalogos();
+  }
+
+  Future<void> _cargarCatalogos() async {
+    await widget.catalogoProvider.cargarFiltros();
+    if (!mounted) return;
+    setState(() {
+      _linePresentationId ??=
+          widget.catalogoProvider.lineasPresentaciones.firstOrNull?.id;
+      _flavorId ??= widget.catalogoProvider.sabores.firstOrNull?.id;
+    });
   }
 
   @override
@@ -52,30 +68,56 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     super.dispose();
   }
 
-  void _guardarProducto() {
+  Future<void> _guardarProducto() async {
     if (!_formKey.currentState!.validate()) return;
-
-    final productoActual = widget.producto;
-    final productoResultado = Producto(
-      id: productoActual?.id ?? DateTime.now().millisecondsSinceEpoch,
+    if (_linePresentationId == null || _flavorId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Selecciona línea, presentación y sabor.'),
+        ),
+      );
+      return;
+    }
+    final guardado = await widget.formProvider.guardar(
+      id: widget.producto?.id,
+      linePresentationId: _linePresentationId!,
+      flavorId: _flavorId!,
       nombre: _nombreController.text.trim(),
-      linea: _lineaSeleccionada,
-      sabor: _saborSeleccionado,
-      presentacion: _presentacionSeleccionada,
-      precioDetalle: productoActual?.precioDetalle ?? 0,
-      precioMayoreo: productoActual?.precioMayoreo ?? 0,
-      estado: _esActivo ? 'Activo' : 'Inactivo',
-      imgUrl: _imagenUrlController.text.trim(),
+      imagenUrl: _imagenUrlController.text.trim().isEmpty
+          ? null
+          : _imagenUrlController.text.trim(),
       stockMinimo: int.parse(_stockMinimoController.text.trim()),
-      stockActual: productoActual?.stockActual ?? 0,
+      activo: _esActivo,
     );
-
-    Navigator.of(context).pop(productoResultado);
+    if (!mounted) return;
+    if (guardado) {
+      Navigator.of(context).pop(true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.formProvider.error ?? 'No se pudo guardar el producto.',
+          ),
+        ),
+      );
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: Listenable.merge([widget.catalogoProvider, widget.formProvider]),
+    builder: (context, _) => _buildForm(context),
+  );
+
+  Widget _buildForm(BuildContext context) {
     final esEdicion = widget.producto != null;
+    final catalogo = widget.catalogoProvider;
+    final linePresentation = catalogo.lineasPresentaciones
+        .where((item) => item.id == _linePresentationId)
+        .firstOrNull;
+    final flavor = catalogo.sabores
+        .where((item) => item.id == _flavorId)
+        .firstOrNull;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -129,51 +171,38 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Línea
+                  // Línea y presentación disponibles en la API
                   ProductoDropdownField(
-                    label: 'Línea',
-                    value: _lineaSeleccionada,
-                    items: _opcionesConValor(
-                      mockLineas.map((e) => e.nombre).toList(),
-                      _lineaSeleccionada,
-                    ),
+                    label: 'Línea y presentación',
+                    value: linePresentation?.label,
+                    items: catalogo.lineasPresentaciones
+                        .map((item) => item.label)
+                        .toList(),
                     validator: (valor) =>
-                        valor == null ? 'Seleccione una línea' : null,
+                        valor == null ? 'Seleccione una combinación' : null,
                     onChanged: (val) {
-                      if (val != null) setState(() => _lineaSeleccionada = val);
+                      final opcion = catalogo.lineasPresentaciones
+                          .where((item) => item.label == val)
+                          .firstOrNull;
+                      if (opcion != null) {
+                        setState(() => _linePresentationId = opcion.id);
+                      }
                     },
                   ),
                   const SizedBox(height: 16),
 
-                  // Presentación
-                  ProductoDropdownField(
-                    label: 'Presentación',
-                    value: _presentacionSeleccionada,
-                    items: _opcionesConValor(
-                      mockPresentaciones.map((e) => e.nombre).toList(),
-                      _presentacionSeleccionada,
-                    ),
-                    validator: (valor) =>
-                        valor == null ? 'Seleccione una presentación' : null,
-                    onChanged: (val) {
-                      if (val != null)
-                        setState(() => _presentacionSeleccionada = val);
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Sabor
+                  // Sabores disponibles en la API
                   ProductoDropdownField(
                     label: 'Sabor',
-                    value: _saborSeleccionado,
-                    items: _opcionesConValor(
-                      mockSabores.map((e) => e.nombre).toList(),
-                      _saborSeleccionado,
-                    ),
+                    value: flavor?.nombre,
+                    items: catalogo.sabores.map((item) => item.nombre).toList(),
                     validator: (valor) =>
                         valor == null ? 'Seleccione un sabor' : null,
                     onChanged: (val) {
-                      if (val != null) setState(() => _saborSeleccionado = val);
+                      final opcion = catalogo.sabores
+                          .where((item) => item.nombre == val)
+                          .firstOrNull;
+                      if (opcion != null) setState(() => _flavorId = opcion.id);
                     },
                   ),
                   const SizedBox(height: 16),
@@ -237,7 +266,9 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton.icon(
-                      onPressed: _guardarProducto,
+                      onPressed: widget.formProvider.guardando
+                          ? null
+                          : _guardarProducto,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.textOnPrimary,
@@ -248,7 +279,11 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                       ),
                       icon: const Icon(Icons.check, size: 20),
                       label: Text(
-                        esEdicion ? 'Confirmar Edición' : 'Crear',
+                        widget.formProvider.guardando
+                            ? 'Guardando...'
+                            : esEdicion
+                            ? 'Confirmar Edición'
+                            : 'Crear',
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -265,9 +300,6 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       ),
     );
   }
-
-  List<String> _opcionesConValor(List<String> opciones, String valorActual) =>
-      {...opciones, valorActual}.toList();
 
   String? _validarNombre(String? valor) {
     final nombre = valor?.trim() ?? '';

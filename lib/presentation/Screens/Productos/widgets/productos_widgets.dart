@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/app_models.dart';
+import '../../../../data/models/producto_vista_model.dart';
 import '../../../theme/app_theme.dart';
 import 'producto_imagen.dart';
 
@@ -35,7 +35,7 @@ class ProductoStatusBadge extends StatelessWidget {
 }
 
 class ProductoCard extends StatelessWidget {
-  final Producto producto;
+  final ProductoVistaModel producto;
   final VoidCallback onTap;
 
   const ProductoCard({super.key, required this.producto, required this.onTap});

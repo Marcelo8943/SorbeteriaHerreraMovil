@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:herrera_system/data/models/cliente_model.dart';
 import 'package:herrera_system/presentation/Screens/Clientes/clientes_module.dart';
+import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:herrera_system/presentation/providers/cliente_provider.dart';
+import 'package:provider/provider.dart';
 
-import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_top_bar.dart';
 import '../../widgets/h_stat_card.dart';
@@ -48,6 +49,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
       MaterialPageRoute<bool>(
         builder: (_) => ClienteFormScreen(
           service: _module.service,
+          formProvider: _module.formProvider,
           cliente: cliente,
         ),
       ),
@@ -63,6 +65,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
           cliente: cliente,
           avatarColor: ClienteCardItem.colorForIndex(index),
           service: _module.service,
+          formProvider: _module.formProvider,
         ),
       ),
     );
@@ -255,6 +258,11 @@ class _ClientesScreenState extends State<ClientesScreen> {
   @override
   Widget build(BuildContext context) {
     final stats = _provider.estadisticas;
+    final esAdmin =
+        context.watch<AuthProvider>().currentUser?.roles.any(
+          (role) => role.toLowerCase() == 'admin',
+        ) ??
+        false;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -262,7 +270,7 @@ class _ClientesScreenState extends State<ClientesScreen> {
           children: [
             AppTopBar(
               subtitle: 'Gestión de clientes',
-              trailing: Session.esAdmin
+              trailing: esAdmin
                   ? ElevatedButton(
                       onPressed: () => _openClientForm(),
                       style: ElevatedButton.styleFrom(
