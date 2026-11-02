@@ -24,6 +24,7 @@ import '../Screens/info_producto/info_producto_screen.dart';
 import '../Screens/logs/logs_screen.dart';
 import '../Screens/logs/log_detail_screen.dart';
 import '../Screens/reportes/reportes_screen.dart';
+import '../screens/ventas/venta_detalle_screen.dart';
 import '../../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
@@ -53,6 +54,7 @@ class AppRoutes {
   // Yahir — Dashboard, Transacciones, Inventario, Usuarios y Logs
   static const String transacciones = '/transacciones';
   static const String ventas = '/ventas';
+  static const String ventaDetalle = '/venta-detalle';
   static const String pedidos = '/pedidos';
   static const String reabastecimientos = '/reabastecimientos';
   static const String transaccionDetalle = '/transaccion-detalle';
@@ -74,6 +76,7 @@ class AppRoutes {
     usuarioDetalle,
     usuarioForm,
     logDetalle,
+    ventaDetalle,
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -158,6 +161,21 @@ class AppRoutes {
       case ventas:
         return MaterialPageRoute(
           builder: (_) => const VentasScreen(),
+          settings: settings,
+        );
+
+      case ventaDetalle:
+        final saleId = settings.arguments;
+        if (saleId is! int) {
+          return MaterialPageRoute(
+            builder: (_) => const _UnderConstruction(
+              title: 'Detalle de venta no disponible',
+            ),
+            settings: settings,
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => VentaDetalleScreen(saleId: saleId),
           settings: settings,
         );
 

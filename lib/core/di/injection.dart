@@ -8,6 +8,7 @@ import 'package:herrera_system/data/repository/inventory_repository.dart';
 import 'package:herrera_system/data/repository/logs_repository.dart';
 import 'package:herrera_system/data/repository/precio_repository.dart';
 import 'package:herrera_system/data/repository/roles_repository.dart';
+import 'package:herrera_system/data/repository/sales_repository.dart';
 import 'package:herrera_system/data/repository/token_repository.dart';
 import 'package:herrera_system/data/repository/user_repository.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
@@ -18,6 +19,7 @@ import 'package:herrera_system/presentation/providers/inventory_provider.dart';
 import 'package:herrera_system/presentation/providers/logs_provider.dart';
 import 'package:herrera_system/presentation/providers/precio_provider.dart';
 import 'package:herrera_system/presentation/providers/roles_provider.dart';
+import 'package:herrera_system/presentation/providers/sales_provider.dart';
 import 'package:herrera_system/presentation/providers/user_form_provider.dart';
 import 'package:herrera_system/presentation/providers/user_provider.dart';
 import 'package:herrera_system/services/auth_services.dart';
@@ -28,6 +30,7 @@ import 'package:herrera_system/services/inventory_service.dart';
 import 'package:herrera_system/services/logs_service.dart';
 import 'package:herrera_system/services/precio_service.dart';
 import 'package:herrera_system/services/roles_service.dart';
+import 'package:herrera_system/services/sales_service.dart';
 import 'package:herrera_system/services/user_service.dart';
 
 final getIt = GetIt.instance;
@@ -68,6 +71,9 @@ void setupDependencies() {
   getIt.registerLazySingleton<RolesRepository>(
     () => RolesRepository(getIt<ApiClient>()),
   );
+  getIt.registerLazySingleton<SalesRepository>(
+    () => SalesRepository(getIt<ApiClient>()),
+  );
 
   //Register services
   getIt.registerLazySingleton<AuthServices>(
@@ -97,6 +103,9 @@ void setupDependencies() {
   );
   getIt.registerLazySingleton<RoleService>(
     () => RoleService(getIt<RolesRepository>()),
+  );
+  getIt.registerLazySingleton<SalesService>(
+    () => SalesService(getIt<SalesRepository>()),
   );
 
   //Register providers
@@ -128,5 +137,8 @@ void setupDependencies() {
   );
   getIt.registerFactory<RolesProvider>(
     () => RolesProvider(getIt<RoleService>()),
+  );
+  getIt.registerFactory<SalesProvider>(
+    () => SalesProvider(getIt<SalesService>()),
   );
 }
