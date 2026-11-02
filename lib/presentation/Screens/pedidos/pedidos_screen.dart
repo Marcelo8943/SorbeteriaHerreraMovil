@@ -76,7 +76,10 @@ class _PedidosScreenState extends State<PedidosScreen> {
       case 'Este año':
         return (DateTime(now.year), today);
       default:
-        return (null, null);
+        // La API interpreta fechas nulas como "este mes". Usa sus límites
+        // admitidos para que "Todas las fechas" consulte todo el historial.
+        // OrderRepository suma un día al ToDate; evita desbordar DateTime.MaxValue.
+        return (DateTime(1753, 1, 1), DateTime(9999, 12, 30));
     }
   }
 
