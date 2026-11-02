@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/core/constants/view_status.dart';
 import 'package:herrera_system/data/models/cliente_model.dart';
+import 'package:herrera_system/presentation/providers/cliente_form_provider.dart';
 import 'package:herrera_system/services/cliente_service.dart';
 
 import '../../theme/app_theme.dart';
@@ -8,10 +10,12 @@ import 'widgets/cliente_form_widgets.dart';
 class ClienteFormScreen extends StatefulWidget {
   final ClienteModel? cliente;
   final ClienteService service;
+  final ClienteFormProvider formProvider;
 
   const ClienteFormScreen({
     super.key,
     required this.service,
+    required this.formProvider,
     this.cliente,
   });
 
@@ -32,7 +36,6 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   int? _municipalityId;
   bool _esActivo = true;
   bool _cargandoCatalogos = true;
-  bool _guardando = false;
   String? _errorCatalogos;
   String? _errorGuardar;
 
@@ -41,6 +44,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   @override
   void initState() {
     super.initState();
+    widget.formProvider.reset();
     final cliente = widget.cliente;
     _nombreCtrl = TextEditingController(text: cliente?.firstName ?? '');
     _apellidoCtrl = TextEditingController(text: cliente?.lastName ?? '');
@@ -132,50 +136,31 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
       setState(() => _errorGuardar = 'Seleccione un municipio.');
       return;
     }
-    setState(() {
-      _guardando = true;
-      _errorGuardar = null;
-    });
-    try {
-      final args = {
-        'municipalityId': _municipalityId!,
-        'firstName': _nombreCtrl.text.trim(),
-        'lastName': _apellidoCtrl.text.trim(),
-        'phone': _telefonoCtrl.text.trim(),
-        'pointOfSale': _puntoVentaCtrl.text.trim(),
-        'posAddress': _direccionPuntoVentaCtrl.text.trim(),
-      };
-      if (_esEdicion) {
-        await widget.service.actualizarCliente(
-          id: widget.cliente!.id,
-          isActive: _esActivo,
-          municipalityId: args['municipalityId'] as int,
-          firstName: args['firstName'] as String,
-          lastName: args['lastName'] as String,
-          phone: args['phone'] as String,
-          pointOfSale: args['pointOfSale'] as String,
-          posAddress: args['posAddress'] as String,
-        );
-      } else {
-        await widget.service.crearCliente(
-          municipalityId: args['municipalityId'] as int,
-          firstName: args['firstName'] as String,
-          lastName: args['lastName'] as String,
-          phone: args['phone'] as String,
-          pointOfSale: args['pointOfSale'] as String,
-          posAddress: args['posAddress'] as String,
-        );
-      }
-      if (mounted) Navigator.pop(context, true);
-    } catch (exception) {
-      if (!mounted) return;
-      setState(() {
-        _guardando = false;
-        _errorGuardar = exception.toString().replaceFirst(
-          RegExp(r'^[^:]+: '),
-          '',
-        );
-      });
+    setState(() => _errorGuardar = null);
+    final formProvider = widget.formProvider;
+    final saved = _esEdicion
+        ? await formProvider.actualizarCliente(
+            id: widget.cliente!.id,
+            isActive: _esActivo,
+            municipalityId: _municipalityId!,
+            firstName: _nombreCtrl.text.trim(),
+            lastName: _apellidoCtrl.text.trim(),
+            phone: _telefonoCtrl.text.trim(),
+            pointOfSale: _puntoVentaCtrl.text.trim(),
+            posAddress: _direccionPuntoVentaCtrl.text.trim(),
+          )
+        : await formProvider.crearCliente(
+            municipalityId: _municipalityId!,
+            firstName: _nombreCtrl.text.trim(),
+            lastName: _apellidoCtrl.text.trim(),
+            phone: _telefonoCtrl.text.trim(),
+            pointOfSale: _puntoVentaCtrl.text.trim(),
+            posAddress: _direccionPuntoVentaCtrl.text.trim(),
+          );
+
+    if (!mounted) return;
+    if (saved) {
+      Navigator.pop(context, true);
     }
   }
 
@@ -191,6 +176,16 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: widget.formProvider,
+      builder: (context, _) => _buildForm(context),
+    );
+  }
+
+  Widget _buildForm(BuildContext context) {
+    final isSaving = widget.formProvider.status == ViewStatus.loading;
+    final errorMessage =
+        _errorGuardar ?? widget.formProvider.errorMessage;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -305,10 +300,10 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                         onChanged: (value) => setState(() => _esActivo = value),
                       ),
                     ],
-                    if (_errorGuardar != null) ...[
+                    if (errorMessage != null) ...[
                       const SizedBox(height: 12),
                       Text(
-                        _errorGuardar!,
+                        errorMessage,
                         style: const TextStyle(color: Colors.red),
                       ),
                     ],
@@ -317,8 +312,8 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
               ),
               const SizedBox(height: 24),
               FormSubmitButton(
-                label: _guardando ? 'Guardando...' : 'Guardar cliente',
-                onPressed: _guardando ? null : _guardarFormulario,
+                label: isSaving ? 'Guardando...' : 'Guardar cliente',
+                onPressed: isSaving ? null : _guardarFormulario,
               ),
             ],
           ),
