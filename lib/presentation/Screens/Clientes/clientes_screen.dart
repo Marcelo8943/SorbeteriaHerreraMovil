@@ -250,9 +250,9 @@ class _ClientesScreenState extends State<ClientesScreen> {
 
   void _showMessage(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -398,14 +398,17 @@ class _ClientesScreenState extends State<ClientesScreen> {
                     else if (_provider.clientes.isEmpty)
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 32),
-                        child: Center(child: Text('No se encontraron clientes')),
+                        child: Center(
+                          child: Text('No se encontraron clientes'),
+                        ),
                       )
                     else
                       Column(
                         children: List.generate(_provider.clientes.length, (i) {
                           final cliente = _provider.clientes[i];
                           final index =
-                              (_provider.currentPage - 1) * ClienteProvider.pageSize +
+                              (_provider.currentPage - 1) *
+                                  ClienteProvider.pageSize +
                               i;
                           return ClienteCardItem(
                             cliente: cliente,

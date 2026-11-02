@@ -16,7 +16,6 @@ import '../Screens/usuarios/usuarios_screen.dart';
 import '../Screens/inventario/inventario_screen.dart';
 import '../Screens/movimientos/movimientos_screen.dart';
 import '../Screens/movimientos/movimiento_detalle_screen.dart';
-import '../Screens/transacciones/transaccion_detalle_screen.dart';
 import '../screens/ventas/ventas_screen.dart';
 import '../screens/pedidos/pedidos_screen.dart';
 import '../screens/reabastecimientos/reabastecimientos_screen.dart';
@@ -223,12 +222,6 @@ class AppRoutes {
         }
         return MaterialPageRoute(
           builder: (_) => ReabastecimientoDetalleScreen(restockId: restockId),
-          settings: settings,
-        );
-
-      case transaccionDetalle:
-        return MaterialPageRoute(
-          builder: (_) => const TransaccionDetalleScreen(),
           settings: settings,
         );
 
