@@ -6,6 +6,7 @@ import 'package:herrera_system/data/models/dashboard_stats_model.dart';
 import 'package:herrera_system/data/models/inventory_movement_stats_model.dart';
 import 'package:herrera_system/data/models/inventory_stats_model.dart';
 import 'package:herrera_system/data/models/producto_catalogo_model.dart';
+import 'package:herrera_system/data/models/sales_stats_model.dart';
 
 class DashboardRepository {
   final ApiClient _apiClient;
@@ -29,9 +30,7 @@ class DashboardRepository {
       customers: ClienteEstadisticas.fromJson(_dataMap(responses[1])),
       inventory: InventoryStatsModel.fromJson(_dataMap(responses[2])),
       sales: SalesStatsModel.fromJson(_dataMap(responses[3])),
-      movements: InventoryMovementStatsModel.fromJson(
-        _dataMap(responses[4]),
-      ),
+      movements: InventoryMovementStatsModel.fromJson(_dataMap(responses[4])),
     );
   }
 
@@ -41,7 +40,8 @@ class DashboardRepository {
     }
     if (response['success'] == false) {
       throw ServerException(
-        response['message']?.toString() ?? 'No se pudieron cargar las estadísticas.',
+        response['message']?.toString() ??
+            'No se pudieron cargar las estadísticas.',
       );
     }
     final data = response['data'];
