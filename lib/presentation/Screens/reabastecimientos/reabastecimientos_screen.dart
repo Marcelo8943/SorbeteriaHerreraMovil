@@ -27,16 +27,16 @@ class ReabastecimientosScreen extends StatefulWidget {
 class _ReabastecimientosScreenState extends State<ReabastecimientosScreen> {
   static const int _pageSize = 10;
   static const List<String> _dateRanges = [
-    'Este mes',
     'Todo el historial',
     'Hoy',
     'Últimos 7 días',
+    'Este mes',
     'Este año',
   ];
 
   int _currentPage = 1;
   String _search = '';
-  String _selectedDateRange = 'Este mes';
+  String _selectedDateRange = 'Todo el historial';
   Timer? _searchDebounce;
 
   @override
@@ -73,7 +73,8 @@ class _ReabastecimientosScreenState extends State<ReabastecimientosScreen> {
     final today = DateTime(now.year, now.month, now.day);
     switch (range) {
       case 'Todo el historial':
-        return (null, today);
+        // Si no se envían fechas, la API limita la consulta al mes actual.
+        return (DateTime(1753, 1, 1), DateTime(9999, 12, 31));
       case 'Hoy':
         return (today, today);
       case 'Últimos 7 días':
@@ -136,7 +137,7 @@ class _ReabastecimientosScreenState extends State<ReabastecimientosScreen> {
                         ))
                     .toList(),
                 onChanged: (value) =>
-                    setModalState(() => selectedRange = value ?? 'Este mes'),
+                    setModalState(() => selectedRange = value ?? 'Todo el historial'),
               ),
               const SizedBox(height: 20),
               Row(
@@ -144,7 +145,7 @@ class _ReabastecimientosScreenState extends State<ReabastecimientosScreen> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        setState(() => _selectedDateRange = 'Este mes');
+                        setState(() => _selectedDateRange = 'Todo el historial');
                         Navigator.pop(modalContext);
                         _loadPage(1);
                       },
