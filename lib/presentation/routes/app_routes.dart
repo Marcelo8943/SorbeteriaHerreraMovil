@@ -27,7 +27,6 @@ import '../Screens/reportes/reportes_screen.dart';
 import '../screens/ventas/venta_detalle_screen.dart';
 import '../screens/pedidos/pedido_detalle_screen.dart';
 import '../screens/reabastecimientos/reabastecimiento_detalle_screen.dart';
-import '../../session.dart';
 import '../widgets/navigation/app_drawer.dart';
 import '../widgets/navigation/app_shell.dart';
 import '../widgets/navigation/app_tabbar.dart';
@@ -389,6 +388,7 @@ class _AuthenticatedShell extends StatelessWidget {
     AppDrawerItem(
       icon: Icons.history_outlined,
       label: 'Logs del Sistema',
+      adminOnly: true,
       onTap: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(AppRoutes.logs);
@@ -413,7 +413,6 @@ class _AuthenticatedShell extends StatelessWidget {
   Future<void> _logout(BuildContext context) async {
     final auth = context.read<AuthProvider>();
     await auth.logout();
-    Session.cerrarSesion();
   }
 }
 

@@ -3,7 +3,6 @@ import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../routes/app_routes.dart';
-import '../../../session.dart';
 import '../../theme/app_theme.dart';
 import 'widgets/conf_widgets.dart';
 
@@ -13,7 +12,6 @@ class ConfiguracionesScreen extends StatelessWidget {
   Future<void> _logout(BuildContext context) async {
     final auth = context.read<AuthProvider>();
     await auth.logout();
-    Session.cerrarSesion();
   }
 
   @override
