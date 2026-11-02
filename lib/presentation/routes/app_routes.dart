@@ -8,7 +8,6 @@ import '../Screens/mi_perfil/mi_perfil_screen.dart';
 import '../Screens/seguridad/seguridad_screen.dart';
 import '../Screens/login/login_screen.dart';
 import '../screens/splash/splash_screen.dart';
-import '../Screens/preferencias_sistema/sistema_screen.dart';
 import '../Screens/dashboard/dashboard_screen.dart';
 import '../Screens/clientes/clientes_screen.dart';
 import '../screens/productos/productos_screen.dart';
@@ -42,7 +41,6 @@ class AppRoutes {
   static const String miPerfil = '/mi-perfil';
   static const String datosNegocio = '/datos-negocio';
   static const String seguridad = '/seguridad';
-  static const String preferencias = '/preferencias';
 
   // Ronald — Catálogo y Clientes
   static const String clienteDetalle = '/cliente-detalle';
@@ -110,12 +108,6 @@ class AppRoutes {
       case seguridad:
         return MaterialPageRoute(
           builder: (_) => const SeguridadScreen(),
-          settings: settings,
-        );
-
-      case preferencias:
-        return MaterialPageRoute(
-          builder: (_) => const PreferenciasSistemaScreen(),
           settings: settings,
         );
 
@@ -346,14 +338,6 @@ class _AuthenticatedShell extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pop();
         Navigator.of(context).pushNamed(AppRoutes.logs);
-      },
-    ),
-    AppDrawerItem(
-      icon: Icons.account_tree_outlined,
-      label: 'Preferencias del Sistema',
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.of(context).pushNamed(AppRoutes.preferencias);
       },
     ),
     AppDrawerItem(

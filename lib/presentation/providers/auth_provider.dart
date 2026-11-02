@@ -18,6 +18,10 @@ class AuthProvider extends ChangeNotifier {
   bool get isSubmitting => _isSubmitting;
   UserModel? _currentUser;
   UserModel? get currentUser => _currentUser;
+  bool _isChangingPassword = false;
+  bool get isChangingPassword => _isChangingPassword;
+  String? _passwordChangeMessage;
+  String? get passwordChangeMessage => _passwordChangeMessage;
 
   Future<void> login({
     required String username,
@@ -50,6 +54,33 @@ class AuthProvider extends ChangeNotifier {
     _authStatus = AuthStatus.unauthenticated;
     _errorMessage = null;
     notifyListeners();
+  }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    if (_isChangingPassword) return false;
+    _isChangingPassword = true;
+    _passwordChangeMessage = null;
+    notifyListeners();
+
+    var changed = false;
+    try {
+      _passwordChangeMessage = await _authService.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+      changed = true;
+    } on AppException catch (error) {
+      _passwordChangeMessage = error.message;
+    } catch (error) {
+      _passwordChangeMessage = error.toString();
+    } finally {
+      _isChangingPassword = false;
+      notifyListeners();
+    }
+    return changed;
   }
 
   Future<void> checkSession() async {

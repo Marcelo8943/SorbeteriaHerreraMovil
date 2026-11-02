@@ -80,7 +80,16 @@ class ApiClient {
 
   dynamic _decode(http.Response response) {
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw ServerException('Request failed', statusCode: response.statusCode);
+      var message = 'Request failed';
+      try {
+        final errorJson = jsonDecode(response.body);
+        if (errorJson is Map<String, dynamic> && errorJson['message'] != null) {
+          message = errorJson['message'].toString();
+        }
+      } on FormatException {
+        // Si el servidor no devuelve JSON, se conserva el mensaje genérico.
+      }
+      throw ServerException(message, statusCode: response.statusCode);
     }
     if (response.body.isEmpty) {
       return null;

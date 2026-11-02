@@ -38,6 +38,16 @@ class AuthServices {
     return _authRepository.getMe(token.token);
   }
 
+  Future<String> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) {
+    return _authRepository.changePassword(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    );
+  }
+
   Future<bool> isLoggedIn() => _tokenRepository.hasValidToken();
   Future<void> logout() => _tokenRepository.removeToken();
 }
