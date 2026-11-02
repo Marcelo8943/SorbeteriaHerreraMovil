@@ -81,7 +81,9 @@ class _VentasScreenState extends State<VentasScreen> {
       case 'Este año':
         return (DateTime(now.year), today);
       default:
-        return (null, null);
+        // La API interpreta fechas nulas como "este mes". Usa sus límites
+        // admitidos para que "Todas las fechas" consulte todo el historial.
+        return (DateTime(1753, 1, 1), DateTime(9999, 12, 31));
     }
   }
 
