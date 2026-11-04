@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:herrera_system/core/constants/regular_expresion.dart';
 import 'package:herrera_system/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -65,7 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (errorMessage != null) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+        )..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
       }
     }
   }
@@ -89,27 +93,31 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 430),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  LoginHero(onLogoTap: _openFacebook),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 18, 14, 0),
-                    child: _LoginForm(
-                      formKey: _globalKey,
-                      userController: _userController,
-                      passwordController: _passwordController,
-                      hidePassword: _hidePassword,
-                      onPasswordVisibilityChanged: () {
-                        setState(() => _hidePassword = !_hidePassword);
-                      },
-                      onLogin: _login,
-                      onForgotPassword: _showPasswordRecoveryMessage,
+            child: RefreshIndicator(
+              onRefresh: _login,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    LoginHero(onLogoTap: _openFacebook),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(14, 18, 14, 0),
+                      child: _LoginForm(
+                        formKey: _globalKey,
+                        userController: _userController,
+                        passwordController: _passwordController,
+                        hidePassword: _hidePassword,
+                        onPasswordVisibilityChanged: () {
+                          setState(() => _hidePassword = !_hidePassword);
+                        },
+                        onLogin: _login,
+                        onForgotPassword: _showPasswordRecoveryMessage,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -157,9 +165,14 @@ class _LoginForm extends StatelessWidget {
             label: 'Usuario',
             controller: userController,
             icon: Icons.person_outline_rounded,
-            validator: (value) => value == null || value.trim().isEmpty
-                ? 'Ingresa tu usuario'
-                : null,
+            validator: (value) {
+              final username = value?.trim() ?? '';
+              if (username.isEmpty) return 'Ingresa tu usuario';
+              if (!CommonRegex.userNameRegex.hasMatch(username)) {
+                return 'El usuario debe tener entre 3 y 50 caracteres';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 13),
           LoginTextField(
@@ -167,9 +180,14 @@ class _LoginForm extends StatelessWidget {
             controller: passwordController,
             icon: Icons.shield_outlined,
             obscureText: hidePassword,
-            validator: (value) => value == null || value.trim().isEmpty
-                ? 'Ingresa tu contraseña'
-                : null,
+            validator: (value) {
+              final password = value?.trim() ?? '';
+              if (password.isEmpty) return 'Ingresa tu contraseña';
+              if (!CommonRegex.passwordRegex.hasMatch(password)) {
+                return 'Mínimo 8 caracteres: incluye mayúscula, minúscula, número y un símbolo permitido (@ \$ ! % * ? & o -).';
+              }
+              return null;
+            },
             trailing: IconButton(
               tooltip: hidePassword
                   ? 'Mostrar contraseña'
