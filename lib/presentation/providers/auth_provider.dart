@@ -29,6 +29,7 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     if (_isSubmitting) return;
     _isSubmitting = true;
+    _errorMessage = null;
     notifyListeners();
     try {
       await _authService.login(username, password);
@@ -37,11 +38,19 @@ class AuthProvider extends ChangeNotifier {
     } on AppException catch (e) {
       _currentUser = null;
       _authStatus = AuthStatus.unauthenticated;
-      _errorMessage = e.message;
+      _errorMessage = e is UnauthorizedException
+          ? 'Usuario o contraseña incorrectos.'
+          : e.message;
+    } on FormatException catch (e) {
+      _currentUser = null;
+      _authStatus = AuthStatus.unauthenticated;
+      _errorMessage = e.message.isNotEmpty
+          ? e.message
+          : 'El formato de los datos ingresados no es válido.';
     } catch (e) {
       _currentUser = null;
       _authStatus = AuthStatus.unauthenticated;
-      _errorMessage = 'An unexpected error occurred';
+      _errorMessage = 'Ocurrió un error inesperado. Intenta de nuevo.';
     }
 
     _isSubmitting = false;
