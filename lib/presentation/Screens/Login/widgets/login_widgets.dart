@@ -250,6 +250,7 @@ class LoginTextField extends StatelessWidget {
           decoration: InputDecoration(
             filled: true,
             fillColor: LoginColors.fieldBackground,
+            errorMaxLines: 3,
             prefixIcon: Icon(icon, color: LoginColors.fieldIcon, size: 19),
             suffixIcon: trailing,
             contentPadding: const EdgeInsets.symmetric(vertical: 13),
