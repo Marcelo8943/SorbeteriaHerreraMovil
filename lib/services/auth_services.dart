@@ -16,14 +16,14 @@ class AuthServices {
     final trimmedPassword = password.trim();
 
     if (trimemUsername.isEmpty || trimmedPassword.isEmpty) {
-      throw const FormatException('Username and password cannot be empty');
+      throw const FormatException('Usuario y contraseña no puede estar vacio');
     }
 
     if (!CommonRegex.userNameRegex.hasMatch(trimemUsername)) {
-      throw const FormatException('Invalid username format');
+      throw const FormatException('Formato de usuario invalido');
     }
     if (!CommonRegex.passwordRegex.hasMatch(trimmedPassword)) {
-      throw const FormatException('Invalid password format');
+      throw const FormatException('Formato de contraseña invalido');
     }
     final TokenModel token = await _authRepository.login(username, password);
     await _tokenRepository.saveToken(token);
